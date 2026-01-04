@@ -26,6 +26,7 @@ import {
   Link,
   Filter,
   RotateCcw,
+  Save,
 } from "lucide-react"
 
 interface Partner {
@@ -386,6 +387,8 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
   const dateFilterRef = useRef<HTMLDivElement>(null)
   const [copiedLeadId, setCopiedLeadId] = useState<string | null>(null)
   const [showTrashed, setShowTrashed] = useState(false)
+  const [estimatedPrices, setEstimatedPrices] = useState<Record<string, number>>({})
+  const [savingPrice, setSavingPrice] = useState<string | null>(null)
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -732,6 +735,44 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
     setTimeout(() => setNotification(null), 3000)
   }
 
+  const pendingRevenue = stats.recentLeads
+    .filter((lead) => lead.status === "pending" || lead.status === "assigned" || lead.status === "client")
+    .reduce((sum, lead) => sum + (Number(lead.lead_price) || 0), 0)
+
+  const handleSaveEstimatedPrice = async (leadId: string, price: number) => {
+    setSavingPrice(leadId)
+    try {
+      const response = await fetch("/api/0x/leads", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ leadId, estimatedPrice: price }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setNotification({ type: "success", message: `Precio estimado guardado: ${price}€` })
+        setStats((prevStats) => ({
+          ...prevStats,
+          recentLeads: prevStats.recentLeads.map((lead) =>
+            lead.id === leadId ? { ...lead, lead_price: price } : lead,
+          ),
+        }))
+        setEstimatedPrices((prev) => {
+          const newPrices = { ...prev }
+          delete newPrices[leadId]
+          return newPrices
+        })
+      } else {
+        setNotification({ type: "error", message: result.error || "Error al guardar" })
+      }
+    } catch (error) {
+      setNotification({ type: "error", message: "Error de conexión" })
+    }
+    setSavingPrice(null)
+    setTimeout(() => setNotification(null), 3000)
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-zinc-100">
       <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:48px_48px]" />
@@ -823,13 +864,19 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
       )}
 
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-6">
-        {/* KPIs */}
-        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        {/* KPIs - Added 4th KPI for pending revenue */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <KPICard
             label="INGRESOS TOTALES"
             value={`${stats.revenue.toFixed(0)}€`}
             icon={<DollarSign className="w-5 h-5" />}
             color="orange"
+          />
+          <KPICard
+            label="INGRESOS PENDIENTES"
+            value={`${pendingRevenue.toFixed(0)}€`}
+            icon={<DollarSign className="w-5 h-5" />}
+            color="zinc"
           />
           <KPICard label="LEADS VENDIDOS" value={stats.sold} icon={<Activity className="w-5 h-5" />} color="green" />
           <KPICard label="PARTNERS" value={stats.partners} icon={<Users className="w-5 h-5" />} color="blue" />
@@ -888,131 +935,170 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
               </button>
             </div>
             <div className="divide-y divide-zinc-800/50 max-h-[600px] overflow-y-auto">
-              {visibleLeads.map((lead: Lead) => (
-                <div
-                  key={lead.id}
-                  className={`px-4 py-4 hover:bg-zinc-800/20 transition-colors ${showTrashed ? "opacity-60" : ""}`}
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                    {/* Lead info */}
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <span className="text-xl">{serviceEmojis[lead.service] || "📋"}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                          <span className="font-medium text-sm">{lead.name || "Sin nombre"}</span>
-                          <span
-                            className={`text-xs px-2 py-0.5 border ${statusColors[lead.status] || statusColors.pending}`}
-                          >
-                            {statusLabels[lead.status] || "TRASH"}
-                          </span>
-                          {getPartnerName(lead.partner_id) && (
-                            <span className="text-xs px-2 py-0.5 border border-blue-500/30 text-blue-400 bg-blue-500/10">
-                              {getPartnerName(lead.partner_id)}
+              {visibleLeads.map((lead: Lead) => {
+                const isEditingPrice = savingPrice === lead.id
+                const estimatedPrice = estimatedPrices[lead.id] ?? lead.lead_price ?? 0
+
+                return (
+                  <div
+                    key={lead.id}
+                    className={`px-4 py-4 hover:bg-zinc-800/20 transition-colors ${showTrashed ? "opacity-60" : ""}`}
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      {/* Lead info */}
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <span className="text-xl">{serviceEmojis[lead.service] || "📋"}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-1">
+                            <span className="font-medium text-sm">{lead.name || "Sin nombre"}</span>
+                            <span
+                              className={`text-xs px-2 py-0.5 border ${statusColors[lead.status] || statusColors.pending}`}
+                            >
+                              {statusLabels[lead.status] || "TRASH"}
                             </span>
+                            {getPartnerName(lead.partner_id) && (
+                              <span className="text-xs px-2 py-0.5 border border-blue-500/30 text-blue-400 bg-blue-500/10">
+                                {getPartnerName(lead.partner_id)}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-zinc-400">
+                            {lead.city} - {lead.service}
+                          </p>
+                          <p className="text-xs text-zinc-500 truncate">{lead.problem?.slice(0, 60)}...</p>
+                          {lead.phone && <p className="text-xs text-zinc-300 font-mono mt-1">{lead.phone}</p>}
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                        {/* Price and date - now at top on mobile */}
+                        <div className="flex items-center justify-between sm:justify-end gap-2 order-first sm:order-last">
+                          {lead.status === "accepted" || lead.status === "paid" ? (
+                            <p className="text-sm font-bold text-green-500">
+                              {Number(lead.lead_price || 0).toFixed(0)}€
+                            </p>
+                          ) : !showTrashed ? (
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs text-zinc-500 sm:hidden">Precio:</span>
+                              <input
+                                type="number"
+                                value={estimatedPrices[lead.id] ?? lead.lead_price ?? ""}
+                                onChange={(e) =>
+                                  setEstimatedPrices((prev) => ({
+                                    ...prev,
+                                    [lead.id]: Number(e.target.value),
+                                  }))
+                                }
+                                placeholder="€"
+                                className="w-16 bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-xs text-right focus:border-[#FF4D00] outline-none"
+                              />
+                              <button
+                                onClick={() =>
+                                  handleSaveEstimatedPrice(
+                                    lead.id,
+                                    estimatedPrices[lead.id] ?? (Number(lead.lead_price) || 0),
+                                  )
+                                }
+                                disabled={savingPrice === lead.id}
+                                className="p-1.5 border border-zinc-700 hover:border-[#FF4D00] hover:bg-[#FF4D00]/10 transition-all"
+                                title="Guardar precio estimado"
+                              >
+                                <Save className="w-3 h-3 text-zinc-400" />
+                              </button>
+                            </div>
+                          ) : null}
+                          <p className="text-xs text-zinc-600">
+                            {new Date(lead.created_at).toLocaleDateString("es-ES", {
+                              day: "2-digit",
+                              month: "short",
+                            })}
+                          </p>
+                        </div>
+
+                        {/* Action buttons */}
+                        <div className="flex flex-wrap items-center gap-2">
+                          {showTrashed ? (
+                            <button
+                              onClick={() => handleTrashLead(lead.id, true)}
+                              disabled={updatingLead === lead.id}
+                              className="p-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all"
+                              title="Restaurar lead"
+                            >
+                              <RotateCcw className="w-4 h-4 text-green-500" />
+                            </button>
+                          ) : (
+                            <>
+                              {/* Copy lead button for WhatsApp group */}
+                              <button
+                                onClick={() => copyLeadForGroup(lead)}
+                                className={`p-2 border transition-all ${
+                                  copiedLeadId === lead.id
+                                    ? "border-green-500 bg-green-500/20"
+                                    : "border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800"
+                                }`}
+                                title="Copiar para grupo WhatsApp"
+                              >
+                                {copiedLeadId === lead.id ? (
+                                  <Check className="w-4 h-4 text-green-500" />
+                                ) : (
+                                  <Copy className="w-4 h-4 text-zinc-400" />
+                                )}
+                              </button>
+
+                              {/* WhatsApp */}
+                              <button
+                                onClick={() => openWhatsAppLead(lead)}
+                                className="p-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all"
+                                title="Hablar por WhatsApp"
+                              >
+                                <MessageCircle className="w-4 h-4 text-green-500" />
+                              </button>
+
+                              {/* Status change dropdown */}
+                              <select
+                                value={lead.status}
+                                onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                                disabled={updatingLead === lead.id}
+                                className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none flex-1 sm:flex-none sm:w-auto min-w-[90px]"
+                              >
+                                <option value="pending">Pendiente</option>
+                                <option value="client">Cliente</option>
+                                <option value="accepted">Vendido</option>
+                                <option value="rejected">Rechazado</option>
+                              </select>
+
+                              {/* Assign partner dropdown */}
+                              <select
+                                value={lead.partner_id || ""}
+                                onChange={(e) => handleAssignPartner(lead.id, e.target.value)}
+                                disabled={assigningLead === lead.id}
+                                className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none flex-1 sm:flex-none sm:w-auto sm:max-w-[120px]"
+                              >
+                                <option value="">Sin asignar</option>
+                                {stats.partnersList?.map((partner) => (
+                                  <option key={partner.id} value={partner.id}>
+                                    {partner.name}
+                                  </option>
+                                ))}
+                              </select>
+
+                              <button
+                                onClick={() => handleTrashLead(lead.id)}
+                                disabled={updatingLead === lead.id}
+                                className="p-2 border border-red-500/30 hover:border-red-500 hover:bg-red-500/10 transition-all"
+                                title="Mover a trash"
+                              >
+                                <Trash2 className="w-4 h-4 text-red-500" />
+                              </button>
+                            </>
                           )}
                         </div>
-                        <p className="text-xs text-zinc-400">
-                          {lead.city} - {lead.service}
-                        </p>
-                        <p className="text-xs text-zinc-500 truncate">{lead.problem?.slice(0, 60)}...</p>
-                        {lead.phone && <p className="text-xs text-zinc-300 font-mono mt-1">{lead.phone}</p>}
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                      {showTrashed ? (
-                        <button
-                          onClick={() => handleTrashLead(lead.id, true)}
-                          disabled={updatingLead === lead.id}
-                          className="p-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all"
-                          title="Restaurar lead"
-                        >
-                          <RotateCcw className="w-4 h-4 text-green-500" />
-                        </button>
-                      ) : (
-                        <>
-                          {/* Copy lead button for WhatsApp group */}
-                          <button
-                            onClick={() => copyLeadForGroup(lead)}
-                            className={`p-2 border transition-all ${
-                              copiedLeadId === lead.id
-                                ? "border-green-500 bg-green-500/20"
-                                : "border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800"
-                            }`}
-                            title="Copiar para grupo WhatsApp"
-                          >
-                            {copiedLeadId === lead.id ? (
-                              <Check className="w-4 h-4 text-green-500" />
-                            ) : (
-                              <Copy className="w-4 h-4 text-zinc-400" />
-                            )}
-                          </button>
-
-                          {/* WhatsApp */}
-                          <button
-                            onClick={() => openWhatsAppLead(lead)}
-                            className="p-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all"
-                            title="Hablar por WhatsApp"
-                          >
-                            <MessageCircle className="w-4 h-4 text-green-500" />
-                          </button>
-
-                          {/* Status change dropdown */}
-                          <select
-                            value={lead.status}
-                            onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
-                            disabled={updatingLead === lead.id}
-                            className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none"
-                          >
-                            <option value="pending">Pendiente</option>
-                            <option value="client">Cliente</option>
-                            <option value="accepted">Vendido</option>
-                            <option value="rejected">Rechazado</option>
-                          </select>
-
-                          {/* Assign partner dropdown */}
-                          <select
-                            value={lead.partner_id || ""}
-                            onChange={(e) => handleAssignPartner(lead.id, e.target.value)}
-                            disabled={assigningLead === lead.id}
-                            className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none max-w-[120px]"
-                          >
-                            <option value="">Sin asignar</option>
-                            {stats.partnersList?.map((partner) => (
-                              <option key={partner.id} value={partner.id}>
-                                {partner.name}
-                              </option>
-                            ))}
-                          </select>
-
-                          <button
-                            onClick={() => handleTrashLead(lead.id)}
-                            disabled={updatingLead === lead.id}
-                            className="p-2 border border-red-500/30 hover:border-red-500 hover:bg-red-500/10 transition-all"
-                            title="Mover a trash"
-                          >
-                            <Trash2 className="w-4 h-4 text-red-500" />
-                          </button>
-                        </>
-                      )}
-
-                      {/* Price and date */}
-                      <div className="text-right min-w-[60px]">
-                        {(lead.status === "accepted" || lead.status === "paid") && (
-                          <p className="text-sm font-bold text-[#FF4D00]">{Number(lead.lead_price || 0).toFixed(0)}€</p>
-                        )}
-                        <p className="text-xs text-zinc-600">
-                          {new Date(lead.created_at).toLocaleDateString("es-ES", {
-                            day: "2-digit",
-                            month: "short",
-                          })}
-                        </p>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
               {visibleLeads.length === 0 && (
                 <div className="px-4 py-8 text-center text-zinc-500 text-sm">
                   {showTrashed ? "No hay leads en trash" : "No hay leads"}

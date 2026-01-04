@@ -13,7 +13,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
-    const { leadId, status, partnerId } = await request.json()
+    const { leadId, status, partnerId, estimatedPrice } = await request.json()
 
     if (!leadId) {
       return NextResponse.json({ error: "Falta leadId" }, { status: 400 })
@@ -45,6 +45,14 @@ export async function PATCH(request: NextRequest) {
           WHERE id = ${leadId}
         `
       }
+    }
+
+    if (estimatedPrice !== undefined) {
+      await sql`
+        UPDATE leads 
+        SET lead_price = ${estimatedPrice}
+        WHERE id = ${leadId}
+      `
     }
 
     return NextResponse.json({ success: true })
