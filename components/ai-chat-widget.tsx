@@ -134,8 +134,6 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
     const messageText = quickMessage || input
     if (!messageText.trim() || isLoading) return
 
-    trackConversion()
-
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
@@ -214,28 +212,27 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
     }
   }
 
-  const trackConversion = () => {
-    if (hasTrackedConversion) return
-
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "conversion", {
-        send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
-        value: 20.0,
-        currency: "EUR",
-      })
-
-      window.gtag("event", "lead_started", {
-        event_category: "conversion",
-        event_label: service || "general",
-      })
-    }
-
-    setHasTrackedConversion(true)
-  }
-
   const isLeadComplete = messages.some(
     (m) => m.role === "user" && /(\+34|0034)?[\s.-]?[6-9]\d{2}[\s.-]?\d{3}[\s.-]?\d{3}/.test(m.content),
   )
+
+  useEffect(() => {
+    if (isLeadComplete && !hasTrackedConversion) {
+      if (typeof window !== "undefined" && window.gtag) {
+        window.gtag("event", "conversion", {
+          send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
+          value: 20.0,
+          currency: "EUR",
+        })
+
+        window.gtag("event", "lead_completed", {
+          event_category: "conversion",
+          event_label: service || "general",
+        })
+      }
+      setHasTrackedConversion(true)
+    }
+  }, [isLeadComplete, hasTrackedConversion, service])
 
   const getServiceFromMessages = () => {
     const serviceMessage = messages.find(
