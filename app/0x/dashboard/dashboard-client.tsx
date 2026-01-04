@@ -5,22 +5,51 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import {
-  TrendingUp,
   Users,
   DollarSign,
   Activity,
   LogOut,
   Zap,
-  Clock,
-  Target,
-  MessageSquareX,
   Send,
   X,
-  Calendar,
   ChevronDown,
-  ExternalLink,
   Trash2,
+  MessageCircle,
+  Plus,
+  Phone,
+  MapPin,
+  Briefcase,
+  Edit2,
+  CreditCard,
+  Copy,
+  Check,
+  Link,
+  Filter,
 } from "lucide-react"
+
+interface Partner {
+  id: string
+  name: string
+  phone: string
+  services: string[]
+  cities: string[]
+  active: boolean
+  created_at: string
+}
+
+interface Lead {
+  id: string
+  name: string
+  phone: string
+  city: string
+  service: string
+  problem: string
+  status: string
+  lead_price: number
+  partner_id: string | null
+  created_at: string
+  requested_date: string | null
+}
 
 interface Stats {
   total: number
@@ -36,11 +65,11 @@ interface Stats {
   weekRevenue: number
   weekPending: number
   weekPotential: number
-  recentLeads: any[]
+  recentLeads: Lead[]
   byService: any[]
   funnelStats: any[]
   partners: number
-  partnersList: any[]
+  partnersList: Partner[]
   ownerTelegramId: string
   conversionRate: string
   incompleteChats: any[]
@@ -151,22 +180,17 @@ function KPICard({
   value,
   icon,
   color,
-  subtext,
-  onClick,
 }: {
   label: string
   value: string | number
   icon: React.ReactNode
-  color: "green" | "orange" | "zinc" | "blue" | "yellow"
-  subtext?: string
-  onClick?: () => void
+  color: "green" | "orange" | "zinc" | "blue"
 }) {
   const colors = {
     green: "border-green-500/30",
     orange: "border-[#FF4D00]/30",
     zinc: "border-zinc-700",
     blue: "border-blue-500/30",
-    yellow: "border-yellow-500/30",
   }
 
   const textColors = {
@@ -174,26 +198,135 @@ function KPICard({
     orange: "text-[#FF4D00]",
     zinc: "text-zinc-100",
     blue: "text-blue-500",
-    yellow: "text-yellow-500",
   }
 
-  const Component = onClick ? "button" : "div"
-
   return (
-    <Component
-      onClick={onClick}
-      className={`border ${colors[color]} bg-zinc-900/30 backdrop-blur-sm p-3 sm:p-5 hover:bg-zinc-900/50 transition-all ${onClick ? "cursor-pointer" : ""}`}
-    >
-      <div className="flex items-center justify-between mb-2 sm:mb-3">
-        <span className="text-[10px] sm:text-xs text-zinc-500 tracking-wider">{label}</span>
+    <div className={`border ${colors[color]} bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6`}>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs text-zinc-500 tracking-wider">{label}</span>
         <div className={textColors[color]}>{icon}</div>
       </div>
-      <div className="flex items-baseline gap-2">
-        <p className={`text-xl sm:text-3xl font-bold tracking-tight ${textColors[color]}`}>{value}</p>
-        {subtext && <span className="text-xs sm:text-sm text-zinc-500">{subtext}</span>}
-        {onClick && <ExternalLink className="w-3 h-3 text-zinc-600 ml-auto" />}
+      <p className={`text-2xl sm:text-4xl font-bold tracking-tight ${textColors[color]}`}>{value}</p>
+    </div>
+  )
+}
+
+function PartnerModal({
+  partner,
+  onClose,
+  onSave,
+}: {
+  partner: Partner | null
+  onClose: () => void
+  onSave: (data: any) => void
+}) {
+  const [name, setName] = useState(partner?.name || "")
+  const [phone, setPhone] = useState(partner?.phone || "")
+  const [services, setServices] = useState<string[]>(partner?.services || [])
+  const [cities, setCities] = useState(partner?.cities?.join(", ") || "")
+  const [saving, setSaving] = useState(false)
+
+  const allServices = ["fontanero", "electricista", "cerrajero", "desatasco", "calderas"]
+
+  const toggleService = (service: string) => {
+    if (services.includes(service)) {
+      setServices(services.filter((s) => s !== service))
+    } else {
+      setServices([...services, service])
+    }
+  }
+
+  const handleSave = async () => {
+    if (!name || !phone || services.length === 0) return
+    setSaving(true)
+    await onSave({
+      id: partner?.id,
+      name,
+      phone,
+      services,
+      cities: cities
+        .split(",")
+        .map((c) => c.trim())
+        .filter(Boolean),
+    })
+    setSaving(false)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+      <div className="w-full max-w-md border border-zinc-700 bg-zinc-900 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-sm font-bold tracking-wider text-[#FF4D00]">
+            {partner ? "EDITAR PARTNER" : "NUEVO PARTNER"}
+          </h3>
+          <button onClick={onClose} className="p-1 hover:bg-zinc-800 transition-colors">
+            <X className="w-5 h-5 text-zinc-400" />
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1">NOMBRE</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Juan García"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1">TELÉFONO</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="612345678"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-500 block mb-2">SERVICIOS</label>
+            <div className="flex flex-wrap gap-2">
+              {allServices.map((service) => (
+                <button
+                  key={service}
+                  onClick={() => toggleService(service)}
+                  className={`px-3 py-1.5 text-xs font-medium border transition-colors capitalize ${
+                    services.includes(service)
+                      ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                      : "border-zinc-700 hover:border-zinc-600"
+                  }`}
+                >
+                  {service}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1">CIUDADES (separadas por coma)</label>
+            <input
+              type="text"
+              value={cities}
+              onChange={(e) => setCities(e.target.value)}
+              placeholder="Barcelona, Madrid, Valencia"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+            />
+          </div>
+        </div>
+
+        <button
+          onClick={handleSave}
+          disabled={saving || !name || !phone || services.length === 0}
+          className="w-full mt-6 py-3 bg-[#FF4D00] text-black font-bold tracking-wider hover:bg-[#FF4D00]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {saving ? "GUARDANDO..." : partner ? "ACTUALIZAR" : "CREAR PARTNER"}
+        </button>
       </div>
-    </Component>
+    </div>
   )
 }
 
@@ -201,14 +334,20 @@ export function DashboardClient({ stats }: { stats: Stats }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [currentTime, setCurrentTime] = useState(new Date())
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [resendLead, setResendLead] = useState<any>(null)
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null)
   const [dateFilterOpen, setDateFilterOpen] = useState(false)
-  const [showPartners, setShowPartners] = useState(false)
-  const [expellingPartner, setExpellingPartner] = useState<string | null>(null)
-  const [clearingChannel, setClearingChannel] = useState<string | null>(null)
-  const [showClearModal, setShowClearModal] = useState(false)
+  const [updatingLead, setUpdatingLead] = useState<string | null>(null)
+  const [showPartnerModal, setShowPartnerModal] = useState(false)
+  const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
+  const [assigningLead, setAssigningLead] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<"leads" | "partners" | "pagos">("leads")
+  const [partnerLeadDropdown, setPartnerLeadDropdown] = useState<string | null>(null)
+  const [generatingPayment, setGeneratingPayment] = useState<string | null>(null)
+  const [paymentPrice, setPaymentPrice] = useState<Record<string, number>>({})
+  const [copiedLink, setCopiedLink] = useState<string | null>(null)
+  const [generatedLinks, setGeneratedLinks] = useState<Record<string, string>>({})
+  const [paymentFilter, setPaymentFilter] = useState<"all" | "pending" | "paid">("all")
+  const [professionFilter, setProfessionFilter] = useState<string>("all")
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -234,84 +373,6 @@ export function DashboardClient({ stats }: { stats: Stats }) {
     all: "Todo",
   }
 
-  const handleExpelPartner = async (partnerId: string, telegramChatId: string) => {
-    if (telegramChatId === stats.ownerTelegramId) {
-      setNotification({ type: "error", message: "No puedes expulsarte a ti mismo" })
-      setTimeout(() => setNotification(null), 3000)
-      return
-    }
-
-    setExpellingPartner(partnerId)
-    try {
-      const response = await fetch("/api/0x/partners", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ partnerId, telegramChatId }),
-      })
-
-      const result = await response.json()
-
-      if (result.success) {
-        setNotification({ type: "success", message: "Partner expulsado correctamente" })
-        setTimeout(() => router.refresh(), 1500)
-      } else {
-        setNotification({ type: "error", message: result.error || "Error al expulsar" })
-      }
-    } catch (error) {
-      setNotification({ type: "error", message: "Error de conexión" })
-    }
-    setExpellingPartner(null)
-    setTimeout(() => setNotification(null), 3000)
-  }
-
-  const handleReactivatePartner = async (partnerId: string) => {
-    try {
-      const response = await fetch("/api/0x/partners", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ partnerId, active: true }),
-      })
-
-      const result = await response.json()
-
-      if (result.success) {
-        setNotification({ type: "success", message: "Partner reactivado" })
-        setTimeout(() => router.refresh(), 1500)
-      } else {
-        setNotification({ type: "error", message: result.error || "Error" })
-      }
-    } catch (error) {
-      setNotification({ type: "error", message: "Error de conexión" })
-    }
-    setTimeout(() => setNotification(null), 3000)
-  }
-
-  const handleResend = async (leadId: number, offerPrice: number) => {
-    try {
-      const response = await fetch("/api/0x/resend-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ leadId, offerPrice }),
-      })
-
-      const result = await response.json()
-
-      if (result.success) {
-        setNotification({ type: "success", message: `Lead #${leadId} reenviado con oferta de ${offerPrice}€` })
-        setResendLead(null)
-        setTimeout(() => {
-          router.refresh()
-        }, 2000)
-      } else {
-        setNotification({ type: "error", message: result.message || "Error al reenviar" })
-      }
-    } catch (error) {
-      setNotification({ type: "error", message: "Error de conexión" })
-    }
-
-    setTimeout(() => setNotification(null), 3000)
-  }
-
   const handleLogout = async () => {
     await fetch("/api/0x/auth", { method: "DELETE" })
     router.push("/0x")
@@ -327,49 +388,204 @@ export function DashboardClient({ stats }: { stats: Stats }) {
 
   const statusColors: Record<string, string> = {
     pending: "text-yellow-500 border-yellow-500/30 bg-yellow-500/10",
+    assigned: "text-purple-500 border-purple-500/30 bg-purple-500/10",
+    paid: "text-green-500 border-green-500/30 bg-green-500/10",
     accepted: "text-green-500 border-green-500/30 bg-green-500/10",
     rejected: "text-red-500 border-red-500/30 bg-red-500/10",
+    client: "text-blue-500 border-blue-500/30 bg-blue-500/10",
   }
 
-  const funnelStepLabels: Record<string, string> = {
-    welcome: "Inicio",
-    service: "Servicio",
-    problem: "Problema",
-    city: "Ciudad",
-    phone: "Teléfono",
-    name: "Nombre",
-    complete: "Completado",
+  const statusLabels: Record<string, string> = {
+    pending: "PENDIENTE",
+    assigned: "ASIGNADO",
+    paid: "PAGADO",
+    accepted: "VENDIDO",
+    rejected: "RECHAZADO",
+    client: "CLIENTE",
   }
 
-  const goToPartners = () => {
-    router.push("/0x/partners")
+  const openWhatsAppLead = (lead: Lead) => {
+    const phone = lead.phone?.replace(/\D/g, "") || ""
+    const phoneWithCountry = phone.startsWith("34") ? phone : `34${phone}`
+    const whenText = lead.requested_date ? ` para ${lead.requested_date}` : ""
+    const message = encodeURIComponent(
+      `Hola! Veo que has solicitado servicio de ${lead.service || "urgencia"} en ${lead.city || "tu zona"}${whenText}. Te escribo para confirmar si todavía necesitas el servicio y asignarte un profesional. ¿Sigue en pie?`,
+    )
+    window.open(`https://wa.me/${phoneWithCountry}?text=${message}`, "_blank")
   }
 
-  const handleClearChannel = async (service: string) => {
-    setClearingChannel(service)
+  const handleUpdateLeadStatus = async (leadId: string, newStatus: string) => {
+    setUpdatingLead(leadId)
     try {
-      const response = await fetch("/api/0x/clear-telegram", {
-        method: "POST",
+      const response = await fetch("/api/0x/leads", {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ service }),
+        body: JSON.stringify({ leadId, status: newStatus }),
       })
 
       const result = await response.json()
 
       if (result.success) {
-        setNotification({
-          type: "success",
-          message: `${result.deletedCount} mensajes eliminados de ${service}`,
-        })
+        setNotification({ type: "success", message: `Lead actualizado a ${statusLabels[newStatus]}` })
+        setTimeout(() => router.refresh(), 1000)
       } else {
-        setNotification({ type: "error", message: result.error || "Error al limpiar" })
+        setNotification({ type: "error", message: result.error || "Error al actualizar" })
       }
     } catch (error) {
       setNotification({ type: "error", message: "Error de conexión" })
     }
-    setClearingChannel(null)
-    setShowClearModal(false)
+    setUpdatingLead(null)
     setTimeout(() => setNotification(null), 3000)
+  }
+
+  const handleAssignPartner = async (leadId: string, partnerId: string) => {
+    setAssigningLead(leadId)
+    try {
+      const response = await fetch("/api/0x/leads", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ leadId, partnerId }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setNotification({ type: "success", message: "Partner asignado correctamente" })
+        setTimeout(() => router.refresh(), 1000)
+      } else {
+        setNotification({ type: "error", message: result.error || "Error al asignar" })
+      }
+    } catch (error) {
+      setNotification({ type: "error", message: "Error de conexión" })
+    }
+    setAssigningLead(null)
+    setTimeout(() => setNotification(null), 3000)
+  }
+
+  const handleSavePartner = async (data: any) => {
+    try {
+      const response = await fetch("/api/0x/manual-partners", {
+        method: data.id ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setNotification({ type: "success", message: data.id ? "Partner actualizado" : "Partner creado" })
+        setShowPartnerModal(false)
+        setEditingPartner(null)
+        setTimeout(() => router.refresh(), 1000)
+      } else {
+        setNotification({ type: "error", message: result.error || "Error" })
+      }
+    } catch (error) {
+      setNotification({ type: "error", message: "Error de conexión" })
+    }
+    setTimeout(() => setNotification(null), 3000)
+  }
+
+  const handleDeletePartner = async (partnerId: string) => {
+    if (!confirm("¿Seguro que quieres eliminar este partner?")) return
+
+    try {
+      const response = await fetch("/api/0x/manual-partners", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ partnerId }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setNotification({ type: "success", message: "Partner eliminado" })
+        setTimeout(() => router.refresh(), 1000)
+      } else {
+        setNotification({ type: "error", message: result.error || "Error" })
+      }
+    } catch (error) {
+      setNotification({ type: "error", message: "Error de conexión" })
+    }
+    setTimeout(() => setNotification(null), 3000)
+  }
+
+  const getPartnerName = (partnerId: string | null) => {
+    if (!partnerId) return null
+    const partner = stats.partnersList?.find((p) => p.id === partnerId)
+    return partner?.name || null
+  }
+
+  const openWhatsAppPartnerOffer = (partner: Partner, lead: Lead) => {
+    const phone = partner.phone?.replace(/\D/g, "") || ""
+    const phoneWithCountry = phone.startsWith("34") ? phone : `34${phone}`
+    const whenText = lead.requested_date ? ` Lo necesita: ${lead.requested_date}.` : ""
+    const message = encodeURIComponent(
+      `Hola ${partner.name}! Tenemos un cliente que necesita ${lead.service} en ${lead.city}.${whenText} El problema es: "${lead.problem?.slice(0, 100)}". ¿Te interesa este trabajo?`,
+    )
+    window.open(`https://wa.me/${phoneWithCountry}?text=${message}`, "_blank")
+    setPartnerLeadDropdown(null)
+  }
+
+  const pendingLeads = stats.recentLeads.filter((lead) => lead.status === "pending")
+  const assignedLeads = stats.recentLeads.filter((lead) => lead.partner_id)
+
+  const allProfessions = ["fontanero", "electricista", "cerrajero", "desatasco", "calderas"]
+  const filteredPartners =
+    stats.partnersList?.filter((partner) => {
+      if (professionFilter === "all") return true
+      return partner.services?.includes(professionFilter)
+    }) || []
+
+  const filteredPagosLeads = assignedLeads.filter((lead) => {
+    if (paymentFilter === "all") return true
+    if (paymentFilter === "paid") return lead.status === "paid"
+    if (paymentFilter === "pending") return lead.status !== "paid"
+    return true
+  })
+
+  const handleGeneratePaymentLink = async (lead: Lead) => {
+    const price = paymentPrice[lead.id] || lead.lead_price || 35
+    setGeneratingPayment(lead.id)
+
+    try {
+      const response = await fetch("/api/0x/generate-payment-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          leadId: lead.id,
+          price,
+          leadInfo: {
+            service: lead.service,
+            city: lead.city,
+            problem: lead.problem,
+          },
+        }),
+      })
+
+      const result = await response.json()
+
+      if (result.success && result.url) {
+        setGeneratedLinks((prev) => ({ ...prev, [lead.id]: result.url }))
+        setNotification({ type: "success", message: "Link de pago generado" })
+      } else {
+        setNotification({ type: "error", message: result.error || "Error al generar link" })
+      }
+    } catch (error) {
+      setNotification({ type: "error", message: "Error de conexión" })
+    }
+    setGeneratingPayment(null)
+    setTimeout(() => setNotification(null), 3000)
+  }
+
+  const handleCopyLink = (leadId: string, link: string) => {
+    navigator.clipboard.writeText(link)
+    setCopiedLink(leadId)
+    setNotification({ type: "success", message: "Link copiado al portapapeles" })
+    setTimeout(() => {
+      setCopiedLink(null)
+      setNotification(null)
+    }, 2000)
   }
 
   return (
@@ -388,51 +604,18 @@ export function DashboardClient({ stats }: { stats: Stats }) {
         </div>
       )}
 
-      {resendLead && <ResendModal lead={resendLead} onClose={() => setResendLead(null)} onResend={handleResend} />}
-
-      {showClearModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-md border border-zinc-700 bg-zinc-900 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-sm font-bold tracking-wider text-red-500">LIMPIAR CANALES TELEGRAM</h3>
-              <button onClick={() => setShowClearModal(false)} className="p-1 hover:bg-zinc-800 transition-colors">
-                <X className="w-5 h-5 text-zinc-400" />
-              </button>
-            </div>
-
-            <p className="text-xs text-zinc-400 mb-6">
-              Selecciona un canal para eliminar todos los mensajes. Esta acción no se puede deshacer.
-            </p>
-
-            <div className="space-y-2">
-              {["fontanero", "electricista", "cerrajero", "calderas"].map((service) => (
-                <button
-                  key={service}
-                  onClick={() => handleClearChannel(service)}
-                  disabled={clearingChannel !== null}
-                  className={`w-full py-3 px-4 border text-left flex items-center justify-between transition-all ${
-                    clearingChannel === service
-                      ? "border-red-500 bg-red-500/20 text-red-400"
-                      : "border-zinc-700 hover:border-red-500/50 hover:bg-red-500/10"
-                  } disabled:opacity-50`}
-                >
-                  <span className="font-medium capitalize">{service}</span>
-                  {clearingChannel === service ? (
-                    <span className="text-xs">Limpiando...</span>
-                  ) : (
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  )}
-                </button>
-              ))}
-            </div>
-
-            <p className="text-[10px] text-zinc-600 mt-4">
-              Nota: Solo se pueden eliminar mensajes de las últimas 48 horas (limitación de Telegram).
-            </p>
-          </div>
-        </div>
+      {(showPartnerModal || editingPartner) && (
+        <PartnerModal
+          partner={editingPartner}
+          onClose={() => {
+            setShowPartnerModal(false)
+            setEditingPartner(null)
+          }}
+          onSave={handleSavePartner}
+        />
       )}
 
+      {/* Header */}
       <header className="relative z-10 border-b border-zinc-800/50 bg-zinc-900/30 backdrop-blur-xl sticky top-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
@@ -441,29 +624,28 @@ export function DashboardClient({ stats }: { stats: Stats }) {
             </div>
             <div>
               <h1 className="text-base sm:text-lg font-bold tracking-wider">RAPIDFIX</h1>
-              <p className="text-[10px] sm:text-xs text-zinc-500 tracking-widest hidden sm:block">CONTROL PANEL</p>
+              <p className="text-[10px] sm:text-xs text-zinc-500 tracking-widest hidden sm:block">PANEL DE CONTROL</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
-            {/* Date filter dropdown */}
+            {/* Date filter */}
             <div className="relative">
               <button
                 onClick={() => setDateFilterOpen(!dateFilterOpen)}
-                className="flex items-center gap-2 px-3 py-2 border border-zinc-700 hover:border-zinc-600 bg-zinc-900/50 text-xs sm:text-sm"
+                className="flex items-center gap-2 px-3 py-1.5 border border-zinc-700 bg-zinc-900 hover:border-zinc-600 transition-colors text-xs"
               >
-                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF4D00]" />
-                <span className="hidden sm:inline">{dateRangeLabels[stats.dateRange] || "Todo"}</span>
+                <span>{dateRangeLabels[stats.dateRange] || "Todo"}</span>
                 <ChevronDown className="w-3 h-3" />
               </button>
               {dateFilterOpen && (
-                <div className="absolute right-0 mt-1 w-40 border border-zinc-700 bg-zinc-900 z-50">
+                <div className="absolute right-0 bottom-full mb-1 w-40 border border-zinc-700 bg-zinc-900 z-[100] shadow-xl">
                   {Object.entries(dateRangeLabels).map(([key, label]) => (
                     <button
                       key={key}
                       onClick={() => handleDateFilter(key)}
                       className={`w-full px-3 py-2 text-left text-xs hover:bg-zinc-800 ${
-                        stats.dateRange === key ? "text-[#FF4D00] bg-zinc-800/50" : ""
+                        stats.dateRange === key ? "text-[#FF4D00]" : ""
                       }`}
                     >
                       {label}
@@ -473,339 +655,509 @@ export function DashboardClient({ stats }: { stats: Stats }) {
               )}
             </div>
 
-            {/* Partners button - now navigates to page */}
-            <button
-              onClick={goToPartners}
-              className="flex items-center gap-2 px-3 py-2 border border-zinc-700 hover:border-[#FF4D00] hover:bg-[#FF4D00]/10 text-xs sm:text-sm transition-colors"
-            >
-              <Users className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Partners</span>
-              <span className="text-[#FF4D00]">{stats.partners}</span>
-            </button>
-
             <div className="text-right hidden sm:block">
               <p className="text-xs text-zinc-500">SISTEMA ACTIVO</p>
               <p className="text-sm font-mono text-[#FF4D00]">
                 {currentTime.toLocaleTimeString("es-ES", { hour12: false })}
               </p>
             </div>
+
             <button
               onClick={handleLogout}
               className="p-2 border border-zinc-700 hover:border-red-500/50 hover:bg-red-500/10 transition-all group"
             >
               <LogOut className="w-4 h-4 text-zinc-400 group-hover:text-red-500" />
             </button>
-
-            {/* Clear Telegram button */}
-            <button
-              onClick={() => setShowClearModal(true)}
-              className="flex items-center gap-2 px-3 py-2 border border-zinc-700 hover:border-red-500/50 hover:bg-red-500/10 text-xs sm:text-sm transition-colors"
-              title="Limpiar canales Telegram"
-            >
-              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
-              <span className="hidden sm:inline text-red-400">Limpiar</span>
-            </button>
           </div>
         </div>
       </header>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-[#FF4D00]" />
-            <span className="text-xs text-zinc-500 tracking-wider">FILTRAR POR PERÍODO</span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {Object.entries(dateRangeLabels).map(([key, label]) => (
-              <button
-                key={key}
-                onClick={() => handleDateFilter(key)}
-                className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium border transition-all ${
-                  stats.dateRange === key
-                    ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
-                    : "border-zinc-700 hover:border-zinc-600 text-zinc-400 hover:text-zinc-200"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {stats.dateRange && stats.dateRange !== "all" && (
-          <div className="flex items-center gap-2 text-xs">
-            <span className="text-zinc-500">Mostrando datos de:</span>
-            <span className="px-2 py-1 border border-[#FF4D00]/50 bg-[#FF4D00]/10 text-[#FF4D00] font-medium">
-              {dateRangeLabels[stats.dateRange] || stats.dateRange}
-            </span>
-          </div>
-        )}
-
-        {/* KPIs - responsive grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-6">
+        {/* KPIs */}
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
           <KPICard
-            label="LEADS TOTALES"
-            value={stats.total}
-            icon={<Activity className="w-4 h-4 sm:w-5 sm:h-5" />}
-            color="zinc"
-          />
-          <KPICard
-            label="VENDIDOS"
-            value={stats.sold}
-            icon={<Target className="w-4 h-4 sm:w-5 sm:h-5" />}
-            color="green"
-            subtext={`${stats.conversionRate}%`}
-          />
-          <KPICard
-            label="INGRESOS"
+            label="INGRESOS TOTALES"
             value={`${stats.revenue.toFixed(0)}€`}
-            icon={<DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />}
+            icon={<DollarSign className="w-5 h-5" />}
             color="orange"
           />
-          <KPICard
-            label="PARTNERS"
-            value={stats.partners}
-            icon={<Users className="w-4 h-4 sm:w-5 sm:h-5" />}
-            color="blue"
-            onClick={goToPartners}
-          />
+          <KPICard label="LEADS VENDIDOS" value={stats.sold} icon={<Activity className="w-5 h-5" />} color="green" />
+          <KPICard label="PARTNERS" value={stats.partners} icon={<Users className="w-5 h-5" />} color="blue" />
         </div>
 
-        {/* Time-based stats - responsive */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
-          <div className="border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6">
-            <div className="flex items-center gap-2 mb-3 sm:mb-4">
-              <Clock className="w-4 h-4 text-[#FF4D00]" />
-              <h3 className="text-xs font-bold tracking-wider text-zinc-400">HOY</h3>
-            </div>
-            <div className="grid grid-cols-4 gap-2 sm:gap-4">
-              <div>
-                <p className="text-2xl sm:text-3xl font-bold">{stats.todayLeads}</p>
-                <p className="text-[10px] sm:text-xs text-zinc-500">leads</p>
-              </div>
-              <div>
-                <p className="text-2xl sm:text-3xl font-bold text-green-500">{stats.todaySold}</p>
-                <p className="text-[10px] sm:text-xs text-zinc-500">vendidos</p>
-              </div>
-              <div>
-                <p className="text-2xl sm:text-3xl font-bold text-[#FF4D00]">{stats.todayRevenue.toFixed(0)}€</p>
-                <p className="text-[10px] sm:text-xs text-zinc-500">ingresos</p>
-              </div>
-              <div>
-                <p className="text-2xl sm:text-3xl font-bold text-yellow-500">{stats.todayPotential.toFixed(0)}€</p>
-                <p className="text-[10px] sm:text-xs text-zinc-500">posibles ({stats.todayPending})</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6">
-            <div className="flex items-center gap-2 mb-3 sm:mb-4">
-              <TrendingUp className="w-4 h-4 text-[#FF4D00]" />
-              <h3 className="text-xs font-bold tracking-wider text-zinc-400">ÚLTIMOS 7 DÍAS</h3>
-            </div>
-            <div className="grid grid-cols-4 gap-2 sm:gap-4">
-              <div>
-                <p className="text-2xl sm:text-3xl font-bold">{stats.weekLeads}</p>
-                <p className="text-[10px] sm:text-xs text-zinc-500">leads</p>
-              </div>
-              <div>
-                <p className="text-2xl sm:text-3xl font-bold text-green-500">{stats.weekSold}</p>
-                <p className="text-[10px] sm:text-xs text-zinc-500">vendidos</p>
-              </div>
-              <div>
-                <p className="text-2xl sm:text-3xl font-bold text-[#FF4D00]">{stats.weekRevenue.toFixed(0)}€</p>
-                <p className="text-[10px] sm:text-xs text-zinc-500">ingresos</p>
-              </div>
-              <div>
-                <p className="text-2xl sm:text-3xl font-bold text-yellow-500">{stats.weekPotential.toFixed(0)}€</p>
-                <p className="text-[10px] sm:text-xs text-zinc-500">posibles ({stats.weekPending})</p>
-              </div>
-            </div>
-          </div>
+        {/* Tabs */}
+        <div className="flex gap-2 border-b border-zinc-800 pb-2">
+          <button
+            onClick={() => setActiveTab("leads")}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === "leads" ? "text-[#FF4D00] border-b-2 border-[#FF4D00]" : "text-zinc-500 hover:text-zinc-300"
+            }`}
+          >
+            Leads ({stats.recentLeads.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("partners")}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === "partners"
+                ? "text-[#FF4D00] border-b-2 border-[#FF4D00]"
+                : "text-zinc-500 hover:text-zinc-300"
+            }`}
+          >
+            Partners ({stats.partners})
+          </button>
+          <button
+            onClick={() => setActiveTab("pagos")}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === "pagos" ? "text-[#FF4D00] border-b-2 border-[#FF4D00]" : "text-zinc-500 hover:text-zinc-300"
+            }`}
+          >
+            Pagos ({filteredPagosLeads.length})
+          </button>
         </div>
 
-        {/* By Service */}
-        <div className="border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6">
-          <h3 className="text-xs font-bold tracking-wider text-zinc-400 mb-4 sm:mb-6">POR SERVICIO</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
-            {stats.byService.map((service: any) => (
-              <div
-                key={service.service}
-                className="border border-zinc-800 bg-zinc-900/50 p-3 sm:p-4 hover:border-[#FF4D00]/30 transition-colors relative group"
-              >
-                <button
-                  onClick={() => handleClearChannel(service.service)}
-                  disabled={clearingChannel !== null}
-                  className="absolute top-2 right-2 p-1.5 opacity-0 group-hover:opacity-100 border border-zinc-700 hover:border-red-500/50 hover:bg-red-500/20 transition-all"
-                  title={`Limpiar canal ${service.service}`}
-                >
-                  {clearingChannel === service.service ? (
-                    <span className="text-[8px] text-red-400">...</span>
-                  ) : (
-                    <Trash2 className="w-3 h-3 text-red-500" />
-                  )}
-                </button>
-                <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                  <span className="text-lg sm:text-xl">{serviceEmojis[service.service] || "📋"}</span>
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider truncate">
-                    {service.service}
-                  </span>
-                </div>
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs sm:text-sm">
-                    <span className="text-zinc-500">Total</span>
-                    <span>{service.total}</span>
-                  </div>
-                  <div className="flex justify-between text-xs sm:text-sm">
-                    <span className="text-zinc-500">Vendidos</span>
-                    <span className="text-green-500">{service.sold}</span>
-                  </div>
-                  <div className="flex justify-between text-xs sm:text-sm">
-                    <span className="text-zinc-500">€</span>
-                    <span className="text-[#FF4D00]">{Number(service.revenue).toFixed(0)}€</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Incomplete chats */}
-        {stats.incompleteChats && stats.incompleteChats.length > 0 && (
-          <div className="border border-red-500/30 bg-zinc-900/30 backdrop-blur-sm">
-            <div className="p-3 sm:p-4 border-b border-zinc-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MessageSquareX className="w-4 h-4 text-red-500" />
-                <h3 className="text-xs font-bold tracking-wider text-red-400">CHATS INCOMPLETOS</h3>
-              </div>
-              <span className="text-xs text-zinc-600">{stats.incompleteChats.length} abandonos</span>
+        {/* Leads Tab */}
+        {activeTab === "leads" && (
+          <div className="border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm">
+            <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+              <h3 className="text-xs font-bold tracking-wider text-zinc-400">TODOS LOS LEADS</h3>
             </div>
-            <div className="divide-y divide-zinc-800/50 max-h-[300px] sm:max-h-[400px] overflow-y-auto">
-              {stats.incompleteChats.map((chat: any, index: number) => (
-                <div
-                  key={chat.session_id || index}
-                  className="px-3 sm:px-4 py-3 hover:bg-zinc-800/20 transition-colors"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs px-2 py-0.5 border border-red-500/30 text-red-400 bg-red-500/10">
-                        {funnelStepLabels[chat.last_step] || chat.last_step}
-                      </span>
-                      {chat.service && <span className="text-sm">{serviceEmojis[chat.service] || "📋"}</span>}
-                      {chat.city && <span className="text-xs text-zinc-400">{chat.city}</span>}
+            <div className="divide-y divide-zinc-800/50 max-h-[600px] overflow-y-auto">
+              {stats.recentLeads.map((lead: Lead) => (
+                <div key={lead.id} className="px-4 py-4 hover:bg-zinc-800/20 transition-colors">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    {/* Lead info */}
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <span className="text-xl">{serviceEmojis[lead.service] || "📋"}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <span className="font-medium text-sm">{lead.name || "Sin nombre"}</span>
+                          <span className={`text-xs px-2 py-0.5 border ${statusColors[lead.status]}`}>
+                            {statusLabels[lead.status]}
+                          </span>
+                          {getPartnerName(lead.partner_id) && (
+                            <span className="text-xs px-2 py-0.5 border border-blue-500/30 text-blue-400 bg-blue-500/10">
+                              {getPartnerName(lead.partner_id)}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-zinc-400">
+                          {lead.city} - {lead.service}
+                        </p>
+                        <p className="text-xs text-zinc-500 truncate">{lead.problem?.slice(0, 60)}...</p>
+                        {lead.phone && <p className="text-xs text-zinc-300 font-mono mt-1">{lead.phone}</p>}
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-zinc-500 truncate">
-                        {chat.user_messages?.slice(0, 100) || "Sin mensajes"}
-                        {chat.user_messages?.length > 100 ? "..." : ""}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[10px] sm:text-xs text-zinc-600">
-                        {new Date(chat.last_activity).toLocaleDateString("es-ES", {
-                          day: "2-digit",
-                          month: "short",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                      {/* WhatsApp */}
+                      <button
+                        onClick={() => openWhatsAppLead(lead)}
+                        className="p-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all"
+                        title="Hablar por WhatsApp"
+                      >
+                        <MessageCircle className="w-4 h-4 text-green-500" />
+                      </button>
+
+                      {/* Status change dropdown */}
+                      <select
+                        value={lead.status}
+                        onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                        disabled={updatingLead === lead.id}
+                        className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none"
+                      >
+                        <option value="pending">Pendiente</option>
+                        <option value="client">Cliente</option>
+                        <option value="accepted">Vendido</option>
+                        <option value="rejected">Rechazado</option>
+                      </select>
+
+                      {/* Assign partner dropdown */}
+                      <select
+                        value={lead.partner_id || ""}
+                        onChange={(e) => handleAssignPartner(lead.id, e.target.value)}
+                        disabled={assigningLead === lead.id}
+                        className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none max-w-[120px]"
+                      >
+                        <option value="">Sin asignar</option>
+                        {stats.partnersList?.map((partner) => (
+                          <option key={partner.id} value={partner.id}>
+                            {partner.name}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* Price and date */}
+                      <div className="text-right min-w-[60px]">
+                        <p className="text-sm font-bold text-[#FF4D00]">{Number(lead.lead_price || 0).toFixed(0)}€</p>
+                        <p className="text-xs text-zinc-600">
+                          {new Date(lead.created_at).toLocaleDateString("es-ES", {
+                            day: "2-digit",
+                            month: "short",
+                          })}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
+              {stats.recentLeads.length === 0 && (
+                <div className="px-4 py-8 text-center text-zinc-500 text-sm">No hay leads</div>
+              )}
             </div>
           </div>
         )}
 
-        {/* Recent leads */}
-        <div className="border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm">
-          <div className="p-3 sm:p-4 border-b border-zinc-800 flex items-center justify-between">
-            <h3 className="text-xs font-bold tracking-wider text-zinc-400">LEADS RECIENTES</h3>
-            <span className="text-xs text-zinc-600">Últimos 15</span>
-          </div>
-          <div className="divide-y divide-zinc-800/50 max-h-[400px] sm:max-h-[500px] overflow-y-auto">
-            {stats.recentLeads.map((lead: any) => (
-              <div key={lead.id} className="px-3 sm:px-4 py-3 hover:bg-zinc-800/20 transition-colors">
-                <div className="flex items-start sm:items-center gap-3 sm:gap-4">
-                  <span className="text-lg hidden sm:block">{serviceEmojis[lead.service] || "📋"}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium truncate text-sm">{lead.name || "Sin nombre"}</span>
-                      <span className={`text-[10px] sm:text-xs px-2 py-0.5 border ${statusColors[lead.status]}`}>
-                        {lead.status === "accepted" ? "VENDIDO" : lead.status === "pending" ? "PENDIENTE" : "RECHAZADO"}
-                      </span>
+        {/* Partners Tab */}
+        {activeTab === "partners" && (
+          <div className="border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm">
+            <div className="p-4 border-b border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Filter className="w-4 h-4 text-zinc-500" />
+                <button
+                  onClick={() => setProfessionFilter("all")}
+                  className={`px-3 py-1.5 text-xs font-bold border transition-colors ${
+                    professionFilter === "all"
+                      ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                      : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+                  }`}
+                >
+                  TODOS ({stats.partnersList?.length || 0})
+                </button>
+                {allProfessions.map((prof) => {
+                  const count = stats.partnersList?.filter((p) => p.services?.includes(prof)).length || 0
+                  if (count === 0) return null
+                  return (
+                    <button
+                      key={prof}
+                      onClick={() => setProfessionFilter(prof)}
+                      className={`px-3 py-1.5 text-xs font-bold border transition-colors capitalize ${
+                        professionFilter === prof
+                          ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                          : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+                      }`}
+                    >
+                      {serviceEmojis[prof]} {prof} ({count})
+                    </button>
+                  )
+                })}
+              </div>
+              <button
+                onClick={() => setShowPartnerModal(true)}
+                className="flex items-center gap-2 px-3 py-2 bg-[#FF4D00] text-black text-xs font-bold hover:bg-[#FF4D00]/90 transition-colors shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                NUEVO PARTNER
+              </button>
+            </div>
+            <div className="divide-y divide-zinc-800/50">
+              {filteredPartners.map((partner: Partner) => (
+                <div key={partner.id} className="px-4 py-4 hover:bg-zinc-800/20 transition-colors">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium">{partner.name}</span>
+                        <span
+                          className={`text-xs px-2 py-0.5 border ${
+                            partner.active
+                              ? "border-green-500/30 text-green-400 bg-green-500/10"
+                              : "border-red-500/30 text-red-400 bg-red-500/10"
+                          }`}
+                        >
+                          {partner.active ? "ACTIVO" : "INACTIVO"}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-400">
+                        <span className="flex items-center gap-1">
+                          <Phone className="w-3 h-3" />
+                          {partner.phone}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Briefcase className="w-3 h-3" />
+                          {partner.services?.join(", ")}
+                        </span>
+                        {partner.cities?.length > 0 && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            {partner.cities?.join(", ")}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-[10px] sm:text-xs text-zinc-500 truncate mt-1">
-                      {lead.city} - {lead.problem?.slice(0, 40)}...
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                    {lead.status === "pending" && (
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="relative">
+                        <button
+                          onClick={() => setPartnerLeadDropdown(partnerLeadDropdown === partner.id ? null : partner.id)}
+                          className="flex items-center gap-1 px-3 py-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all text-xs text-green-500"
+                          title="Enviar lead por WhatsApp"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          <span className="hidden sm:inline">Enviar Lead</span>
+                          <ChevronDown className="w-3 h-3" />
+                        </button>
+                        {partnerLeadDropdown === partner.id && (
+                          <div className="absolute right-0 bottom-full mb-1 w-72 border border-zinc-700 bg-zinc-900 z-[100] max-h-60 overflow-y-auto shadow-xl">
+                            {pendingLeads.length > 0 ? (
+                              pendingLeads.map((lead) => (
+                                <button
+                                  key={lead.id}
+                                  onClick={() => openWhatsAppPartnerOffer(partner, lead)}
+                                  className="w-full px-3 py-3 text-left hover:bg-zinc-800 border-b border-zinc-800 last:border-0"
+                                >
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <span>{serviceEmojis[lead.service] || "📋"}</span>
+                                    <span className="text-sm font-medium">{lead.service}</span>
+                                    <span className="text-xs text-zinc-500">- {lead.city}</span>
+                                  </div>
+                                  <p className="text-xs text-zinc-400 truncate">{lead.problem?.slice(0, 50)}...</p>
+                                </button>
+                              ))
+                            ) : (
+                              <div className="px-3 py-4 text-center text-zinc-500 text-xs">No hay leads pendientes</div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                       <button
-                        onClick={() => setResendLead(lead)}
-                        className="p-2 border border-[#FF4D00]/30 hover:border-[#FF4D00] hover:bg-[#FF4D00]/10 transition-all group"
-                        title="Reenviar con oferta"
+                        onClick={() => setEditingPartner(partner)}
+                        className="p-2 border border-zinc-700 hover:border-[#FF4D00] hover:bg-[#FF4D00]/10 transition-all"
+                        title="Editar"
                       >
-                        <Send className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF4D00]" />
+                        <Edit2 className="w-4 h-4 text-[#FF4D00]" />
                       </button>
-                    )}
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-[#FF4D00]">{Number(lead.lead_price || 0).toFixed(0)}€</p>
-                      <p className="text-[10px] text-zinc-600">
-                        {new Date(lead.created_at).toLocaleDateString("es-ES", {
-                          day: "2-digit",
-                          month: "short",
-                        })}
-                      </p>
+                      <button
+                        onClick={() => handleDeletePartner(partner.id)}
+                        className="p-2 border border-zinc-700 hover:border-red-500 hover:bg-red-500/10 transition-all"
+                        title="Eliminar"
+                      >
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Funnel stats */}
-        {stats.funnelStats.length > 0 && (
-          <div className="border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6">
-            <h3 className="text-xs font-bold tracking-wider text-zinc-400 mb-4 sm:mb-6">FUNNEL DEL CHAT (7 DÍAS)</h3>
-            <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
-              <table className="w-full text-xs sm:text-sm min-w-[500px]">
-                <thead>
-                  <tr className="text-[10px] sm:text-xs text-zinc-500 border-b border-zinc-800">
-                    <th className="text-left py-2 font-medium">FECHA</th>
-                    <th className="text-right py-2 font-medium">SESIONES</th>
-                    <th className="text-right py-2 font-medium">SERVICIO</th>
-                    <th className="text-right py-2 font-medium">CIUDAD</th>
-                    <th className="text-right py-2 font-medium">TELÉFONO</th>
-                    <th className="text-right py-2 font-medium">OK</th>
-                    <th className="text-right py-2 font-medium">%</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stats.funnelStats.map((day: any) => (
-                    <tr key={day.date} className="border-b border-zinc-800/50 hover:bg-zinc-800/20">
-                      <td className="py-2">
-                        {new Date(day.date).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}
-                      </td>
-                      <td className="text-right py-2">{day.total_sessions}</td>
-                      <td className="text-right py-2">{day.selected_service}</td>
-                      <td className="text-right py-2">{day.provided_city}</td>
-                      <td className="text-right py-2">{day.provided_phone}</td>
-                      <td className="text-right py-2 text-green-500">{day.completed_leads}</td>
-                      <td className="text-right py-2 text-[#FF4D00]">{Number(day.conversion_rate || 0).toFixed(1)}%</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              ))}
+              {filteredPartners.length === 0 && (
+                <div className="px-4 py-8 text-center text-zinc-500 text-sm">
+                  {professionFilter === "all"
+                    ? "No hay partners. Crea uno nuevo."
+                    : `No hay partners de ${professionFilter}.`}
+                </div>
+              )}
             </div>
           </div>
         )}
 
-        <div className="pt-4 sm:pt-8 border-t border-zinc-800/50 flex items-center justify-between text-[10px] sm:text-xs text-zinc-600">
-          <span>RAPIDFIX v1.0.0</span>
-          <span className="hidden sm:inline">Sistema activo desde 2025</span>
-        </div>
+        {/* Pagos Tab */}
+        {activeTab === "pagos" && (
+          <div className="border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm">
+            <div className="p-4 border-b border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <h3 className="text-xs font-bold tracking-wider text-zinc-400">LEADS ASIGNADOS - GENERAR COBRO</h3>
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-zinc-500" />
+                <button
+                  onClick={() => setPaymentFilter("all")}
+                  className={`px-3 py-1.5 text-xs font-bold border transition-colors ${
+                    paymentFilter === "all"
+                      ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                      : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+                  }`}
+                >
+                  TODOS ({assignedLeads.length})
+                </button>
+                <button
+                  onClick={() => setPaymentFilter("pending")}
+                  className={`px-3 py-1.5 text-xs font-bold border transition-colors ${
+                    paymentFilter === "pending"
+                      ? "border-yellow-500 bg-yellow-500/20 text-yellow-500"
+                      : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+                  }`}
+                >
+                  PENDIENTES ({assignedLeads.filter((l) => l.status !== "paid").length})
+                </button>
+                <button
+                  onClick={() => setPaymentFilter("paid")}
+                  className={`px-3 py-1.5 text-xs font-bold border transition-colors ${
+                    paymentFilter === "paid"
+                      ? "border-green-500 bg-green-500/20 text-green-500"
+                      : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+                  }`}
+                >
+                  PAGADOS ({assignedLeads.filter((l) => l.status === "paid").length})
+                </button>
+              </div>
+            </div>
+            <div className="divide-y divide-zinc-800/50 max-h-[600px] overflow-y-auto">
+              {filteredPagosLeads.map((lead: Lead) => {
+                const partner = stats.partnersList?.find((p) => p.id === lead.partner_id)
+                const currentPrice = paymentPrice[lead.id] ?? lead.lead_price ?? 35
+                const hasLink = generatedLinks[lead.id]
+                const isPaid = lead.status === "paid"
+
+                return (
+                  <div
+                    key={lead.id}
+                    className={`px-4 py-4 hover:bg-zinc-800/20 transition-colors ${isPaid ? "opacity-70" : ""}`}
+                  >
+                    <div className="flex flex-col gap-3">
+                      {/* Lead info row */}
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <span className="text-xl">{serviceEmojis[lead.service] || "📋"}</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                              <span className="font-medium text-sm">{lead.service}</span>
+                              <span className="text-xs text-zinc-500">en</span>
+                              <span className="font-medium text-sm">{lead.city}</span>
+                              {isPaid && (
+                                <span className="text-xs px-2 py-0.5 border border-green-500/30 text-green-400 bg-green-500/10">
+                                  PAGADO
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-zinc-400 truncate">{lead.problem?.slice(0, 80)}...</p>
+                          </div>
+                        </div>
+
+                        {/* Partner assigned */}
+                        {partner && (
+                          <div className="flex items-center gap-2 px-3 py-2 border border-blue-500/30 bg-blue-500/10">
+                            <Users className="w-4 h-4 text-blue-400" />
+                            <div>
+                              <p className="text-sm font-medium text-blue-400">{partner.name}</p>
+                              <p className="text-xs text-zinc-500">{partner.phone}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {!isPaid && (
+                        <>
+                          {/* Payment generation row */}
+                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-3 border border-zinc-800 bg-zinc-800/30">
+                            <div className="flex items-center gap-2 flex-1">
+                              <CreditCard className="w-4 h-4 text-[#FF4D00]" />
+                              <span className="text-xs text-zinc-400">Precio del lead:</span>
+                              <div className="flex items-center gap-1">
+                                <input
+                                  type="number"
+                                  value={currentPrice}
+                                  onChange={(e) =>
+                                    setPaymentPrice((prev) => ({ ...prev, [lead.id]: Number(e.target.value) }))
+                                  }
+                                  className="w-20 bg-zinc-900 border border-zinc-700 px-2 py-1 text-sm font-bold text-[#FF4D00] focus:border-[#FF4D00] outline-none text-center"
+                                  min={1}
+                                />
+                                <span className="text-sm font-bold text-[#FF4D00]">€</span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              {/* Quick price buttons */}
+                              {[25, 35, 45, 50].map((price) => (
+                                <button
+                                  key={price}
+                                  onClick={() => setPaymentPrice((prev) => ({ ...prev, [lead.id]: price }))}
+                                  className={`px-2 py-1 text-xs font-bold border transition-colors ${
+                                    currentPrice === price
+                                      ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                                      : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+                                  }`}
+                                >
+                                  {price}€
+                                </button>
+                              ))}
+                            </div>
+
+                            <button
+                              onClick={() => handleGeneratePaymentLink(lead)}
+                              disabled={generatingPayment === lead.id}
+                              className="flex items-center justify-center gap-2 px-4 py-2 bg-[#FF4D00] text-black text-xs font-bold hover:bg-[#FF4D00]/90 transition-colors disabled:opacity-50"
+                            >
+                              {generatingPayment === lead.id ? (
+                                "GENERANDO..."
+                              ) : (
+                                <>
+                                  <Link className="w-4 h-4" />
+                                  GENERAR LINK
+                                </>
+                              )}
+                            </button>
+                          </div>
+
+                          {/* Generated link row */}
+                          {hasLink && (
+                            <div className="flex items-center gap-2 p-3 border border-green-500/30 bg-green-500/10">
+                              <Check className="w-4 h-4 text-green-500 shrink-0" />
+                              <input
+                                type="text"
+                                value={hasLink}
+                                readOnly
+                                className="flex-1 bg-transparent text-xs text-green-400 font-mono truncate outline-none"
+                              />
+                              <button
+                                onClick={() => handleCopyLink(lead.id, hasLink)}
+                                className="flex items-center gap-1 px-3 py-1.5 border border-green-500/50 hover:bg-green-500/20 transition-colors text-xs font-bold text-green-400"
+                              >
+                                {copiedLink === lead.id ? (
+                                  <>
+                                    <Check className="w-3 h-3" />
+                                    COPIADO
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-3 h-3" />
+                                    COPIAR
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {isPaid && (
+                        <div className="flex items-center gap-2 p-3 border border-green-500/30 bg-green-500/10">
+                          <Check className="w-4 h-4 text-green-500" />
+                          <span className="text-sm text-green-400 font-medium">Pago completado</span>
+                          <span className="text-xs text-zinc-500 ml-auto">{lead.lead_price}€</span>
+                          <button
+                            onClick={() => handleUpdateLeadStatus(lead.id, "assigned")}
+                            disabled={updatingLead === lead.id}
+                            className="ml-2 px-3 py-1.5 text-xs font-bold border border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/20 transition-colors"
+                          >
+                            {updatingLead === lead.id ? "..." : "MARCAR NO PAGADO"}
+                          </button>
+                        </div>
+                      )}
+
+                      {!isPaid && (
+                        <div className="flex items-center justify-end">
+                          <button
+                            onClick={() => handleUpdateLeadStatus(lead.id, "paid")}
+                            disabled={updatingLead === lead.id}
+                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold border border-green-500/50 text-green-400 hover:bg-green-500/20 transition-colors"
+                          >
+                            <Check className="w-3 h-3" />
+                            {updatingLead === lead.id ? "..." : "MARCAR PAGADO MANUAL"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+              {filteredPagosLeads.length === 0 && (
+                <div className="px-4 py-8 text-center text-zinc-500 text-sm">
+                  {paymentFilter === "all"
+                    ? 'No hay leads asignados a partners. Asigna un partner a un lead en la pestaña "Leads".'
+                    : paymentFilter === "paid"
+                      ? "No hay leads pagados."
+                      : "No hay leads pendientes de pago."}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )

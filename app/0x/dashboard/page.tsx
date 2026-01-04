@@ -92,7 +92,7 @@ async function getStats(dateRange?: string) {
       [{ count: 0, revenue: 0 }],
     ),
     safeQuery(
-      sqlClient`SELECT id, name, phone, service, city, problem, status, lead_price, created_at FROM leads ${dateFilterWithWhere ? sqlClient.unsafe(dateFilterWithWhere) : sqlClient``} ORDER BY created_at DESC LIMIT 15`,
+      sqlClient`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, created_at FROM leads ${dateFilterWithWhere ? sqlClient.unsafe(dateFilterWithWhere) : sqlClient``} ORDER BY created_at DESC LIMIT 50`,
       [],
     ),
     safeQuery(
@@ -158,7 +158,7 @@ async function getStats(dateRange?: string) {
       GROUP BY session_id
       HAVING MAX(phone) IS NULL 
          AND MAX(step) != 'complete' 
-         AND (MAX(completed) IS NULL OR MAX(completed) = false)
+         AND (BOOL_OR(completed) IS NULL OR BOOL_OR(completed) = false)
       ORDER BY last_activity DESC
       LIMIT 20
     `,

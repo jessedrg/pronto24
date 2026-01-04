@@ -233,6 +233,30 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
     setHasTrackedConversion(true)
   }
 
+  const isLeadComplete = messages.some(
+    (m) => m.role === "user" && /(\+34|0034)?[\s.-]?[6-9]\d{2}[\s.-]?\d{3}[\s.-]?\d{3}/.test(m.content),
+  )
+
+  const getServiceFromMessages = () => {
+    const serviceMessage = messages.find(
+      (m) =>
+        m.role === "user" &&
+        (m.content.toLowerCase().includes("fontanero") ||
+          m.content.toLowerCase().includes("electricista") ||
+          m.content.toLowerCase().includes("cerrajero") ||
+          m.content.toLowerCase().includes("desatasco") ||
+          m.content.toLowerCase().includes("caldera")),
+    )
+    if (serviceMessage) {
+      if (serviceMessage.content.toLowerCase().includes("fontanero")) return "fontanero"
+      if (serviceMessage.content.toLowerCase().includes("electricista")) return "electricista"
+      if (serviceMessage.content.toLowerCase().includes("cerrajero")) return "cerrajero"
+      if (serviceMessage.content.toLowerCase().includes("desatasco")) return "desatasco"
+      if (serviceMessage.content.toLowerCase().includes("caldera")) return "calderas"
+    }
+    return service || "urgente"
+  }
+
   return (
     <>
       {!isOpen && (

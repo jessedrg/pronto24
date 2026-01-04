@@ -1,8 +1,9 @@
 export const runtime = "nodejs"
 
 import { neon } from "@neondatabase/serverless"
-import { getBotToken, getBotChatId, normalizeService } from "@/lib/telegram-bots"
+import { normalizeService } from "@/lib/telegram-bots"
 import { calculateLeadPrice } from "@/lib/lead-pricing"
+import { sendLeadEmail } from "@/lib/email-templates"
 
 const databaseUrl = process.env.NEON_DATABASE_URL || process.env.NEON_POSTGRES_URL || process.env.DATABASE_URL
 
@@ -104,6 +105,21 @@ function detectCity(text: string): string | null {
   return null
 }
 
+function extractRequestedDate(text: string): string | null {
+  if (!text) return null
+  const lower = text.toLowerCase()
+
+  const dateKeywords = ["ahora", "hoy", "mañana", "esta semana"]
+
+  for (const keyword of dateKeywords) {
+    if (lower.includes(keyword)) {
+      return keyword
+    }
+  }
+
+  return null
+}
+
 async function savePartialLead(lead: any, sessionId: string) {
   if (!databaseUrl) return
 
@@ -125,13 +141,14 @@ async function savePartialLead(lead: any, sessionId: string) {
 
     // Guardar como backup con status 'partial'
     await sql`
-      INSERT INTO leads (service, problem, phone, city, name, status, created_at)
+      INSERT INTO leads (service, problem, phone, city, name, requested_date, status, created_at)
       VALUES (
         ${lead.service || "pendiente"},
         ${lead.problem || "Por determinar"},
         ${lead.phone},
         ${lead.city || "Barcelona"},
         ${lead.name || "Cliente"},
+        ${lead.requestedDate || null},
         'partial',
         NOW()
       )
@@ -151,6 +168,7 @@ async function trackChatInteraction(data: {
   service?: string
   city?: string
   phone?: string
+  requestedDate?: string
   completed?: boolean
   leadId?: string
   ip?: string
@@ -166,7 +184,7 @@ async function trackChatInteraction(data: {
     const sql = neon(databaseUrl)
     await sql`
       INSERT INTO chat_interactions (
-        session_id, message, message_type, step, service, city, phone, 
+        session_id, message, message_type, step, service, city, phone, requested_date, 
         completed, lead_id, ip_address, user_agent, referrer,
         utm_source, utm_medium, utm_campaign
       ) VALUES (
@@ -177,6 +195,7 @@ async function trackChatInteraction(data: {
         ${data.service || null},
         ${data.city || null},
         ${data.phone || null},
+        ${data.requestedDate || null},
         ${data.completed || false},
         ${data.leadId ? data.leadId : null},
         ${data.ip || null},
@@ -265,6 +284,7 @@ async function saveLead(lead: any) {
           service = ${normalizeService(lead.service)},
           problem = ${lead.problem},
           city = ${lead.city},
+          requested_date = ${lead.requestedDate},
           name = ${lead.name || "Cliente"},
           lead_price = ${pricing.leadPrice},
           estimated_job_min = ${pricing.estimatedJobValue.min},
@@ -301,6 +321,7 @@ async function saveLead(lead: any) {
         problem, 
         phone, 
         city, 
+        requested_date, 
         name, 
         credit_cost,
         lead_price,
@@ -316,6 +337,7 @@ async function saveLead(lead: any) {
         ${lead.problem},
         ${lead.phone},
         ${lead.city},
+        ${lead.requestedDate},
         ${lead.name || "Cliente"},
         1,
         ${pricing.leadPrice},
@@ -372,92 +394,61 @@ async function updateLeadTelegramInfo(leadId: string, messageId: string, groupId
   }
 }
 
-async function sendLeadToTelegram(
+async function sendLeadToEmail(
   lead: any,
   retryCount = 0,
 ): Promise<{ success: boolean; message?: string; isDuplicate?: boolean }> {
   const MAX_RETRIES = 3
 
   const normalizedService = normalizeService(lead.service)
-  const TELEGRAM_BOT_TOKEN = getBotToken(lead.service)
-  const TELEGRAM_GROUP_CHAT_ID = getBotChatId(lead.service)
-
-  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_GROUP_CHAT_ID) {
-    console.error("[v0] Missing Telegram config for service:", lead.service)
-    return { success: false, message: "Telegram not configured" }
-  }
 
   const { id: leadId, pricing, isDuplicate } = await saveLead(lead)
 
   if (isDuplicate) {
-    console.log("[v0] Skipping Telegram send - duplicate lead:", leadId)
+    console.log("[v0] Skipping email send - duplicate lead:", leadId)
     return { success: true, isDuplicate: true }
   }
 
-  const urgencyEmoji = pricing.urgency === "emergencia" ? "🚨" : pricing.urgency === "urgente" ? "⚡" : "🔔"
-  const urgencyText =
-    pricing.urgency === "emergencia" ? " [EMERGENCIA]" : pricing.urgency === "urgente" ? " [URGENTE]" : ""
-
-  const baseUrl = "https://rapidfix.es"
-  const buyUrl = `${baseUrl}/api/stripe/buy-lead?lead_id=${leadId}&price=${pricing.leadPrice}&service=${encodeURIComponent(normalizedService)}`
-
-  const message = `
-${urgencyEmoji} NUEVO LEAD${urgencyText} - rapidfix.es
-
-📋 Servicio: ${normalizedService.charAt(0).toUpperCase() + normalizedService.slice(1)}
-📝 Problema: ${lead.problem || "No especificado"}
-📞 Teléfono: •••••••••• (visible al comprar)
-📍 Ciudad: ${lead.city || "Barcelona"}
-👤 Cliente: ${lead.name || "Cliente"}
-
-━━━━━━━━━━━━━━━━━━━━
-💰 Precio lead: ${pricing.leadPrice}€
-📊 Trabajo estimado: ${pricing.estimatedJobValue.min}-${pricing.estimatedJobValue.max}€
-━━━━━━━━━━━━━━━━━━━━
-
-⏰ ${new Date().toLocaleString("es-ES")}
-  `.trim()
-
   try {
-    const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_GROUP_CHAT_ID,
-        text: message,
-        reply_markup: {
-          inline_keyboard: [[{ text: `💳 COMPRAR (${pricing.leadPrice}€)`, url: buyUrl }]],
-        },
-      }),
+    const result = await sendLeadEmail({
+      service: normalizedService,
+      problem: lead.problem || "No especificado",
+      phone: lead.phone,
+      city: lead.city || "Barcelona",
+      requestedDate: lead.requestedDate || "Ahora",
+      name: lead.name || "Cliente",
+      pricing: {
+        leadPrice: pricing.leadPrice,
+        estimatedJobValue: pricing.estimatedJobValue,
+        urgency: pricing.urgency,
+      },
+      leadId: String(leadId),
     })
 
-    const result = await response.json()
-
-    if (result.ok) {
-      await updateLeadTelegramInfo(String(leadId), result.result.message_id, TELEGRAM_GROUP_CHAT_ID)
-      console.log("[v0] Lead sent to Telegram successfully")
+    if (result.success) {
+      console.log("[v0] Lead sent via email successfully")
       return { success: true }
     } else {
-      console.error("[v0] Telegram API error:", result)
+      console.error("[v0] Email send error:", result.error)
 
       if (retryCount < MAX_RETRIES) {
-        console.log(`[v0] Retrying Telegram send (${retryCount + 1}/${MAX_RETRIES})...`)
+        console.log(`[v0] Retrying email send (${retryCount + 1}/${MAX_RETRIES})...`)
         await new Promise((resolve) => setTimeout(resolve, 1000 * (retryCount + 1)))
-        return sendLeadToTelegram(lead, retryCount + 1)
+        return sendLeadToEmail(lead, retryCount + 1)
       }
 
-      return { success: false, message: result.description }
+      return { success: false, message: "Failed to send email" }
     }
   } catch (error) {
-    console.error("[v0] Error sending to Telegram:", error)
+    console.error("[v0] Error sending email:", error)
 
     if (retryCount < MAX_RETRIES) {
       console.log(`[v0] Retrying after error (${retryCount + 1}/${MAX_RETRIES})...`)
       await new Promise((resolve) => setTimeout(resolve, 1000 * (retryCount + 1)))
-      return sendLeadToTelegram(lead, retryCount + 1)
+      return sendLeadToEmail(lead, retryCount + 1)
     }
 
-    return { success: false, message: "Failed to send to Telegram" }
+    return { success: false, message: "Failed to send email" }
   }
 }
 
@@ -504,12 +495,14 @@ export async function POST(req: Request) {
         name: null,
         outOfArea: false,
         locationValidated: false,
+        requestedDate: null,
       }
 
     if (userMessage) {
       const extractedPhone = extractPhone(userMessage)
       const extractedService = detectService(userMessage)
       const extractedCity = detectCity(userMessage)
+      const extractedRequestedDate = extractRequestedDate(userMessage)
 
       if (extractedPhone && !currentLead.phone) {
         currentLead.phone = extractedPhone
@@ -522,6 +515,10 @@ export async function POST(req: Request) {
       if (extractedCity && !currentLead.city) {
         currentLead.city = extractedCity
         console.log("[v0] Extracted city from message:", extractedCity)
+      }
+      if (extractedRequestedDate && !currentLead.requestedDate) {
+        currentLead.requestedDate = extractedRequestedDate
+        console.log("[v0] Extracted requested date from message:", extractedRequestedDate)
       }
 
       // Si el mensaje parece ser una descripción del problema
@@ -548,12 +545,15 @@ export async function POST(req: Request) {
             ? "problem"
             : !currentLead.city
               ? "city"
-              : !currentLead.phone
-                ? "phone"
-                : "complete",
+              : !currentLead.requestedDate
+                ? "requestedDate"
+                : !currentLead.phone
+                  ? "phone"
+                  : "complete",
         service: currentLead.service || service,
         city: currentLead.city,
         phone: currentLead.phone,
+        requestedDate: currentLead.requestedDate,
         ip,
         userAgent,
         referrer,
@@ -576,11 +576,12 @@ SERVICIOS: fontanero, electricista, cerrajero, desatascos, calderas
 FLUJO DE CONVERSACIÓN (seguir este orden estricto):
 1. PRIMERO pregunta: "¿Cuál es el problema que tienes?" (describe la urgencia)
 2. SEGUNDO pregunta: "¿En qué zona/ciudad estás?" 
-3. TERCERO pregunta: "¿Tu número de teléfono para que te llame el profesional?"
+3. TERCERO pregunta: "¿Para cuándo necesitas el servicio?" (ahora, hoy, mañana, esta semana)
+4. CUARTO pregunta: "¿Tu número de teléfono para que te llamemos o te escribamos por WhatsApp?"
 
 NO PIDAS EL NOMBRE - no es necesario.
 
-Cuando tengas servicio + problema + ciudad + teléfono, el lead está COMPLETO.
+Cuando tengas servicio + problema + ciudad + cuando lo necesita + teléfono, el lead está COMPLETO.
 
 TIEMPO DE RESPUESTA:
 - Un profesional verificado te llamará o escribirá por WhatsApp en 30 minutos a 1 hora máximo
@@ -614,7 +615,7 @@ IMPORTANTE:
 - Transmite confianza: profesionales verificados, respuesta rápida en 30min-1h, sin compromiso hasta acordar precio
 - SIEMPRE empieza preguntando por el problema si no lo sabemos aún
 
-SIEMPRE incluye al final: LEAD_DATA: {"service": "...", "problem": "...", "phone": "...", "city": "..."}
+SIEMPRE incluye al final: LEAD_DATA: {"service": "...", "problem": "...", "phone": "...", "city": "...", "requestedDate": "..."}
 
 ESTADO ACTUAL: ${JSON.stringify(currentLead)}`
 
@@ -642,7 +643,8 @@ ESTADO ACTUAL: ${JSON.stringify(currentLead)}`
         if (currentLead.phone && currentLead.service) {
           currentLead.problem = currentLead.problem || "Urgencia - contactar cliente"
           currentLead.city = currentLead.city || "Barcelona"
-          await sendLeadToTelegram(currentLead)
+          currentLead.requestedDate = currentLead.requestedDate || "Ahora"
+          await sendLeadToEmail(currentLead)
         }
 
         return Response.json({
@@ -664,6 +666,7 @@ ESTADO ACTUAL: ${JSON.stringify(currentLead)}`
           if (extractedData.problem) currentLead.problem = extractedData.problem
           if (extractedData.phone) currentLead.phone = extractedData.phone
           if (extractedData.city) currentLead.city = extractedData.city
+          if (extractedData.requestedDate) currentLead.requestedDate = extractedData.requestedDate
 
           leadData.set(conversationId, currentLead)
 
@@ -678,16 +681,17 @@ ESTADO ACTUAL: ${JSON.stringify(currentLead)}`
 
       const cleanResponse = responseText.replace(/LEAD_DATA:\s*\{[\s\S]*?\}/i, "").trim()
 
-      const isLeadComplete = currentLead.service && currentLead.problem && currentLead.phone && currentLead.city
+      const isLeadComplete =
+        currentLead.service && currentLead.problem && currentLead.phone && currentLead.city && currentLead.requestedDate
 
       if (isLeadComplete) {
-        console.log("[v0] LEAD COMPLETE - sending to Telegram:", currentLead)
+        console.log("[v0] LEAD COMPLETE - sending via email:", currentLead)
 
         currentLead.name = "Cliente" // Nombre por defecto
 
-        const telegramResult = await sendLeadToTelegram(currentLead)
+        const emailResult = await sendLeadToEmail(currentLead)
 
-        if (telegramResult.success) {
+        if (emailResult.success) {
           console.log("[v0] Lead sent successfully!")
           leadData.delete(conversationId)
           backupLeads.delete(conversationId)
@@ -711,7 +715,8 @@ ESTADO ACTUAL: ${JSON.stringify(currentLead)}`
       if (currentLead.phone && currentLead.service) {
         currentLead.problem = currentLead.problem || "Urgencia"
         currentLead.city = currentLead.city || "Barcelona"
-        await sendLeadToTelegram(currentLead)
+        currentLead.requestedDate = currentLead.requestedDate || "Ahora"
+        await sendLeadToEmail(currentLead)
 
         return Response.json({
           message: "¡Recibido! Un profesional te contactará muy pronto. 📞",
@@ -720,7 +725,7 @@ ESTADO ACTUAL: ${JSON.stringify(currentLead)}`
       }
 
       return Response.json({
-        message: "Por favor, llámanos al 900 123 456 para ayudarte. 📞",
+        message: "Por favor, llámanos al 900 123 456 para ayudarte. 🙏",
         error: "openai_error",
       })
     }
