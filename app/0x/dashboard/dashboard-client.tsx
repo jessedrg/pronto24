@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import {
   Users,
@@ -74,6 +74,11 @@ interface Stats {
   conversionRate: string
   incompleteChats: any[]
   dateRange: string
+}
+
+// Define the props interface for the component
+interface DashboardClientProps {
+  initialStats: Stats
 }
 
 function ResendModal({
@@ -330,12 +335,40 @@ function PartnerModal({
   )
 }
 
-export function DashboardClient({ stats }: { stats: Stats }) {
+export function DashboardClient({ initialStats }: DashboardClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [stats, setStats] = useState<Stats>(
+    initialStats || {
+      total: 0,
+      sold: 0,
+      revenue: 0,
+      todayLeads: 0,
+      todaySold: 0,
+      todayRevenue: 0,
+      todayPending: 0,
+      todayPotential: 0,
+      weekLeads: 0,
+      weekSold: 0,
+      weekRevenue: 0,
+      weekPending: 0,
+      weekPotential: 0,
+      recentLeads: [],
+      byService: [],
+      funnelStats: [],
+      partners: 0,
+      partnersList: [],
+      ownerTelegramId: "",
+      conversionRate: "0",
+      incompleteChats: [],
+      dateRange: "all",
+    },
+  )
   const [currentTime, setCurrentTime] = useState(new Date())
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null)
   const [dateFilterOpen, setDateFilterOpen] = useState(false)
+  const dateButtonRef = useRef<HTMLButtonElement>(null)
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 })
   const [updatingLead, setUpdatingLead] = useState<string | null>(null)
   const [showPartnerModal, setShowPartnerModal] = useState(false)
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
@@ -348,11 +381,44 @@ export function DashboardClient({ stats }: { stats: Stats }) {
   const [generatedLinks, setGeneratedLinks] = useState<Record<string, string>>({})
   const [paymentFilter, setPaymentFilter] = useState<"all" | "pending" | "paid">("all")
   const [professionFilter, setProfessionFilter] = useState<string>("all")
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const dateFilterRef = useRef<HTMLDivElement>(null)
+  const [copiedLeadId, setCopiedLeadId] = useState<string | null>(null)
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000)
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setPartnerLeadDropdown(null)
+      }
+      // Close date filter dropdown if clicking outside of it
+      if (dateFilterRef.current && !dateFilterRef.current.contains(event.target as Node)) {
+        setDateFilterOpen(false)
+      }
+    }
+
+    if (partnerLeadDropdown || dateFilterOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [partnerLeadDropdown, dateFilterOpen])
+
+  useEffect(() => {
+    if (dateFilterOpen && dateButtonRef.current) {
+      const rect = dateButtonRef.current.getBoundingClientRect()
+      setDropdownPosition({
+        top: rect.bottom + 4,
+        right: window.innerWidth - rect.right,
+      })
+    }
+  }, [dateFilterOpen])
 
   const handleDateFilter = (range: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -427,6 +493,13 @@ export function DashboardClient({ stats }: { stats: Stats }) {
 
       if (result.success) {
         setNotification({ type: "success", message: `Lead actualizado a ${statusLabels[newStatus]}` })
+        // Optimistically update local state for immediate feedback, then refresh for actual data
+        setStats((prevStats) => ({
+          ...prevStats,
+          recentLeads: prevStats.recentLeads.map((lead) =>
+            lead.id === leadId ? { ...lead, status: newStatus } : lead,
+          ),
+        }))
         setTimeout(() => router.refresh(), 1000)
       } else {
         setNotification({ type: "error", message: result.error || "Error al actualizar" })
@@ -451,6 +524,13 @@ export function DashboardClient({ stats }: { stats: Stats }) {
 
       if (result.success) {
         setNotification({ type: "success", message: "Partner asignado correctamente" })
+        // Optimistically update local state
+        setStats((prevStats) => ({
+          ...prevStats,
+          recentLeads: prevStats.recentLeads.map((lead) =>
+            lead.id === leadId ? { ...lead, partner_id: partnerId } : lead,
+          ),
+        }))
         setTimeout(() => router.refresh(), 1000)
       } else {
         setNotification({ type: "error", message: result.error || "Error al asignar" })
@@ -525,6 +605,26 @@ export function DashboardClient({ stats }: { stats: Stats }) {
     )
     window.open(`https://wa.me/${phoneWithCountry}?text=${message}`, "_blank")
     setPartnerLeadDropdown(null)
+  }
+
+  const copyLeadForGroup = (lead: Lead) => {
+    const whenText = lead.requested_date ? `📅 *Cuándo:* ${lead.requested_date}` : "📅 *Cuándo:* Lo antes posible"
+    const message = `🚨 *NUEVO TRABAJO DISPONIBLE* 🚨
+
+${serviceEmojis[lead.service] || "📋"} *Servicio:* ${lead.service?.toUpperCase()}
+📍 *Zona:* ${lead.city}
+${whenText}
+
+📝 *Problema:*
+${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
+
+━━━━━━━━━━━━━━━━━━
+✅ *Reacciona a este mensaje si estás disponible*
+━━━━━━━━━━━━━━━━━━`
+
+    navigator.clipboard.writeText(message)
+    setCopiedLeadId(lead.id)
+    setTimeout(() => setCopiedLeadId(null), 2000)
   }
 
   const pendingLeads = stats.recentLeads.filter((lead) => lead.status === "pending")
@@ -630,29 +730,16 @@ export function DashboardClient({ stats }: { stats: Stats }) {
 
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Date filter */}
-            <div className="relative">
+            <div className="relative z-50" ref={dateFilterRef}>
               <button
+                ref={dateButtonRef}
                 onClick={() => setDateFilterOpen(!dateFilterOpen)}
                 className="flex items-center gap-2 px-3 py-1.5 border border-zinc-700 bg-zinc-900 hover:border-zinc-600 transition-colors text-xs"
               >
-                <span>{dateRangeLabels[stats.dateRange] || "Todo"}</span>
-                <ChevronDown className="w-3 h-3" />
+                <Filter className="w-3 h-3" />
+                <span className="hidden sm:inline">{dateRangeLabels[stats.dateRange] || "Todo"}</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${dateFilterOpen ? "rotate-180" : ""}`} />
               </button>
-              {dateFilterOpen && (
-                <div className="absolute right-0 bottom-full mb-1 w-40 border border-zinc-700 bg-zinc-900 z-[100] shadow-xl">
-                  {Object.entries(dateRangeLabels).map(([key, label]) => (
-                    <button
-                      key={key}
-                      onClick={() => handleDateFilter(key)}
-                      className={`w-full px-3 py-2 text-left text-xs hover:bg-zinc-800 ${
-                        stats.dateRange === key ? "text-[#FF4D00]" : ""
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
 
             <div className="text-right hidden sm:block">
@@ -672,7 +759,26 @@ export function DashboardClient({ stats }: { stats: Stats }) {
         </div>
       </header>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-6">
+      {dateFilterOpen && (
+        <div
+          className="fixed w-40 border border-zinc-700 bg-zinc-900 z-[9999] shadow-2xl"
+          style={{ top: dropdownPosition.top, right: dropdownPosition.right }}
+        >
+          {Object.entries(dateRangeLabels).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => handleDateFilter(key)}
+              className={`w-full px-3 py-2 text-left text-xs hover:bg-zinc-800 ${
+                stats.dateRange === key ? "text-[#FF4D00]" : "text-zinc-300"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-6">
         {/* KPIs */}
         <div className="grid grid-cols-3 gap-3 sm:gap-4">
           <KPICard
@@ -750,6 +856,23 @@ export function DashboardClient({ stats }: { stats: Stats }) {
 
                     {/* Actions */}
                     <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                      {/* Copy lead button for WhatsApp group */}
+                      <button
+                        onClick={() => copyLeadForGroup(lead)}
+                        className={`p-2 border transition-all ${
+                          copiedLeadId === lead.id
+                            ? "border-green-500 bg-green-500/20"
+                            : "border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800"
+                        }`}
+                        title="Copiar para grupo WhatsApp"
+                      >
+                        {copiedLeadId === lead.id ? (
+                          <Check className="w-4 h-4 text-green-500" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-zinc-400" />
+                        )}
+                      </button>
+
                       {/* WhatsApp */}
                       <button
                         onClick={() => openWhatsAppLead(lead)}
@@ -789,7 +912,9 @@ export function DashboardClient({ stats }: { stats: Stats }) {
 
                       {/* Price and date */}
                       <div className="text-right min-w-[60px]">
-                        <p className="text-sm font-bold text-[#FF4D00]">{Number(lead.lead_price || 0).toFixed(0)}€</p>
+                        {(lead.status === "accepted" || lead.status === "paid") && (
+                          <p className="text-sm font-bold text-[#FF4D00]">{Number(lead.lead_price || 0).toFixed(0)}€</p>
+                        )}
                         <p className="text-xs text-zinc-600">
                           {new Date(lead.created_at).toLocaleDateString("es-ES", {
                             day: "2-digit",
@@ -885,7 +1010,7 @@ export function DashboardClient({ stats }: { stats: Stats }) {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <div className="relative">
+                      <div className="relative" ref={partnerLeadDropdown === partner.id ? dropdownRef : null}>
                         <button
                           onClick={() => setPartnerLeadDropdown(partnerLeadDropdown === partner.id ? null : partner.id)}
                           className="flex items-center gap-1 px-3 py-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all text-xs text-green-500"
@@ -896,7 +1021,7 @@ export function DashboardClient({ stats }: { stats: Stats }) {
                           <ChevronDown className="w-3 h-3" />
                         </button>
                         {partnerLeadDropdown === partner.id && (
-                          <div className="absolute right-0 bottom-full mb-1 w-72 border border-zinc-700 bg-zinc-900 z-[100] max-h-60 overflow-y-auto shadow-xl">
+                          <div className="absolute right-0 top-full mt-1 w-72 border border-zinc-700 bg-zinc-900 z-[100] max-h-60 overflow-y-auto shadow-xl rounded-md">
                             {pendingLeads.length > 0 ? (
                               pendingLeads.map((lead) => (
                                 <button

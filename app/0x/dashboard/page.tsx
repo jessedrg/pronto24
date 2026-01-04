@@ -210,5 +210,5 @@ export default async function DashboardPage({
   const params = await searchParams
   const stats = await getStats(params.range)
 
-  return <DashboardClient stats={stats} />
+  return <DashboardClient initialStats={stats} />
 }
