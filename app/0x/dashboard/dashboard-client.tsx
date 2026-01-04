@@ -25,6 +25,7 @@ import {
   Check,
   Link,
   Filter,
+  RotateCcw,
 } from "lucide-react"
 
 interface Partner {
@@ -384,6 +385,7 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const dateFilterRef = useRef<HTMLDivElement>(null)
   const [copiedLeadId, setCopiedLeadId] = useState<string | null>(null)
+  const [showTrashed, setShowTrashed] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -459,6 +461,7 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
     accepted: "text-green-500 border-green-500/30 bg-green-500/10",
     rejected: "text-red-500 border-red-500/30 bg-red-500/10",
     client: "text-blue-500 border-blue-500/30 bg-blue-500/10",
+    trashed: "text-zinc-500 border-zinc-700/30 bg-zinc-700/10", // Added for trashed status
   }
 
   const statusLabels: Record<string, string> = {
@@ -468,6 +471,7 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
     accepted: "VENDIDO",
     rejected: "RECHAZADO",
     client: "CLIENTE",
+    trashed: "PAP. ELIMINADOS", // Added for trashed status
   }
 
   const openWhatsAppLead = (lead: Lead) => {
@@ -627,6 +631,13 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
     setTimeout(() => setCopiedLeadId(null), 2000)
   }
 
+  const visibleLeads = stats.recentLeads.filter((lead) =>
+    showTrashed ? lead.status === "trashed" : lead.status !== "trashed",
+  )
+
+  const trashedCount = stats.recentLeads.filter((lead) => lead.status === "trashed").length
+  const activeCount = stats.recentLeads.filter((lead) => lead.status !== "trashed").length
+
   const pendingLeads = stats.recentLeads.filter((lead) => lead.status === "pending")
   const assignedLeads = stats.recentLeads.filter((lead) => lead.partner_id)
 
@@ -686,6 +697,39 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
       setCopiedLink(null)
       setNotification(null)
     }, 2000)
+  }
+
+  const handleTrashLead = async (leadId: string, restore = false) => {
+    setUpdatingLead(leadId)
+    try {
+      const response = await fetch("/api/0x/leads", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ leadId, status: restore ? "pending" : "trashed" }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setNotification({
+          type: "success",
+          message: restore ? "Lead restaurado" : "Lead movido a trash",
+        })
+        setStats((prevStats) => ({
+          ...prevStats,
+          recentLeads: prevStats.recentLeads.map((lead) =>
+            lead.id === leadId ? { ...lead, status: restore ? "pending" : "trashed" } : lead,
+          ),
+        }))
+        setTimeout(() => router.refresh(), 1000)
+      } else {
+        setNotification({ type: "error", message: result.error || "Error" })
+      }
+    } catch (error) {
+      setNotification({ type: "error", message: "Error de conexión" })
+    }
+    setUpdatingLead(null)
+    setTimeout(() => setNotification(null), 3000)
   }
 
   return (
@@ -794,12 +838,15 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
         {/* Tabs */}
         <div className="flex gap-2 border-b border-zinc-800 pb-2">
           <button
-            onClick={() => setActiveTab("leads")}
+            onClick={() => {
+              setActiveTab("leads")
+              setShowTrashed(false) // Reset trash toggle when switching to leads tab
+            }}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === "leads" ? "text-[#FF4D00] border-b-2 border-[#FF4D00]" : "text-zinc-500 hover:text-zinc-300"
             }`}
           >
-            Leads ({stats.recentLeads.length})
+            Leads ({activeCount} / {trashedCount} eliminados)
           </button>
           <button
             onClick={() => setActiveTab("partners")}
@@ -825,11 +872,27 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
         {activeTab === "leads" && (
           <div className="border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm">
             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="text-xs font-bold tracking-wider text-zinc-400">TODOS LOS LEADS</h3>
+              <h3 className="text-xs font-bold tracking-wider text-zinc-400">
+                {showTrashed ? "LEADS EN TRASH" : "TODOS LOS LEADS"}
+              </h3>
+              <button
+                onClick={() => setShowTrashed(!showTrashed)}
+                className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold border transition-colors ${
+                  showTrashed
+                    ? "border-red-500 bg-red-500/20 text-red-500"
+                    : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+                }`}
+              >
+                <Trash2 className="w-3 h-3" />
+                {showTrashed ? `VOLVER (${activeCount})` : `TRASH (${trashedCount})`}
+              </button>
             </div>
             <div className="divide-y divide-zinc-800/50 max-h-[600px] overflow-y-auto">
-              {stats.recentLeads.map((lead: Lead) => (
-                <div key={lead.id} className="px-4 py-4 hover:bg-zinc-800/20 transition-colors">
+              {visibleLeads.map((lead: Lead) => (
+                <div
+                  key={lead.id}
+                  className={`px-4 py-4 hover:bg-zinc-800/20 transition-colors ${showTrashed ? "opacity-60" : ""}`}
+                >
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     {/* Lead info */}
                     <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -837,8 +900,10 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-1">
                           <span className="font-medium text-sm">{lead.name || "Sin nombre"}</span>
-                          <span className={`text-xs px-2 py-0.5 border ${statusColors[lead.status]}`}>
-                            {statusLabels[lead.status]}
+                          <span
+                            className={`text-xs px-2 py-0.5 border ${statusColors[lead.status] || statusColors.pending}`}
+                          >
+                            {statusLabels[lead.status] || "TRASH"}
                           </span>
                           {getPartnerName(lead.partner_id) && (
                             <span className="text-xs px-2 py-0.5 border border-blue-500/30 text-blue-400 bg-blue-500/10">
@@ -856,59 +921,81 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
 
                     {/* Actions */}
                     <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                      {/* Copy lead button for WhatsApp group */}
-                      <button
-                        onClick={() => copyLeadForGroup(lead)}
-                        className={`p-2 border transition-all ${
-                          copiedLeadId === lead.id
-                            ? "border-green-500 bg-green-500/20"
-                            : "border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800"
-                        }`}
-                        title="Copiar para grupo WhatsApp"
-                      >
-                        {copiedLeadId === lead.id ? (
-                          <Check className="w-4 h-4 text-green-500" />
-                        ) : (
-                          <Copy className="w-4 h-4 text-zinc-400" />
-                        )}
-                      </button>
+                      {showTrashed ? (
+                        <button
+                          onClick={() => handleTrashLead(lead.id, true)}
+                          disabled={updatingLead === lead.id}
+                          className="p-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all"
+                          title="Restaurar lead"
+                        >
+                          <RotateCcw className="w-4 h-4 text-green-500" />
+                        </button>
+                      ) : (
+                        <>
+                          {/* Copy lead button for WhatsApp group */}
+                          <button
+                            onClick={() => copyLeadForGroup(lead)}
+                            className={`p-2 border transition-all ${
+                              copiedLeadId === lead.id
+                                ? "border-green-500 bg-green-500/20"
+                                : "border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800"
+                            }`}
+                            title="Copiar para grupo WhatsApp"
+                          >
+                            {copiedLeadId === lead.id ? (
+                              <Check className="w-4 h-4 text-green-500" />
+                            ) : (
+                              <Copy className="w-4 h-4 text-zinc-400" />
+                            )}
+                          </button>
 
-                      {/* WhatsApp */}
-                      <button
-                        onClick={() => openWhatsAppLead(lead)}
-                        className="p-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all"
-                        title="Hablar por WhatsApp"
-                      >
-                        <MessageCircle className="w-4 h-4 text-green-500" />
-                      </button>
+                          {/* WhatsApp */}
+                          <button
+                            onClick={() => openWhatsAppLead(lead)}
+                            className="p-2 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all"
+                            title="Hablar por WhatsApp"
+                          >
+                            <MessageCircle className="w-4 h-4 text-green-500" />
+                          </button>
 
-                      {/* Status change dropdown */}
-                      <select
-                        value={lead.status}
-                        onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
-                        disabled={updatingLead === lead.id}
-                        className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none"
-                      >
-                        <option value="pending">Pendiente</option>
-                        <option value="client">Cliente</option>
-                        <option value="accepted">Vendido</option>
-                        <option value="rejected">Rechazado</option>
-                      </select>
+                          {/* Status change dropdown */}
+                          <select
+                            value={lead.status}
+                            onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                            disabled={updatingLead === lead.id}
+                            className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none"
+                          >
+                            <option value="pending">Pendiente</option>
+                            <option value="client">Cliente</option>
+                            <option value="accepted">Vendido</option>
+                            <option value="rejected">Rechazado</option>
+                          </select>
 
-                      {/* Assign partner dropdown */}
-                      <select
-                        value={lead.partner_id || ""}
-                        onChange={(e) => handleAssignPartner(lead.id, e.target.value)}
-                        disabled={assigningLead === lead.id}
-                        className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none max-w-[120px]"
-                      >
-                        <option value="">Sin asignar</option>
-                        {stats.partnersList?.map((partner) => (
-                          <option key={partner.id} value={partner.id}>
-                            {partner.name}
-                          </option>
-                        ))}
-                      </select>
+                          {/* Assign partner dropdown */}
+                          <select
+                            value={lead.partner_id || ""}
+                            onChange={(e) => handleAssignPartner(lead.id, e.target.value)}
+                            disabled={assigningLead === lead.id}
+                            className="bg-zinc-800 border border-zinc-700 px-2 py-2 text-xs focus:border-[#FF4D00] outline-none max-w-[120px]"
+                          >
+                            <option value="">Sin asignar</option>
+                            {stats.partnersList?.map((partner) => (
+                              <option key={partner.id} value={partner.id}>
+                                {partner.name}
+                              </option>
+                            ))}
+                          </select>
+
+                          <button
+                            onClick={() => handleTrashLead(lead.id)}
+                            disabled={updatingLead === lead.id}
+                            className="p-2 border border-red-500/30 hover:border-red-500 hover:bg-red-500/10 transition-all"
+                            title="Mover a trash"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-500" />
+                          </button>
+                        </>
+                      )}
 
                       {/* Price and date */}
                       <div className="text-right min-w-[60px]">
@@ -926,8 +1013,10 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
                   </div>
                 </div>
               ))}
-              {stats.recentLeads.length === 0 && (
-                <div className="px-4 py-8 text-center text-zinc-500 text-sm">No hay leads</div>
+              {visibleLeads.length === 0 && (
+                <div className="px-4 py-8 text-center text-zinc-500 text-sm">
+                  {showTrashed ? "No hay leads en trash" : "No hay leads"}
+                </div>
               )}
             </div>
           </div>
