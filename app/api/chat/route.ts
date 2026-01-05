@@ -212,50 +212,8 @@ async function trackChatInteraction(data: {
 }
 
 async function isInBarcelonaAreaAI(location: string): Promise<boolean> {
-  const apiKey = process.env.OPENAI_API_KEY
-  if (!apiKey || !location) return true // Default true para no perder leads
-
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `Eres un validador de ubicaciones. Tu única tarea es determinar si una ubicación está dentro de un radio de 40km del centro de Barcelona, España.
-
-Responde SOLO con "SI" o "NO".
-
-- SI = La ubicación está dentro de 40km de Barcelona (incluye Barcelona ciudad, área metropolitana, Maresme, Baix Llobregat, Vallès, Garraf, etc.)
-- NO = La ubicación está fuera de 40km de Barcelona o no es una ubicación válida en España`,
-          },
-          {
-            role: "user",
-            content: `¿Está "${location}" dentro de 40km del centro de Barcelona? Responde solo SI o NO.`,
-          },
-        ],
-        temperature: 0,
-        max_tokens: 10,
-      }),
-    })
-
-    if (!response.ok) {
-      return true // Default to true to not block leads on API error
-    }
-
-    const data = await response.json()
-    const answer = data.choices?.[0]?.message?.content?.trim().toUpperCase()
-
-    return answer === "SI"
-  } catch (error) {
-    console.error("[v0] Error validating location:", error)
-    return true // Default to true on error
-  }
+  // Accept all locations - no geographic filtering
+  return true
 }
 
 async function saveLead(lead: any) {
