@@ -58,15 +58,15 @@ interface Stats {
   sold: number
   revenue: number
   todayLeads: number
-  todaySold: number
-  todayRevenue: number
-  todayPending: number
-  todayPotential: number
-  weekLeads: number
-  weekSold: number
-  weekRevenue: number
-  weekPending: number
-  weekPotential: number
+  todaySold: 0
+  todayRevenue: 0
+  todayPending: 0
+  todayPotential: 0
+  weekLeads: 0
+  weekSold: 0
+  weekRevenue: 0
+  weekPending: 0
+  weekPotential: 0
   recentLeads: Lead[]
   byService: any[]
   funnelStats: any[]
@@ -337,6 +337,144 @@ function PartnerModal({
   )
 }
 
+function LeadModal({
+  onClose,
+  onSave,
+}: {
+  onClose: () => void
+  onSave: (data: any) => void
+}) {
+  const [name, setName] = useState("")
+  const [phone, setPhone] = useState("")
+  const [city, setCity] = useState("")
+  const [service, setService] = useState("")
+  const [problem, setProblem] = useState("")
+  const [requestedDate, setRequestedDate] = useState("")
+  const [saving, setSaving] = useState(false)
+
+  const allServices = ["fontanero", "electricista", "cerrajero", "desatasco", "calderas"]
+  const requestedDateOptions = ["Ahora / Urgente", "Hoy", "Mañana", "Esta semana", "Sin prisa"]
+
+  const handleSave = async () => {
+    if (!name || !phone || !service) return
+    setSaving(true)
+    await onSave({
+      name,
+      phone,
+      city,
+      service,
+      problem,
+      requested_date: requestedDate,
+    })
+    setSaving(false)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+      <div className="w-full max-w-md border border-zinc-700 bg-zinc-900 p-6 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-sm font-bold tracking-wider text-[#FF4D00]">NUEVO LEAD MANUAL</h3>
+          <button onClick={onClose} className="p-1 hover:bg-zinc-800 transition-colors">
+            <X className="w-5 h-5 text-zinc-400" />
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1">NOMBRE *</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Juan García"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1">TELÉFONO *</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="612345678"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1">CIUDAD</label>
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Barcelona"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-500 block mb-2">SERVICIO *</label>
+            <div className="flex flex-wrap gap-2">
+              {allServices.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setService(s)}
+                  className={`px-3 py-1.5 text-xs font-medium border transition-colors capitalize ${
+                    service === s
+                      ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                      : "border-zinc-700 hover:border-zinc-600"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-500 block mb-2">CUÁNDO LO NECESITA</label>
+            <div className="flex flex-wrap gap-2">
+              {requestedDateOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setRequestedDate(option)}
+                  className={`px-3 py-1.5 text-xs font-medium border transition-colors ${
+                    requestedDate === option
+                      ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                      : "border-zinc-700 hover:border-zinc-600"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1">DESCRIPCIÓN DEL PROBLEMA</label>
+            <textarea
+              value={problem}
+              onChange={(e) => setProblem(e.target.value)}
+              placeholder="Describe el problema del cliente..."
+              rows={3}
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none resize-none"
+            />
+          </div>
+        </div>
+
+        <button
+          onClick={handleSave}
+          disabled={saving || !name || !phone || !service}
+          className="w-full mt-6 py-3 bg-[#FF4D00] text-black font-bold tracking-wider hover:bg-[#FF4D00]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {saving ? "GUARDANDO..." : "CREAR LEAD"}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function DashboardClient({ initialStats }: DashboardClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -389,6 +527,7 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
   const [showTrashed, setShowTrashed] = useState(false)
   const [estimatedPrices, setEstimatedPrices] = useState<Record<string, number>>({})
   const [savingPrice, setSavingPrice] = useState<string | null>(null)
+  const [showLeadModal, setShowLeadModal] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -597,6 +736,29 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
     setTimeout(() => setNotification(null), 3000)
   }
 
+  const handleSaveManualLead = async (data: any) => {
+    try {
+      const response = await fetch("/api/0x/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setNotification({ type: "success", message: "Lead creado correctamente" })
+        setShowLeadModal(false)
+        setTimeout(() => router.refresh(), 1000)
+      } else {
+        setNotification({ type: "error", message: result.error || "Error al crear lead" })
+      }
+    } catch (error) {
+      setNotification({ type: "error", message: "Error de conexión" })
+    }
+    setTimeout(() => setNotification(null), 3000)
+  }
+
   const getPartnerName = (partnerId: string | null) => {
     if (!partnerId) return null
     const partner = stats.partnersList?.find((p) => p.id === partnerId)
@@ -789,7 +951,8 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
         </div>
       )}
 
-      {(showPartnerModal || editingPartner) && (
+      {/* Partner Modal */}
+      {showPartnerModal && (
         <PartnerModal
           partner={editingPartner}
           onClose={() => {
@@ -797,6 +960,14 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
             setEditingPartner(null)
           }}
           onSave={handleSavePartner}
+        />
+      )}
+
+      {/* CHANGE: Render LeadModal when showLeadModal is true */}
+      {showLeadModal && (
+        <LeadModal
+          onClose={() => setShowLeadModal(false)}
+          onSave={handleSaveManualLead} // Use the new handler
         />
       )}
 
@@ -922,17 +1093,29 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
               <h3 className="text-xs font-bold tracking-wider text-zinc-400">
                 {showTrashed ? "LEADS EN TRASH" : "TODOS LOS LEADS"}
               </h3>
-              <button
-                onClick={() => setShowTrashed(!showTrashed)}
-                className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold border transition-colors ${
-                  showTrashed
-                    ? "border-red-500 bg-red-500/20 text-red-500"
-                    : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
-                }`}
-              >
-                <Trash2 className="w-3 h-3" />
-                {showTrashed ? `VOLVER (${activeCount})` : `TRASH (${trashedCount})`}
-              </button>
+              {/* CHANGE: Adding button to create manual lead and trash toggle */}
+              <div className="flex items-center gap-2">
+                {!showTrashed && (
+                  <button
+                    onClick={() => setShowLeadModal(true)}
+                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold border border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00] hover:bg-[#FF4D00]/30 transition-colors"
+                  >
+                    <Plus className="w-3 h-3" />
+                    NUEVO LEAD
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowTrashed(!showTrashed)}
+                  className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold border transition-colors ${
+                    showTrashed
+                      ? "border-red-500 bg-red-500/20 text-red-500"
+                      : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+                  }`}
+                >
+                  <Trash2 className="w-3 h-3" />
+                  {showTrashed ? `VOLVER (${activeCount})` : `TRASH (${trashedCount})`}
+                </button>
+              </div>
             </div>
             <div className="divide-y divide-zinc-800/50 max-h-[600px] overflow-y-auto">
               {visibleLeads.map((lead: Lead) => {
@@ -990,8 +1173,8 @@ ${lead.problem?.slice(0, 150)}${(lead.problem?.length || 0) > 150 ? "..." : ""}
                                     [lead.id]: Number(e.target.value),
                                   }))
                                 }
-                                placeholder="€"
                                 className="w-16 bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-xs text-right focus:border-[#FF4D00] outline-none"
+                                placeholder="€"
                               />
                               <button
                                 onClick={() =>

@@ -262,6 +262,21 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
     return service || "urgente"
   }
 
+  const handleWhatsAppClick = () => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "conversion", {
+        send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
+        value: 20.0,
+        currency: "EUR",
+      })
+
+      window.gtag("event", "whatsapp_click", {
+        event_category: "conversion",
+        event_label: service || getServiceFromMessages() || "general",
+      })
+    }
+  }
+
   if (isOpen === null) {
     return null
   }
@@ -365,6 +380,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
               href={`https://wa.me/34711267223?text=${encodeURIComponent(`Hola! Necesito ayuda con un servicio ${getServiceFromMessages()}`)}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleWhatsAppClick}
               className="flex items-center gap-3 bg-green-50 hover:bg-green-100 border border-green-200 rounded-2xl p-3 transition-colors group"
             >
               <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shrink-0">

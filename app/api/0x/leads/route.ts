@@ -4,6 +4,35 @@ import { neon } from "@neondatabase/serverless"
 
 const VALID_SESSION = "rf_admin_session_2024_punk"
 
+export async function POST(request: NextRequest) {
+  const cookieStore = await cookies()
+  const session = cookieStore.get("rf_admin_session")
+
+  if (session?.value !== VALID_SESSION) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+  }
+
+  try {
+    const { name, phone, city, service, problem, requested_date } = await request.json()
+
+    if (!name || !phone || !service) {
+      return NextResponse.json({ error: "Faltan campos requeridos (nombre, teléfono, servicio)" }, { status: 400 })
+    }
+
+    const sql = neon(process.env.NEON_DATABASE_URL!)
+
+    await sql`
+      INSERT INTO leads (name, phone, city, service, problem, requested_date, status, created_at)
+      VALUES (${name}, ${phone}, ${city || ""}, ${service}, ${problem || ""}, ${requested_date || null}, 'pending', NOW())
+    `
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Error creating lead:", error)
+    return NextResponse.json({ error: "Error al crear lead" }, { status: 500 })
+  }
+}
+
 export async function PATCH(request: NextRequest) {
   const cookieStore = await cookies()
   const session = cookieStore.get("rf_admin_session")
