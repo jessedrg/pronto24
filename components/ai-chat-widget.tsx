@@ -100,7 +100,8 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
   }, [messages])
 
   useEffect(() => {
-    if (isOpen) {
+    const isMobile = window.innerWidth < 768
+    if (isOpen && isMobile) {
       document.body.style.overflow = "hidden"
       document.body.style.position = "fixed"
       document.body.style.width = "100%"
