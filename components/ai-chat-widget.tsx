@@ -55,7 +55,7 @@ function getUTMParams() {
 }
 
 export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState<boolean | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -68,6 +68,13 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (isOpen === null) {
+      const isMobile = window.innerWidth < 768
+      setIsOpen(!isMobile) // Open on desktop, closed on mobile
+    }
+  }, [isOpen])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -252,6 +259,10 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
       if (serviceMessage.content.toLowerCase().includes("caldera")) return "calderas"
     }
     return service || "urgente"
+  }
+
+  if (isOpen === null) {
+    return null
   }
 
   return (
