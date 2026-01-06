@@ -2,6 +2,12 @@
 
 import { Phone, MessageCircle, Star, Clock, Shield, CheckCircle, Zap } from "lucide-react"
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void
+  }
+}
+
 const services = [
   { name: "Fontaneros", icon: "🔧" },
   { name: "Electricistas", icon: "⚡" },
@@ -11,12 +17,34 @@ const services = [
 ]
 
 export default function Home() {
-  const handleConversion = () => {
-    if (typeof window !== "undefined" && typeof window.gtag === "function") {
+  const handleCallConversion = () => {
+    if (typeof window !== "undefined" && window.gtag) {
+      // Google Ads conversion
       window.gtag("event", "conversion", {
         send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
         value: 20.0,
         currency: "EUR",
+      })
+      // Analytics event
+      window.gtag("event", "phone_call_click", {
+        event_category: "conversion",
+        event_label: "landing_page",
+      })
+    }
+  }
+
+  const handleWhatsAppConversion = () => {
+    if (typeof window !== "undefined" && window.gtag) {
+      // Google Ads conversion
+      window.gtag("event", "conversion", {
+        send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
+        value: 20.0,
+        currency: "EUR",
+      })
+      // Analytics event
+      window.gtag("event", "whatsapp_click", {
+        event_category: "conversion",
+        event_label: "landing_page",
       })
     }
   }
@@ -35,7 +63,7 @@ export default function Home() {
           <a
             href="tel:+34711267223"
             className="flex items-center gap-2 bg-white text-black font-semibold px-4 py-2 rounded-full text-sm hover:bg-white/90 transition-colors"
-            onClick={handleConversion}
+            onClick={handleCallConversion}
           >
             <Phone className="w-4 h-4" />
             <span className="hidden sm:inline">711 267 223</span>
@@ -91,7 +119,7 @@ export default function Home() {
                 <a
                   href="tel:+34711267223"
                   className="flex items-center justify-center gap-3 bg-white text-black font-bold py-4 px-8 rounded-2xl text-lg hover:bg-white/90 transition-all hover:scale-[1.02]"
-                  onClick={handleConversion}
+                  onClick={handleCallConversion}
                 >
                   <Phone className="w-5 h-5" />
                   <span>Llamar Ahora</span>
@@ -101,7 +129,7 @@ export default function Home() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 bg-[#25D366] text-white font-bold py-4 px-8 rounded-2xl text-lg hover:bg-[#22c55e] transition-all hover:scale-[1.02]"
-                  onClick={handleConversion}
+                  onClick={handleWhatsAppConversion}
                 >
                   <MessageCircle className="w-5 h-5" />
                   <span>WhatsApp</span>
@@ -220,7 +248,7 @@ export default function Home() {
           <a
             href="tel:+34711267223"
             className="flex-1 flex items-center justify-center gap-2 bg-white text-black font-bold py-4 rounded-2xl text-base"
-            onClick={handleConversion}
+            onClick={handleCallConversion}
           >
             <Phone className="w-5 h-5" />
             <span>Llamar</span>
@@ -230,7 +258,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-4 rounded-2xl text-base"
-            onClick={handleConversion}
+            onClick={handleWhatsAppConversion}
           >
             <MessageCircle className="w-5 h-5" />
             <span>WhatsApp</span>
