@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { name, phone, city, service, problem, requested_date } = await request.json()
+    const { name, phone, city, service, problem, requested_date, service_time } = await request.json()
 
     if (!name || !phone || !service) {
       return NextResponse.json({ error: "Faltan campos requeridos (nombre, teléfono, servicio)" }, { status: 400 })
@@ -22,8 +22,8 @@ export async function POST(request: NextRequest) {
     const sql = neon(process.env.NEON_DATABASE_URL!)
 
     await sql`
-      INSERT INTO leads (name, phone, city, service, problem, requested_date, status, created_at)
-      VALUES (${name}, ${phone}, ${city || ""}, ${service}, ${problem || ""}, ${requested_date || null}, 'pending', NOW())
+      INSERT INTO leads (name, phone, city, service, problem, requested_date, service_time, status, created_at)
+      VALUES (${name}, ${phone}, ${city || ""}, ${service}, ${problem || ""}, ${requested_date || null}, ${service_time || null}, 'pending', NOW())
     `
 
     return NextResponse.json({ success: true })
@@ -88,5 +88,40 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error("Error updating lead:", error)
     return NextResponse.json({ error: "Error al actualizar" }, { status: 500 })
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  const cookieStore = await cookies()
+  const session = cookieStore.get("rf_admin_session")
+
+  if (session?.value !== VALID_SESSION) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+  }
+
+  try {
+    const body = await request.json()
+    console.log("[v0] PUT request body:", body)
+    const { id, service_time } = body
+
+    if (!id) {
+      return NextResponse.json({ error: "Falta id" }, { status: 400 })
+    }
+
+    const sql = neon(process.env.NEON_DATABASE_URL!)
+
+    console.log("[v0] Updating service_time for lead:", id, "to:", service_time)
+
+    await sql`
+      UPDATE leads 
+      SET service_time = ${service_time || null}
+      WHERE id = ${id}
+    `
+
+    console.log("[v0] Update successful")
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("[v0] Error updating service_time:", error)
+    return NextResponse.json({ error: "Error al actualizar hora de servicio" }, { status: 500 })
   }
 }
