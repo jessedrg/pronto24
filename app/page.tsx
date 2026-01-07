@@ -1,6 +1,7 @@
 "use client"
 
 import { Phone, MessageCircle, Star, Clock, Shield, CheckCircle, Zap } from "lucide-react"
+import { useEffect, useState } from "react"
 
 declare global {
   interface Window {
@@ -17,15 +18,27 @@ const services = [
 ]
 
 export default function Home() {
+  const [config, setConfig] = useState({
+    whatsapp_phone: "34711267223",
+    call_phone: "+34711267223",
+    whatsapp_enabled: "true",
+    call_enabled: "true",
+  })
+
+  useEffect(() => {
+    fetch("/api/config")
+      .then((res) => res.json())
+      .then((data) => setConfig(data))
+      .catch((err) => console.error("[v0] Error loading config:", err))
+  }, [])
+
   const handleCallConversion = () => {
     if (typeof window !== "undefined" && window.gtag) {
-      // Google Ads conversion
       window.gtag("event", "conversion", {
         send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
         value: 20.0,
         currency: "EUR",
       })
-      // Analytics event
       window.gtag("event", "phone_call_click", {
         event_category: "conversion",
         event_label: "landing_page",
@@ -35,19 +48,20 @@ export default function Home() {
 
   const handleWhatsAppConversion = () => {
     if (typeof window !== "undefined" && window.gtag) {
-      // Google Ads conversion
       window.gtag("event", "conversion", {
         send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
         value: 20.0,
         currency: "EUR",
       })
-      // Analytics event
       window.gtag("event", "whatsapp_click", {
         event_category: "conversion",
         event_label: "landing_page",
       })
     }
   }
+
+  const isCallEnabled = config.call_enabled === "true"
+  const isWhatsAppEnabled = config.whatsapp_enabled === "true"
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
@@ -60,15 +74,17 @@ export default function Home() {
             </div>
             <span className="font-bold text-lg">rapidfix</span>
           </div>
-          <a
-            href="tel:+34711267223"
-            className="flex items-center gap-2 bg-white text-black font-semibold px-4 py-2 rounded-full text-sm hover:bg-white/90 transition-colors"
-            onClick={handleCallConversion}
-          >
-            <Phone className="w-4 h-4" />
-            <span className="hidden sm:inline">711 267 223</span>
-            <span className="sm:hidden">Llamar</span>
-          </a>
+          {isCallEnabled && (
+            <a
+              href={`tel:${config.call_phone}`}
+              className="flex items-center gap-2 bg-white text-black font-semibold px-4 py-2 rounded-full text-sm hover:bg-white/90 transition-colors"
+              onClick={handleCallConversion}
+            >
+              <Phone className="w-4 h-4" />
+              <span className="hidden sm:inline">{config.call_phone.replace("+34", "")}</span>
+              <span className="sm:hidden">Llamar</span>
+            </a>
+          )}
         </div>
       </nav>
 
@@ -92,7 +108,6 @@ export default function Home() {
                 <span className="text-white/60 text-sm">15.847 servicios</span>
               </div>
 
-              {/* Headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05] mb-5">
                 Técnico en tu casa
                 <br />
@@ -105,7 +120,6 @@ export default function Home() {
                 Urgencias del hogar 24/7. Profesionales verificados. Solo pagas si solucionamos.
               </p>
 
-              {/* Availability */}
               <div className="flex items-center gap-3 mb-8">
                 <span className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -114,29 +128,33 @@ export default function Home() {
                 <span className="text-green-400 font-medium">12 técnicos disponibles ahora en tu zona</span>
               </div>
 
-              {/* CTA Buttons - Desktop */}
-              <div className="hidden sm:flex gap-4 mb-10">
-                <a
-                  href="tel:+34711267223"
-                  className="flex items-center justify-center gap-3 bg-white text-black font-bold py-4 px-8 rounded-2xl text-lg hover:bg-white/90 transition-all hover:scale-[1.02]"
-                  onClick={handleCallConversion}
-                >
-                  <Phone className="w-5 h-5" />
-                  <span>Llamar Ahora</span>
-                </a>
-                <a
-                  href="https://wa.me/34711267223?text=Hola!%20Necesito%20ayuda%20urgente"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-3 bg-[#25D366] text-white font-bold py-4 px-8 rounded-2xl text-lg hover:bg-[#22c55e] transition-all hover:scale-[1.02]"
-                  onClick={handleWhatsAppConversion}
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  <span>WhatsApp</span>
-                </a>
-              </div>
+              {(isCallEnabled || isWhatsAppEnabled) && (
+                <div className="hidden sm:flex gap-4 mb-10">
+                  {isCallEnabled && (
+                    <a
+                      href={`tel:${config.call_phone}`}
+                      className="flex items-center justify-center gap-3 bg-white text-black font-bold py-4 px-8 rounded-2xl text-lg hover:bg-white/90 transition-all hover:scale-[1.02]"
+                      onClick={handleCallConversion}
+                    >
+                      <Phone className="w-5 h-5" />
+                      <span>Llamar Ahora</span>
+                    </a>
+                  )}
+                  {isWhatsAppEnabled && (
+                    <a
+                      href={`https://wa.me/${config.whatsapp_phone}?text=${encodeURIComponent("Hola! Necesito ayuda urgente")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-3 bg-[#25D366] text-white font-bold py-4 px-8 rounded-2xl text-lg hover:bg-[#22c55e] transition-all hover:scale-[1.02]"
+                      onClick={handleWhatsAppConversion}
+                    >
+                      <MessageCircle className="w-5 h-5" />
+                      <span>WhatsApp</span>
+                    </a>
+                  )}
+                </div>
+              )}
 
-              {/* Trust Points */}
               <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/50">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500" />
@@ -242,29 +260,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Fixed Bottom CTAs - Mobile only */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 bg-gradient-to-t from-zinc-950 via-zinc-950/95 to-transparent pt-8 sm:hidden z-50">
-        <div className="flex gap-3 max-w-lg mx-auto">
-          <a
-            href="tel:+34711267223"
-            className="flex-1 flex items-center justify-center gap-2 bg-white text-black font-bold py-4 rounded-2xl text-base"
-            onClick={handleCallConversion}
-          >
-            <Phone className="w-5 h-5" />
-            <span>Llamar</span>
-          </a>
-          <a
-            href="https://wa.me/34711267223?text=Hola!%20Necesito%20ayuda%20urgente"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-4 rounded-2xl text-base"
-            onClick={handleWhatsAppConversion}
-          >
-            <MessageCircle className="w-5 h-5" />
-            <span>WhatsApp</span>
-          </a>
+      {(isCallEnabled || isWhatsAppEnabled) && (
+        <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 bg-gradient-to-t from-zinc-950 via-zinc-950/95 to-transparent pt-8 sm:hidden z-50">
+          <div className="flex gap-3 max-w-lg mx-auto">
+            {isCallEnabled && (
+              <a
+                href={`tel:${config.call_phone}`}
+                className="flex-1 flex items-center justify-center gap-2 bg-white text-black font-bold py-4 rounded-2xl text-base"
+                onClick={handleCallConversion}
+              >
+                <Phone className="w-5 h-5" />
+                <span>Llamar</span>
+              </a>
+            )}
+            {isWhatsAppEnabled && (
+              <a
+                href={`https://wa.me/${config.whatsapp_phone}?text=${encodeURIComponent("Hola! Necesito ayuda urgente")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-4 rounded-2xl text-base"
+                onClick={handleWhatsAppConversion}
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>WhatsApp</span>
+              </a>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </main>
   )
 }
