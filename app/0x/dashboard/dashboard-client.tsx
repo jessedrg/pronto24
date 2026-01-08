@@ -31,6 +31,8 @@ import {
   CheckCircle,
   CreditCard,
   UserCheck,
+  FileText,
+  Euro,
 } from "lucide-react"
 
 interface Partner {
@@ -57,6 +59,10 @@ interface Lead {
   requested_date: string | null
   service_time: string | null
   source?: string
+  commission?: number // Added commission
+  amount_charged?: number // Added amount_charged
+  client_cost?: number // Added client_cost
+  notes?: string // Added notes
 }
 
 interface Stats {
@@ -577,6 +583,10 @@ function LeadDetailModal({
   const [serviceTime, setServiceTime] = useState(lead.service_time || "")
   const [localStatus, setLocalStatus] = useState(lead.status)
   const [localPartnerId, setLocalPartnerId] = useState(lead.partner_id)
+  const [commission, setCommission] = useState(lead.commission || 0)
+  const [amountCharged, setAmountCharged] = useState(lead.amount_charged || 0)
+  const [clientCost, setClientCost] = useState(lead.client_cost || 0)
+  const [notes, setNotes] = useState(lead.notes || "")
 
   useEffect(() => {
     setName(lead.name || "")
@@ -588,6 +598,10 @@ function LeadDetailModal({
     setServiceTime(lead.service_time || "")
     setLocalStatus(lead.status)
     setLocalPartnerId(lead.partner_id)
+    setCommission(lead.commission || 0)
+    setAmountCharged(lead.amount_charged || 0)
+    setClientCost(lead.client_cost || 0)
+    setNotes(lead.notes || "")
   }, [lead])
 
   const allServices = ["fontanero", "electricista", "cerrajero", "desatasco", "calderas"]
@@ -602,6 +616,7 @@ function LeadDetailModal({
   const statusLabels: Record<string, { label: string; color: string }> = {
     pending: { label: "Pendiente", color: "text-yellow-400" },
     contacted: { label: "Contactado", color: "text-blue-400" },
+    pending_appointment: { label: "Pdte Cita", color: "text-cyan-400" },
     confirmed: { label: "Cita Confirmada", color: "text-purple-400" },
     completed: { label: "Trabajo Acabado", color: "text-orange-400" },
     paid: { label: "Pagado", color: "text-green-400" },
@@ -618,6 +633,10 @@ function LeadDetailModal({
       problem,
       lead_price: leadPrice,
       service_time: serviceTime || null,
+      commission,
+      amount_charged: amountCharged,
+      client_cost: clientCost,
+      notes,
     })
     setSaving(false)
     setEditing(false)
@@ -688,6 +707,57 @@ function LeadDetailModal({
         </div>
 
         <div className="p-4 space-y-4">
+          <div className="grid grid-cols-3 gap-3 p-3 border border-[#FF4D00]/30 bg-[#FF4D00]/5">
+            <div>
+              <label className="text-[10px] text-zinc-500 block mb-1">COMISION ESTIMADA</label>
+              {editing ? (
+                <div className="flex items-center gap-1">
+                  <input
+                    type="number"
+                    value={commission}
+                    onChange={(e) => setCommission(Number(e.target.value))}
+                    className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-[#FF4D00] outline-none"
+                  />
+                  <span className="text-[#FF4D00]">€</span>
+                </div>
+              ) : (
+                <p className="text-lg font-bold text-[#FF4D00]">{commission || 0}€</p>
+              )}
+            </div>
+            <div>
+              <label className="text-[10px] text-zinc-500 block mb-1">IMPORTE COBRADO</label>
+              {editing ? (
+                <div className="flex items-center gap-1">
+                  <input
+                    type="number"
+                    value={amountCharged}
+                    onChange={(e) => setAmountCharged(Number(e.target.value))}
+                    className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-green-500 outline-none"
+                  />
+                  <span className="text-green-500">€</span>
+                </div>
+              ) : (
+                <p className="text-lg font-bold text-green-500">{amountCharged || 0}€</p>
+              )}
+            </div>
+            <div>
+              <label className="text-[10px] text-zinc-500 block mb-1">COSTE CLIENTE</label>
+              {editing ? (
+                <div className="flex items-center gap-1">
+                  <input
+                    type="number"
+                    value={clientCost}
+                    onChange={(e) => setClientCost(Number(e.target.value))}
+                    className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-blue-500 outline-none"
+                  />
+                  <span className="text-blue-500">€</span>
+                </div>
+              ) : (
+                <p className="text-lg font-bold text-blue-500">{clientCost || 0}€</p>
+              )}
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs text-zinc-500 block mb-1">NOMBRE</label>
@@ -703,7 +773,7 @@ function LeadDetailModal({
               )}
             </div>
             <div>
-              <label className="text-xs text-zinc-500 block mb-1">TELÉFONO</label>
+              <label className="text-xs text-zinc-500 block mb-1">TELEFONO</label>
               {editing ? (
                 <input
                   type="tel"
@@ -766,7 +836,27 @@ function LeadDetailModal({
               />
             ) : (
               <p className="text-sm text-zinc-300 bg-zinc-800/50 p-3 border border-zinc-800">
-                {problem || "Sin descripción"}
+                {problem || "Sin descripcion"}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-500 block mb-1 flex items-center gap-1">
+              <FileText className="w-3 h-3" />
+              NOTAS
+            </label>
+            {editing ? (
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                rows={3}
+                placeholder="Añade notas sobre este lead..."
+                className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none resize-none"
+              />
+            ) : (
+              <p className="text-sm text-zinc-300 bg-zinc-800/50 p-3 border border-zinc-800 min-h-[60px]">
+                {notes || "Sin notas"}
               </p>
             )}
           </div>
@@ -850,7 +940,7 @@ function LeadDetailModal({
           <div className="flex items-center gap-2 pt-4 border-t border-zinc-800">
             <a
               href={`https://wa.me/34${phone?.replace(/\D/g, "")}?text=${encodeURIComponent(
-                `Hola ${name || ""}, soy de RapidFix. He visto tu solicitud de ${service}. ¿Cuándo te vendría bien que pasara el técnico?`,
+                `Hola ${name || ""}, soy de RapidFix. He visto tu solicitud de ${service}. ¿Cuando te vendria bien que pasara el tecnico?`,
               )}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -950,22 +1040,34 @@ function LeadCard({
             {lead.city} • {lead.service}
           </p>
         </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            onExpand()
-          }}
-          className="p-1 opacity-0 group-hover:opacity-100 hover:bg-zinc-700 transition-all"
-          title="Expandir"
-        >
-          <Maximize2 className="w-3.5 h-3.5 text-zinc-400" />
-        </button>
         <span className="text-xs text-zinc-600">
           {new Date(lead.created_at).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}
         </span>
       </div>
 
+      <div className="grid grid-cols-3 gap-1 mb-2 text-[10px]">
+        <div className="bg-[#FF4D00]/10 border border-[#FF4D00]/30 px-1.5 py-1 text-center">
+          <span className="text-zinc-500 block">Comision</span>
+          <span className="text-[#FF4D00] font-bold">{lead.commission || 0}€</span>
+        </div>
+        <div className="bg-green-500/10 border border-green-500/30 px-1.5 py-1 text-center">
+          <span className="text-zinc-500 block">Cobrado</span>
+          <span className="text-green-500 font-bold">{lead.amount_charged || 0}€</span>
+        </div>
+        <div className="bg-blue-500/10 border border-blue-500/30 px-1.5 py-1 text-center">
+          <span className="text-zinc-500 block">Cliente</span>
+          <span className="text-blue-500 font-bold">{lead.client_cost || 0}€</span>
+        </div>
+      </div>
+
       {lead.problem && <p className="text-xs text-zinc-400 mb-2 line-clamp-2">{lead.problem}</p>}
+
+      {lead.notes && (
+        <p className="text-xs text-yellow-400/70 mb-2 line-clamp-1 flex items-center gap-1">
+          <FileText className="w-3 h-3" />
+          {lead.notes}
+        </p>
+      )}
 
       <p className="text-xs font-mono text-zinc-300 mb-2">{lead.phone}</p>
 
@@ -976,39 +1078,14 @@ function LeadCard({
         </div>
       )}
 
-      {lead.lead_price > 0 && <div className="text-xs text-[#FF4D00] font-bold mb-2">{lead.lead_price}€</div>}
-
       <div className="flex items-center gap-1.5 flex-wrap" onClick={(e) => e.stopPropagation()}>
-        <input
-          type="number"
-          defaultValue={lead.lead_price || ""}
-          onBlur={(e) => onPriceChange(Number(e.target.value))}
-          onClick={(e) => e.stopPropagation()}
-          className="w-12 bg-zinc-800 border border-zinc-700 px-1.5 py-1 text-xs text-center focus:border-[#FF4D00] outline-none"
-          placeholder="€"
-        />
-
         <button
-          onClick={(e) => {
-            e.stopPropagation()
-            onWhatsApp()
-          }}
-          className="p-1.5 border border-green-500/30 hover:border-green-500 hover:bg-green-500/10 transition-all"
-          title="WhatsApp"
+          onClick={onWhatsApp}
+          className="p-1.5 border border-green-600/30 bg-green-600/10 hover:bg-green-600/20 transition-colors"
         >
           <MessageCircle className="w-3.5 h-3.5 text-green-500" />
         </button>
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            onCopy()
-          }}
-          className={`p-1.5 border transition-all ${
-            copied ? "border-green-500 bg-green-500/20" : "border-zinc-700 hover:border-zinc-500"
-          }`}
-          title="Copiar"
-        >
+        <button onClick={onCopy} className="p-1.5 border border-zinc-700 hover:border-zinc-600 transition-colors">
           {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 text-zinc-400" />}
         </button>
 
@@ -1018,9 +1095,8 @@ function LeadCard({
             e.stopPropagation()
             onPartnerAssign(lead.id, e.target.value)
           }}
+          className="flex-1 min-w-0 bg-zinc-800 border border-zinc-700 px-2 py-1 text-xs focus:border-[#FF4D00] outline-none"
           onClick={(e) => e.stopPropagation()}
-          disabled={updating}
-          className="bg-zinc-800 border border-zinc-700 px-1.5 py-1 text-xs focus:border-[#FF4D00] outline-none max-w-[80px]"
         >
           <option value="">Partner</option>
           {partners.map((p) => (
@@ -1031,14 +1107,10 @@ function LeadCard({
         </select>
 
         <button
-          onClick={(e) => {
-            e.stopPropagation()
-            onTrash()
-          }}
-          className="p-1.5 border border-zinc-700 hover:border-red-500 hover:bg-red-500/10 transition-all ml-auto"
-          title="Eliminar"
+          onClick={onTrash}
+          className="p-1.5 border border-zinc-700 hover:border-red-600/50 hover:bg-red-600/10 transition-colors"
         >
-          <Trash2 className="w-3.5 h-3.5 text-zinc-400 hover:text-red-500" />
+          <Trash2 className="w-3.5 h-3.5 text-zinc-400 hover:text-red-400" />
         </button>
       </div>
     </div>
@@ -1605,6 +1677,11 @@ ${lead.problem?.slice(0, 150)}
   const paidLeads = activeLeads.filter((l) => l.status === "paid")
   const rejectedLeads = filteredLeads.filter((l) => l.status === "rejected")
 
+  // Calculate totals for new KPIs
+  const totalCommission = stats.recentLeads.reduce((sum, l) => sum + (Number(l.commission) || 0), 0)
+  const totalCharged = stats.recentLeads.reduce((sum, l) => sum + (Number(l.amount_charged) || 0), 0)
+  const totalClientCost = stats.recentLeads.reduce((sum, l) => sum + (Number(l.client_cost) || 0), 0)
+
   const pendingRevenue = [...pendingLeads, ...contactedLeads, ...pendingAppointmentLeads, ...confirmedLeads].reduce(
     // Updated
     (sum, l) => sum + (Number(l.lead_price) || 0),
@@ -1764,6 +1841,28 @@ ${lead.problem?.slice(0, 150)}
             color="green"
           />
           <KPICard label="PARTNERS" value={partnersList.length} icon={<Users className="w-4 h-4" />} color="zinc" />
+        </div>
+
+        {/* Added totalCommission, totalCharged, totalClientCost to KPIs in the main component */}
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-2">
+          <KPICard
+            label="COMISIÓN TOTAL"
+            value={totalCommission.toFixed(2)}
+            icon={<Euro className="w-4 h-4" />}
+            color="orange"
+          />
+          <KPICard
+            label="IMPORTE COBRADO TOTAL"
+            value={totalCharged.toFixed(2)}
+            icon={<DollarSign className="w-4 h-4" />}
+            color="green"
+          />
+          <KPICard
+            label="COSTE CLIENTE TOTAL"
+            value={totalClientCost.toFixed(2)}
+            icon={<Euro className="w-4 h-4" />}
+            color="blue"
+          />
         </div>
 
         <div className="flex items-center justify-between border-b border-zinc-800 pb-2">

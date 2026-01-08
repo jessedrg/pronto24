@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const result = await sql`
       INSERT INTO leads (name, phone, city, service, problem, requested_date, service_time, status, source, created_at)
       VALUES (${name}, ${phone}, ${city || ""}, ${service}, ${problem || ""}, ${requested_date || null}, ${service_time || null}, 'pending', ${source || "manual"}, NOW())
-      RETURNING id, name, phone, city, service, problem, status, lead_price, partner_id, requested_date, service_time, source, created_at
+      RETURNING id, name, phone, city, service, problem, status, lead_price, partner_id, requested_date, service_time, source, created_at, commission, amount_charged, client_cost, notes
     `
 
     return NextResponse.json({ success: true, lead: result[0] })
@@ -84,7 +84,22 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { id, name, phone, city, service, problem, lead_price, service_time, status, partner_id } = body
+    const {
+      id,
+      name,
+      phone,
+      city,
+      service,
+      problem,
+      lead_price,
+      service_time,
+      status,
+      partner_id,
+      commission,
+      amount_charged,
+      client_cost,
+      notes,
+    } = body
 
     if (!id) {
       return NextResponse.json({ error: "Falta id" }, { status: 400 })
@@ -102,7 +117,11 @@ export async function PUT(request: NextRequest) {
         lead_price = COALESCE(${lead_price}, lead_price),
         service_time = ${service_time === undefined ? null : service_time || null},
         status = COALESCE(${status}, status),
-        partner_id = ${partner_id === undefined ? null : partner_id || null}
+        partner_id = ${partner_id === undefined ? null : partner_id || null},
+        commission = COALESCE(${commission}, commission),
+        amount_charged = COALESCE(${amount_charged}, amount_charged),
+        client_cost = COALESCE(${client_cost}, client_cost),
+        notes = COALESCE(${notes}, notes)
       WHERE id = ${id}
     `
 
