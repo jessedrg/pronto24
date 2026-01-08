@@ -91,6 +91,7 @@ interface DashboardClientProps {
 const PIPELINE_STATUSES = [
   { key: "pending", label: "PENDIENTE", color: "yellow", icon: Clock },
   { key: "contacted", label: "CONTACTADO", color: "blue", icon: Phone },
+  { key: "pending_appointment", label: "PDTE CITA", color: "cyan", icon: Calendar },
   { key: "confirmed", label: "CITA CONFIRMADA", color: "purple", icon: Calendar },
   { key: "completed", label: "TRABAJO ACABADO", color: "orange", icon: CheckCircle },
   { key: "paid", label: "PAGADO", color: "green", icon: CreditCard },
@@ -109,7 +110,7 @@ function KPICard({
   value: string | number
   subvalue?: string
   icon: React.ReactNode
-  color: "green" | "orange" | "zinc" | "blue" | "yellow" | "purple"
+  color: "green" | "orange" | "zinc" | "blue" | "yellow" | "purple" | "cyan"
 }) {
   const colors = {
     green: "border-green-500/30 bg-green-500/5",
@@ -118,6 +119,7 @@ function KPICard({
     blue: "border-blue-500/30 bg-blue-500/5",
     yellow: "border-yellow-500/30 bg-yellow-500/5",
     purple: "border-purple-500/30 bg-purple-500/5",
+    cyan: "border-cyan-500/30 bg-cyan-500/5",
   }
 
   const textColors = {
@@ -127,6 +129,7 @@ function KPICard({
     blue: "text-blue-500",
     yellow: "text-yellow-500",
     purple: "text-purple-500",
+    cyan: "text-cyan-500",
   }
 
   return (
@@ -154,7 +157,9 @@ function PartnerDetailModal({
 }) {
   const partnerLeads = leads.filter((l) => l.partner_id === partner.id && l.status !== "trashed")
 
-  const pendingLeads = partnerLeads.filter((l) => ["pending", "contacted", "confirmed"].includes(l.status))
+  const pendingLeads = partnerLeads.filter((l) =>
+    ["pending", "contacted", "pending_appointment", "confirmed"].includes(l.status),
+  )
   const completedLeads = partnerLeads.filter((l) => l.status === "completed")
   const paidLeads = partnerLeads.filter((l) => l.status === "paid")
 
@@ -172,6 +177,7 @@ function PartnerDetailModal({
   const statusColors: Record<string, string> = {
     pending: "text-yellow-400 border-yellow-500/30 bg-yellow-500/10",
     contacted: "text-blue-400 border-blue-500/30 bg-blue-500/10",
+    pending_appointment: "text-cyan-400 border-cyan-500/30 bg-cyan-500/10",
     confirmed: "text-purple-400 border-purple-500/30 bg-purple-500/10",
     completed: "text-orange-400 border-orange-500/30 bg-orange-500/10",
     paid: "text-green-400 border-green-500/30 bg-green-500/10",
@@ -180,6 +186,7 @@ function PartnerDetailModal({
   const statusLabels: Record<string, string> = {
     pending: "Pendiente",
     contacted: "Contactado",
+    pending_appointment: "Pdte Cita",
     confirmed: "Cita",
     completed: "Acabado",
     paid: "Pagado",
@@ -803,6 +810,7 @@ function LeadDetailModal({
               >
                 <option value="pending">Pendiente</option>
                 <option value="contacted">Contactado</option>
+                <option value="pending_appointment">Pendiente de Cita</option>
                 <option value="confirmed">Cita Confirmada</option>
                 <option value="completed">Trabajo Acabado</option>
                 <option value="paid">Pagado</option>
@@ -1105,6 +1113,7 @@ function PipelineColumn({
     orange: "border-orange-500",
     green: "border-green-500",
     red: "border-red-500",
+    cyan: "border-cyan-500", // Added for new status
   }
 
   const textColorClasses: Record<string, string> = {
@@ -1114,6 +1123,7 @@ function PipelineColumn({
     orange: "text-orange-500",
     green: "text-green-500",
     red: "text-red-500",
+    cyan: "text-cyan-500", // Added for new status
   }
 
   const bgColorClasses: Record<string, string> = {
@@ -1123,6 +1133,7 @@ function PipelineColumn({
     orange: "bg-orange-500/10",
     green: "bg-green-500/10",
     red: "bg-red-500/10",
+    cyan: "bg-cyan-500/10", // Added for new status
   }
 
   return (
@@ -1588,12 +1599,14 @@ ${lead.problem?.slice(0, 150)}
 
   const pendingLeads = activeLeads.filter((l) => l.status === "pending")
   const contactedLeads = activeLeads.filter((l) => l.status === "contacted")
+  const pendingAppointmentLeads = activeLeads.filter((l) => l.status === "pending_appointment") // New status
   const confirmedLeads = activeLeads.filter((l) => l.status === "confirmed")
   const completedLeads = activeLeads.filter((l) => l.status === "completed")
   const paidLeads = activeLeads.filter((l) => l.status === "paid")
   const rejectedLeads = filteredLeads.filter((l) => l.status === "rejected")
 
-  const pendingRevenue = [...pendingLeads, ...contactedLeads, ...confirmedLeads].reduce(
+  const pendingRevenue = [...pendingLeads, ...contactedLeads, ...pendingAppointmentLeads, ...confirmedLeads].reduce(
+    // Updated
     (sum, l) => sum + (Number(l.lead_price) || 0),
     0,
   )
@@ -1724,10 +1737,16 @@ ${lead.problem?.slice(0, 150)}
           <KPICard label="HOY" value={todayLeadsCount} icon={<Activity className="w-4 h-4" />} color="orange" />
           <KPICard
             label="PENDIENTES"
-            value={pendingLeads.length + contactedLeads.length}
+            value={pendingLeads.length + contactedLeads.length + pendingAppointmentLeads.length} // Updated
             subvalue={`${pendingRevenue}€ pot.`}
             icon={<Clock className="w-4 h-4" />}
             color="yellow"
+          />
+          <KPICard
+            label="PDTE CITA"
+            value={pendingAppointmentLeads.length} // New KPI card for pending appointment
+            icon={<Calendar className="w-4 h-4" />}
+            color="cyan" // Use the new cyan color
           />
           <KPICard label="CITAS" value={confirmedLeads.length} icon={<Calendar className="w-4 h-4" />} color="purple" />
           <KPICard
@@ -1898,6 +1917,26 @@ ${lead.problem?.slice(0, 150)}
                 expanded
               />
               <PipelineColumn
+                status="pending_appointment" // New status column
+                label="PDTE CITA"
+                color="cyan" // Use cyan color
+                icon={Calendar}
+                leads={pendingAppointmentLeads}
+                partners={partnersList}
+                onStatusChange={handleStatusChange}
+                onPartnerAssign={handlePartnerAssign}
+                onWhatsApp={openWhatsAppLead}
+                onCopy={handleCopyLead}
+                onTrash={handleTrashLead}
+                onPriceChange={handlePriceChange}
+                onExpand={setExpandedLeadId}
+                copiedLeadId={copiedLeadId}
+                updatingLeadId={updatingLeadId}
+                onDrop={handleDrop}
+                draggedLeadId={draggedLeadId}
+                expanded
+              />
+              <PipelineColumn
                 status="confirmed"
                 label="CITA"
                 color="purple"
@@ -1997,6 +2036,25 @@ ${lead.problem?.slice(0, 150)}
               color="blue"
               icon={Phone}
               leads={contactedLeads}
+              partners={partnersList}
+              onStatusChange={handleStatusChange}
+              onPartnerAssign={handlePartnerAssign}
+              onWhatsApp={openWhatsAppLead}
+              onCopy={handleCopyLead}
+              onTrash={handleTrashLead}
+              onPriceChange={handlePriceChange}
+              onExpand={setExpandedLeadId}
+              copiedLeadId={copiedLeadId}
+              updatingLeadId={updatingLeadId}
+              onDrop={handleDrop}
+              draggedLeadId={draggedLeadId}
+            />
+            <PipelineColumn
+              status="pending_appointment" // New status column
+              label="PDTE CITA"
+              color="cyan" // Use cyan color
+              icon={Calendar}
+              leads={pendingAppointmentLeads}
               partners={partnersList}
               onStatusChange={handleStatusChange}
               onPartnerAssign={handlePartnerAssign}
@@ -2123,8 +2181,8 @@ ${lead.problem?.slice(0, 150)}
             <div className="divide-y divide-zinc-800/50">
               {partnersList.map((partner) => {
                 const partnerLeads = recentLeads.filter((l) => l.partner_id === partner.id && l.status !== "trashed")
-                const partnerPending = partnerLeads.filter((l) =>
-                  ["pending", "contacted", "confirmed"].includes(l.status),
+                const partnerPending = partnerLeads.filter(
+                  (l) => ["pending", "contacted", "pending_appointment", "confirmed"].includes(l.status), // Updated
                 ).length
                 const partnerCompleted = partnerLeads.filter((l) => l.status === "completed").length
                 const partnerPaid = partnerLeads.filter((l) => l.status === "paid").length
