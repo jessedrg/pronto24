@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { name, phone, city, service, problem, requested_date, service_time } = await request.json()
+    const { name, phone, city, service, problem, requested_date, service_time, source } = await request.json()
 
     if (!name || !phone || !service) {
       return NextResponse.json({ error: "Faltan campos requeridos (nombre, teléfono, servicio)" }, { status: 400 })
@@ -21,12 +21,13 @@ export async function POST(request: NextRequest) {
 
     const sql = neon(process.env.NEON_DATABASE_URL!)
 
-    await sql`
-      INSERT INTO leads (name, phone, city, service, problem, requested_date, service_time, status, created_at)
-      VALUES (${name}, ${phone}, ${city || ""}, ${service}, ${problem || ""}, ${requested_date || null}, ${service_time || null}, 'pending', NOW())
+    const result = await sql`
+      INSERT INTO leads (name, phone, city, service, problem, requested_date, service_time, status, source, created_at)
+      VALUES (${name}, ${phone}, ${city || ""}, ${service}, ${problem || ""}, ${requested_date || null}, ${service_time || null}, 'pending', ${source || "manual"}, NOW())
+      RETURNING id, name, phone, city, service, problem, status, lead_price, partner_id, requested_date, service_time, source, created_at
     `
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, lead: result[0] })
   } catch (error) {
     console.error("Error creating lead:", error)
     return NextResponse.json({ error: "Error al crear lead" }, { status: 500 })
@@ -42,7 +43,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
-    const { leadId, status, partnerId, estimatedPrice } = await request.json()
+    const { leadId, status, partnerId, estimatedPrice, lead_price } = await request.json()
 
     if (!leadId) {
       return NextResponse.json({ error: "Falta leadId" }, { status: 400 })
@@ -51,37 +52,19 @@ export async function PATCH(request: NextRequest) {
     const sql = neon(process.env.NEON_DATABASE_URL!)
 
     if (status) {
-      await sql`
-        UPDATE leads 
-        SET status = ${status}
-        WHERE id = ${leadId}
-      `
+      await sql`UPDATE leads SET status = ${status} WHERE id = ${leadId}`
+      return NextResponse.json({ success: true })
     }
 
     if (partnerId !== undefined) {
-      if (partnerId) {
-        // Assigning a partner - set status to "assigned"
-        await sql`
-          UPDATE leads 
-          SET partner_id = ${partnerId}, status = 'assigned'
-          WHERE id = ${leadId}
-        `
-      } else {
-        // Removing partner - set status back to "pending"
-        await sql`
-          UPDATE leads 
-          SET partner_id = NULL, status = 'pending'
-          WHERE id = ${leadId}
-        `
-      }
+      await sql`UPDATE leads SET partner_id = ${partnerId || null} WHERE id = ${leadId}`
+      return NextResponse.json({ success: true })
     }
 
-    if (estimatedPrice !== undefined) {
-      await sql`
-        UPDATE leads 
-        SET lead_price = ${estimatedPrice}
-        WHERE id = ${leadId}
-      `
+    const priceToUpdate = estimatedPrice ?? lead_price
+    if (priceToUpdate !== undefined) {
+      await sql`UPDATE leads SET lead_price = ${priceToUpdate} WHERE id = ${leadId}`
+      return NextResponse.json({ success: true })
     }
 
     return NextResponse.json({ success: true })
@@ -101,8 +84,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
-    console.log("[v0] PUT request body:", body)
-    const { id, service_time } = body
+    const { id, name, phone, city, service, problem, lead_price, service_time, status, partner_id } = body
 
     if (!id) {
       return NextResponse.json({ error: "Falta id" }, { status: 400 })
@@ -110,18 +92,23 @@ export async function PUT(request: NextRequest) {
 
     const sql = neon(process.env.NEON_DATABASE_URL!)
 
-    console.log("[v0] Updating service_time for lead:", id, "to:", service_time)
-
     await sql`
-      UPDATE leads 
-      SET service_time = ${service_time || null}
+      UPDATE leads SET 
+        name = COALESCE(${name}, name),
+        phone = COALESCE(${phone}, phone),
+        city = COALESCE(${city}, city),
+        service = COALESCE(${service}, service),
+        problem = COALESCE(${problem}, problem),
+        lead_price = COALESCE(${lead_price}, lead_price),
+        service_time = ${service_time === undefined ? null : service_time || null},
+        status = COALESCE(${status}, status),
+        partner_id = ${partner_id === undefined ? null : partner_id || null}
       WHERE id = ${id}
     `
 
-    console.log("[v0] Update successful")
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("[v0] Error updating service_time:", error)
-    return NextResponse.json({ error: "Error al actualizar hora de servicio" }, { status: 500 })
+    console.error("Error updating lead:", error)
+    return NextResponse.json({ error: "Error al actualizar lead" }, { status: 500 })
   }
 }

@@ -61,6 +61,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
   const [isLoading, setIsLoading] = useState(false)
   const [showTeaser, setShowTeaser] = useState(false)
   const [hasTrackedConversion, setHasTrackedConversion] = useState(false)
+  const [hasTrackedWhatsApp, setHasTrackedWhatsApp] = useState(false) // Track if WhatsApp lead was already sent
   const [progress, setProgress] = useState(0)
   const [availabilityTime, setAvailabilityTime] = useState(15)
   const [currentActivity, setCurrentActivity] = useState(recentActivity[0])
@@ -72,7 +73,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
   useEffect(() => {
     if (isOpen === null) {
       const isMobile = window.innerWidth < 768
-      setIsOpen(!isMobile) // Open on desktop, closed on mobile
+      setIsOpen(!isMobile)
     }
   }, [isOpen])
 
@@ -262,7 +263,28 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
     return service || "urgente"
   }
 
+  const sendWhatsAppLead = async () => {
+    if (hasTrackedWhatsApp) return // Don't send duplicate leads
+
+    try {
+      await fetch("/api/leads/whatsapp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service: getServiceFromMessages(),
+          messages: messages,
+          sessionId: sessionId,
+        }),
+      })
+      setHasTrackedWhatsApp(true)
+    } catch (error) {
+      console.error("[v0] Error sending WhatsApp lead:", error)
+    }
+  }
+
   const handleWhatsAppClick = () => {
+    sendWhatsAppLead()
+
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "conversion", {
         send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
@@ -473,67 +495,55 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
                       : "bg-white shadow-sm rounded-bl-sm"
                   }`}
                 >
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                  <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
                 </div>
               </div>
             ))}
 
             {isLoading && (
               <div className="flex justify-start animate-in fade-in duration-200">
-                <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-2.5 shadow-sm">
-                  <div className="flex gap-1">
+                <div className="bg-white shadow-sm rounded-2xl rounded-bl-sm px-4 py-3">
+                  <div className="flex gap-1.5">
                     <span
-                      className="w-1.5 h-1.5 bg-neutral-300 rounded-full animate-bounce"
+                      className="w-2 h-2 bg-neutral-300 rounded-full animate-bounce"
                       style={{ animationDelay: "0ms" }}
                     />
                     <span
-                      className="w-1.5 h-1.5 bg-neutral-300 rounded-full animate-bounce"
+                      className="w-2 h-2 bg-neutral-300 rounded-full animate-bounce"
                       style={{ animationDelay: "150ms" }}
                     />
                     <span
-                      className="w-1.5 h-1.5 bg-neutral-300 rounded-full animate-bounce"
+                      className="w-2 h-2 bg-neutral-300 rounded-full animate-bounce"
                       style={{ animationDelay: "300ms" }}
                     />
                   </div>
                 </div>
               </div>
             )}
-
             <div ref={messagesEndRef} />
           </div>
 
-          <div
-            className="bg-neutral-50 px-4 py-3 shrink-0"
-            style={{ paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}
-          >
-            {messages.length > 0 && messages.length < 4 && (
-              <p className="text-[11px] text-neutral-400 text-center mb-2">Completa ahora para prioridad</p>
-            )}
-            <form onSubmit={handleSubmit} className="flex gap-2">
+          <form onSubmit={handleSubmit} className="p-3 bg-white border-t border-neutral-100 shrink-0">
+            <div className="flex gap-2">
               <input
                 ref={inputRef}
+                type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Escribe tu mensaje..."
-                className="flex-1 px-4 py-2.5 rounded-xl border border-neutral-200 focus:outline-none focus:border-foreground text-sm transition-colors bg-white"
+                className="flex-1 px-4 py-2.5 bg-neutral-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 placeholder:text-neutral-400"
                 disabled={isLoading}
-                style={{ fontSize: "16px" }}
-                autoComplete="off"
               />
               <Button
                 type="submit"
-                size="icon"
-                className="rounded-xl h-[42px] w-[42px] shrink-0"
                 disabled={isLoading || !input.trim()}
+                size="icon"
+                className="h-10 w-10 rounded-xl shrink-0"
               >
-                {isLoading ? (
-                  <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                ) : (
-                  <ArrowRight className="h-4 w-4" />
-                )}
+                <ArrowRight className="h-4 w-4" />
               </Button>
-            </form>
-          </div>
+            </div>
+          </form>
         </Card>
       )}
     </>

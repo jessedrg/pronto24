@@ -1,12 +1,11 @@
-import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
 import { neon } from "@neondatabase/serverless"
-import { DashboardClient } from "./dashboard-client"
+import { cookies } from "next/headers"
+import { NextResponse } from "next/server"
 
 const VALID_SESSION = "rf_admin_session_2024_punk"
 const OWNER_TELEGRAM_ID = process.env.ADMIN_USER_IDS?.split(",")[0] || ""
 
-const defaultStats = {
+const emptyResponse = (dateRange?: string) => ({
   total: 0,
   sold: 0,
   revenue: 0,
@@ -20,18 +19,28 @@ const defaultStats = {
   weekRevenue: 0,
   weekPending: 0,
   weekPotential: 0,
-  recentLeads: [] as any[],
-  byService: [] as any[],
-  funnelStats: [] as any[],
+  recentLeads: [],
+  byService: [],
+  funnelStats: [],
   partners: 0,
-  partnersList: [] as any[],
+  partnersList: [],
   ownerTelegramId: OWNER_TELEGRAM_ID,
   conversionRate: "0",
-  incompleteChats: [] as any[],
-  dateRange: "all",
-}
+  incompleteChats: [],
+  dateRange: dateRange || "all",
+})
 
-async function getStats(dateRange?: string) {
+export async function GET(request: Request) {
+  const cookieStore = await cookies()
+  const session = cookieStore.get("rf_admin_session")
+
+  if (session?.value !== VALID_SESSION) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const { searchParams } = new URL(request.url)
+  const dateRange = searchParams.get("range") || undefined
+
   try {
     const sql = neon(process.env.NEON_DATABASE_URL!)
 
@@ -39,7 +48,7 @@ async function getStats(dateRange?: string) {
     let recentLeads: any[] = []
     let partnersList: any[] = []
 
-    // Query 1: Stats (single consolidated query)
+    // Query 1: Stats
     try {
       const statsResult = await sql`
         WITH stats AS (
@@ -60,19 +69,19 @@ async function getStats(dateRange?: string) {
           FROM leads
         ),
         partner_count AS (
-          SELECT COUNT(*) as count FROM partners WHERE active = true
+          SELECT COUNT(*) as cnt FROM partners WHERE active = true
         )
-        SELECT s.*, p.count as partners_count FROM stats s, partner_count p
+        SELECT s.*, p.cnt as partners_count FROM stats s, partner_count p
       `
       stats = statsResult[0] || {}
-    } catch {
+    } catch (e) {
       stats = {}
     }
 
-    // Small delay between queries
+    // Small delay
     await new Promise((r) => setTimeout(r, 50))
 
-    // Query 2: Get leads based on date range
+    // Query 2: Leads
     try {
       if (dateRange === "today") {
         recentLeads =
@@ -90,14 +99,14 @@ async function getStats(dateRange?: string) {
         recentLeads =
           await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at FROM leads ORDER BY created_at DESC LIMIT 100`
       }
-    } catch {
+    } catch (e) {
       recentLeads = []
     }
 
     // Small delay
     await new Promise((r) => setTimeout(r, 50))
 
-    // Query 3: Get partners
+    // Query 3: Partners
     try {
       partnersList = await sql`
         SELECT 
@@ -109,14 +118,14 @@ async function getStats(dateRange?: string) {
         GROUP BY p.id, p.name, p.phone, p.telegram_chat_id, p.services, p.cities, p.active, p.created_at, p.total_leads_accepted, p.balance_euros
         ORDER BY p.created_at DESC
       `
-    } catch {
+    } catch (e) {
       partnersList = []
     }
 
     const total = Number(stats.total_all || 0)
     const sold = Number(stats.sold_all || 0)
 
-    return {
+    return NextResponse.json({
       total,
       sold,
       revenue: Number(stats.revenue_all || 0),
@@ -142,27 +151,9 @@ async function getStats(dateRange?: string) {
       conversionRate: total > 0 ? ((sold / total) * 100).toFixed(1) : "0",
       incompleteChats: [],
       dateRange: dateRange || "all",
-    }
+    })
   } catch (error: any) {
-    console.error("getStats error:", error?.message || error)
-    return { ...defaultStats, dateRange: dateRange || "all" }
+    console.error("Dashboard API error:", error?.message || error)
+    return NextResponse.json(emptyResponse(dateRange))
   }
-}
-
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ range?: string }>
-}) {
-  const cookieStore = await cookies()
-  const session = cookieStore.get("rf_admin_session")
-
-  if (session?.value !== VALID_SESSION) {
-    redirect("/0x")
-  }
-
-  const params = await searchParams
-  const stats = await getStats(params.range)
-
-  return <DashboardClient initialStats={stats} />
 }
