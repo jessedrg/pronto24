@@ -719,15 +719,13 @@ function LeadDetailModal({
   lead: Lead
   partners: Partner[]
   onClose: () => void
-  onSave: (data: any) => void
+  onSave: (data: Partial<Lead>) => void
   onStatusChange: (status: string) => void
-  onPartnerAssign: (partnerId: string) => void
+  onPartnerAssign: (partnerId: string | null) => void
   onDelete: () => void
 }) {
+  const [activeModalTab, setActiveModalTab] = useState<"info" | "sequence">("info") // Renamed from activeTab
   const [editing, setEditing] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [analyzingScreenshot, setAnalyzingScreenshot] = useState(false)
-  const screenshotInputRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState(lead.name || "")
   const [phone, setPhone] = useState(lead.phone || "")
   const [city, setCity] = useState(lead.city || "")
@@ -735,14 +733,17 @@ function LeadDetailModal({
   const [problem, setProblem] = useState(lead.problem || "")
   const [leadPrice, setLeadPrice] = useState(lead.lead_price || 0)
   const [serviceTime, setServiceTime] = useState(lead.service_time || "")
-  const [localStatus, setLocalStatus] = useState(lead.status)
-  const [localPartnerId, setLocalPartnerId] = useState(lead.partner_id)
   const [commission, setCommission] = useState(lead.commission || 0)
   const [amountCharged, setAmountCharged] = useState(lead.amount_charged || 0)
   const [notes, setNotes] = useState(lead.notes || "")
-  const [activeTab, setActiveTab] = useState<"info" | "secuencia">("info")
+  const [partnerId, setPartnerId] = useState(lead.partner_id || null)
+  const [status, setStatus] = useState(lead.status || "pending")
+  const [saving, setSaving] = useState(false)
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
+  const [analyzingScreenshot, setAnalyzingScreenshot] = useState(false)
+  const screenshotInputRef = useRef<HTMLInputElement>(null)
 
+  // Sync state when lead prop changes
   useEffect(() => {
     setName(lead.name || "")
     setPhone(lead.phone || "")
@@ -751,11 +752,11 @@ function LeadDetailModal({
     setProblem(lead.problem || "")
     setLeadPrice(lead.lead_price || 0)
     setServiceTime(lead.service_time || "")
-    setLocalStatus(lead.status)
-    setLocalPartnerId(lead.partner_id)
     setCommission(lead.commission || 0)
     setAmountCharged(lead.amount_charged || 0)
     setNotes(lead.notes || "")
+    setPartnerId(lead.partner_id || null)
+    setStatus(lead.status || "pending")
   }, [lead])
 
   const allServices = ["fontanero", "electricista", "cerrajero", "desatasco", "calderas"]
@@ -843,6 +844,8 @@ function LeadDetailModal({
         commission,
         amount_charged: amountCharged,
         notes,
+        partner_id: partnerId,
+        status,
       })
       console.log("[v0] Lead saved successfully")
       setEditing(false)
@@ -854,13 +857,13 @@ function LeadDetailModal({
   }
 
   const handleStatusChangeLocal = (newStatus: string) => {
-    setLocalStatus(newStatus)
+    setStatus(newStatus)
     onStatusChange(newStatus)
   }
 
   const handlePartnerAssignLocal = (partnerId: string) => {
-    setLocalPartnerId(partnerId || null)
-    onPartnerAssign(partnerId)
+    setPartnerId(partnerId || null)
+    onPartnerAssign(partnerId || null)
   }
 
   const handleScreenshotAnalysis = async (file: File) => {
@@ -917,8 +920,8 @@ function LeadDetailModal({
   }, [])
 
   const source = sourceLabels[lead.source || "chat"] || sourceLabels.chat
-  const status = statusLabels[localStatus] || statusLabels.pending
-  const partner = partners.find((p) => p.id === localPartnerId)
+  const selectedStatus = statusLabels[status] || statusLabels.pending
+  const partner = partners.find((p) => p.id === partnerId)
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleString("es-ES", {
@@ -1015,6 +1018,8 @@ function LeadDetailModal({
                   setCommission(lead.commission || 0)
                   setAmountCharged(lead.amount_charged || 0)
                   setNotes(lead.notes || "")
+                  setPartnerId(lead.partner_id || null) // Reset partnerId
+                  setStatus(lead.status || "pending") // Reset status
                   setEditing(false)
                 }}
                 className="p-1.5 sm:p-2 border border-red-500/50 hover:bg-red-500/10 transition-colors"
@@ -1033,9 +1038,9 @@ function LeadDetailModal({
 
         <div className="flex border-b border-zinc-800 shrink-0">
           <button
-            onClick={() => setActiveTab("info")}
+            onClick={() => setActiveModalTab("info")}
             className={`flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${
-              activeTab === "info"
+              activeModalTab === "info"
                 ? "text-[#FF4D00] border-b-2 border-[#FF4D00] bg-[#FF4D00]/5"
                 : "text-zinc-500 hover:text-zinc-300"
             }`}
@@ -1044,9 +1049,9 @@ function LeadDetailModal({
             INFO
           </button>
           <button
-            onClick={() => setActiveTab("secuencia")}
+            onClick={() => setActiveModalTab("sequence")}
             className={`flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${
-              activeTab === "secuencia"
+              activeModalTab === "sequence"
                 ? "text-[#FF4D00] border-b-2 border-[#FF4D00] bg-[#FF4D00]/5"
                 : "text-zinc-500 hover:text-zinc-300"
             }`}
@@ -1063,7 +1068,7 @@ function LeadDetailModal({
           </div>
         )}
 
-        {activeTab === "info" && (
+        {activeModalTab === "info" && (
           <div className="p-4 space-y-4 overflow-y-auto flex-1">
             <div className="grid grid-cols-2 gap-3 p-3 border border-[#FF4D00]/30 bg-[#FF4D00]/5">
               <div>
@@ -1236,7 +1241,7 @@ function LeadDetailModal({
               <div>
                 <label className="text-xs text-zinc-500 block mb-1">ESTADO</label>
                 <select
-                  value={localStatus}
+                  value={status}
                   onChange={(e) => handleStatusChangeLocal(e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
                 >
@@ -1252,7 +1257,7 @@ function LeadDetailModal({
               <div>
                 <label className="text-xs text-zinc-500 block mb-1">PARTNER ASIGNADO</label>
                 <select
-                  value={localPartnerId || ""}
+                  value={partnerId || ""}
                   onChange={(e) => handlePartnerAssignLocal(e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
                 >
@@ -1308,7 +1313,7 @@ function LeadDetailModal({
           </div>
         )}
 
-        {activeTab === "secuencia" && (
+        {activeModalTab === "sequence" && (
           <div className="p-4 space-y-3 overflow-y-auto flex-1">
             <div className="p-3 bg-zinc-800/50 border border-zinc-700 mb-4">
               <p className="text-xs text-zinc-400">
@@ -1318,9 +1323,9 @@ function LeadDetailModal({
             </div>
 
             {sequenceMessages.map((seq, index) => {
-              const isCurrentStatus = localStatus === seq.status
+              const isCurrentStatus = status === seq.status
               const isPastStatus =
-                PIPELINE_STATUSES.findIndex((s) => s.key === localStatus) >
+                PIPELINE_STATUSES.findIndex((s) => s.key === status) >
                 PIPELINE_STATUSES.findIndex((s) => s.key === seq.status)
 
               return (

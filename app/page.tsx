@@ -1,5 +1,4 @@
 import { Hero } from "@/components/hero"
-import { AllServices } from "@/components/all-services"
 import { Footer } from "@/components/footer"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { TrustBadges } from "@/components/trust-badges"
@@ -14,7 +13,6 @@ export default function Home() {
       <UrgencyBanner />
       <Hero />
       <TrustBadges />
-      <AllServices />
       <SocialProof />
       <GuaranteeSection />
       <Coverage />
