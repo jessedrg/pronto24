@@ -84,6 +84,8 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
+    console.log("[v0] PUT /api/0x/leads - Raw body:", JSON.stringify(body))
+
     const {
       id,
       name,
@@ -107,27 +109,58 @@ export async function PUT(request: NextRequest) {
 
     const sql = neon(process.env.NEON_DATABASE_URL!)
 
-    await sql`
-      UPDATE leads SET 
-        name = COALESCE(${name}, name),
-        phone = COALESCE(${phone}, phone),
-        city = COALESCE(${city}, city),
-        service = COALESCE(${service}, service),
-        problem = COALESCE(${problem}, problem),
-        lead_price = COALESCE(${lead_price}, lead_price),
-        service_time = ${service_time === undefined ? null : service_time || null},
-        status = COALESCE(${status}, status),
-        partner_id = ${partner_id === undefined ? null : partner_id || null},
-        commission = COALESCE(${commission}, commission),
-        amount_charged = COALESCE(${amount_charged}, amount_charged),
-        client_cost = COALESCE(${client_cost}, client_cost),
-        notes = COALESCE(${notes}, notes)
+    const updateValues = {
+      name: name ?? "",
+      phone: phone ?? "",
+      city: city ?? "",
+      service: service ?? "",
+      problem: problem ?? "",
+      lead_price: Number(lead_price) || 0,
+      service_time: service_time || null,
+      status: status || "pending",
+      partner_id: partner_id || null,
+      commission: Number(commission) || 0,
+      amount_charged: Number(amount_charged) || 0,
+      client_cost: Number(client_cost) || 0,
+      notes: notes || null,
+    }
+    console.log("[v0] PUT - Values for SQL update:", JSON.stringify(updateValues))
+
+    const result = await sql`
+      UPDATE leads SET
+        name = ${updateValues.name},
+        phone = ${updateValues.phone},
+        city = ${updateValues.city},
+        service = ${updateValues.service},
+        problem = ${updateValues.problem},
+        lead_price = ${updateValues.lead_price},
+        service_time = ${updateValues.service_time},
+        status = ${updateValues.status},
+        partner_id = ${updateValues.partner_id},
+        commission = ${updateValues.commission},
+        amount_charged = ${updateValues.amount_charged},
+        client_cost = ${updateValues.client_cost},
+        notes = ${updateValues.notes}
       WHERE id = ${id}
+      RETURNING id, name, phone, city, service, problem, lead_price, service_time, status, partner_id, commission, amount_charged, client_cost, notes
     `
 
-    return NextResponse.json({ success: true })
+    console.log("[v0] PUT - SQL result:", JSON.stringify(result))
+    console.log("[v0] PUT - Result row count:", result.length)
+
+    if (result.length > 0) {
+      console.log("[v0] PUT - Updated lead commission:", result[0].commission)
+      console.log("[v0] PUT - Updated lead amount_charged:", result[0].amount_charged)
+      console.log("[v0] PUT - Updated lead client_cost:", result[0].client_cost)
+    }
+
+    if (!result[0]) {
+      return NextResponse.json({ error: "Lead no encontrado" }, { status: 404 })
+    }
+
+    return NextResponse.json({ success: true, lead: result[0] })
   } catch (error) {
-    console.error("Error updating lead:", error)
+    console.error("[v0] PUT - Error:", error)
     return NextResponse.json({ error: "Error al actualizar lead" }, { status: 500 })
   }
 }

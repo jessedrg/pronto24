@@ -76,19 +76,19 @@ async function getStats(dateRange?: string) {
     try {
       if (dateRange === "today") {
         recentLeads =
-          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at FROM leads WHERE DATE(created_at) = CURRENT_DATE ORDER BY created_at DESC LIMIT 100`
+          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at, commission, amount_charged, client_cost, notes, source FROM leads WHERE DATE(created_at) = CURRENT_DATE ORDER BY created_at DESC LIMIT 100`
       } else if (dateRange === "yesterday") {
         recentLeads =
-          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at FROM leads WHERE DATE(created_at) = CURRENT_DATE - 1 ORDER BY created_at DESC LIMIT 100`
+          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at, commission, amount_charged, client_cost, notes, source FROM leads WHERE DATE(created_at) = CURRENT_DATE - 1 ORDER BY created_at DESC LIMIT 100`
       } else if (dateRange === "week") {
         recentLeads =
-          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at FROM leads WHERE created_at >= NOW() - INTERVAL '7 days' ORDER BY created_at DESC LIMIT 100`
+          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at, commission, amount_charged, client_cost, notes, source FROM leads WHERE created_at >= NOW() - INTERVAL '7 days' ORDER BY created_at DESC LIMIT 100`
       } else if (dateRange === "month") {
         recentLeads =
-          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at FROM leads WHERE created_at >= NOW() - INTERVAL '30 days' ORDER BY created_at DESC LIMIT 100`
+          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at, commission, amount_charged, client_cost, notes, source FROM leads WHERE created_at >= NOW() - INTERVAL '30 days' ORDER BY created_at DESC LIMIT 100`
       } else {
         recentLeads =
-          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at FROM leads ORDER BY created_at DESC LIMIT 100`
+          await sql`SELECT id, name, phone, service, city, problem, status, lead_price, partner_id, requested_date, service_time, created_at, commission, amount_charged, client_cost, notes, source FROM leads ORDER BY created_at DESC LIMIT 100`
       }
     } catch {
       recentLeads = []

@@ -25,7 +25,6 @@ import {
   RotateCcw,
   Clock,
   Maximize2,
-  Save,
   GripVertical,
   Calendar,
   CheckCircle,
@@ -33,6 +32,11 @@ import {
   UserCheck,
   FileText,
   Euro,
+  Upload,
+  ImageIcon,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
 
 interface Partner {
@@ -97,7 +101,7 @@ interface DashboardClientProps {
 const PIPELINE_STATUSES = [
   { key: "pending", label: "PENDIENTE", color: "yellow", icon: Clock },
   { key: "contacted", label: "CONTACTADO", color: "blue", icon: Phone },
-  { key: "pending_appointment", label: "PDTE CITA", color: "cyan", icon: Calendar },
+  { key: "pending_appointment", label: "PDTE CITA", color: "cyan", icon: Calendar }, // Added new status
   { key: "confirmed", label: "CITA CONFIRMADA", color: "purple", icon: Calendar },
   { key: "completed", label: "TRABAJO ACABADO", color: "orange", icon: CheckCircle },
   { key: "paid", label: "PAGADO", color: "green", icon: CreditCard },
@@ -139,13 +143,13 @@ function KPICard({
   }
 
   return (
-    <div className={`border ${colors[color]} p-3`}>
+    <div className={`border ${colors[color]} p-2 sm:p-3`}>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] text-zinc-500 tracking-wider">{label}</span>
-        <div className={textColors[color]}>{icon}</div>
+        <span className="text-[8px] sm:text-[10px] text-zinc-500 tracking-wider truncate">{label}</span>
+        <div className={`${textColors[color]} hidden sm:block`}>{icon}</div>
       </div>
-      <p className={`text-lg font-bold tracking-tight ${textColors[color]}`}>{value}</p>
-      {subvalue && <p className="text-[10px] text-zinc-500 mt-0.5">{subvalue}</p>}
+      <p className={`text-sm sm:text-lg font-bold tracking-tight ${textColors[color]}`}>{value}</p>
+      {subvalue && <p className="text-[8px] sm:text-[10px] text-zinc-500 mt-0.5 truncate">{subvalue}</p>}
     </div>
   )
 }
@@ -200,20 +204,22 @@ function PartnerDetailModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl max-h-[85vh] overflow-hidden border border-zinc-700 bg-zinc-900 flex flex-col"
+        className="w-full sm:max-w-2xl h-[90vh] sm:h-auto sm:max-h-[85vh] overflow-hidden border-t sm:border border-zinc-700 bg-zinc-900 flex flex-col rounded-t-xl sm:rounded-none"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-4 border-b border-zinc-800 flex items-center justify-between shrink-0">
+        <div className="w-12 h-1 bg-zinc-700 rounded-full mx-auto mt-2 sm:hidden" />
+
+        <div className="p-3 sm:p-4 border-b border-zinc-800 flex items-center justify-between shrink-0">
           <div>
-            <h3 className="text-sm font-bold tracking-wider text-[#FF4D00] flex items-center gap-2">
+            <h3 className="text-xs sm:text-sm font-bold tracking-wider text-[#FF4D00] flex items-center gap-2">
               <UserCheck className="w-4 h-4" />
               {partner.name}
             </h3>
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-[10px] sm:text-xs text-zinc-500 mt-1">
               {partner.phone} • {partner.services?.join(", ")}
             </p>
           </div>
@@ -222,18 +228,18 @@ function PartnerDetailModal({
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 p-4 border-b border-zinc-800 shrink-0">
-          <div className="text-center p-2 border border-yellow-500/30 bg-yellow-500/5">
-            <p className="text-lg font-bold text-yellow-500">{pendingLeads.length}</p>
-            <p className="text-[10px] text-zinc-500">EN PROCESO</p>
+        <div className="grid grid-cols-3 gap-1 sm:gap-2 p-2 sm:p-4 border-b border-zinc-800 shrink-0">
+          <div className="text-center p-1.5 sm:p-2 border border-yellow-500/30 bg-yellow-500/5">
+            <p className="text-base sm:text-lg font-bold text-yellow-500">{pendingLeads.length}</p>
+            <p className="text-[8px] sm:text-[10px] text-zinc-500">EN PROCESO</p>
           </div>
-          <div className="text-center p-2 border border-orange-500/30 bg-orange-500/5">
-            <p className="text-lg font-bold text-orange-500">{completedLeads.length}</p>
-            <p className="text-[10px] text-zinc-500">PDTE PAGO ({pendingRevenue}€)</p>
+          <div className="text-center p-1.5 sm:p-2 border border-orange-500/30 bg-orange-500/5">
+            <p className="text-base sm:text-lg font-bold text-orange-500">{completedLeads.length}</p>
+            <p className="text-[8px] sm:text-[10px] text-zinc-500">PDTE ({pendingRevenue}€)</p>
           </div>
-          <div className="text-center p-2 border border-green-500/30 bg-green-500/5">
-            <p className="text-lg font-bold text-green-500">{paidLeads.length}</p>
-            <p className="text-[10px] text-zinc-500">PAGADOS ({totalRevenue}€)</p>
+          <div className="text-center p-1.5 sm:p-2 border border-green-500/30 bg-green-500/5">
+            <p className="text-base sm:text-lg font-bold text-green-500">{paidLeads.length}</p>
+            <p className="text-[8px] sm:text-[10px] text-zinc-500">PAGADOS ({totalRevenue}€)</p>
           </div>
         </div>
 
@@ -451,31 +457,177 @@ function LeadModal({
   onClose: () => void
   onSave: (data: any) => void
 }) {
+  const [mode, setMode] = useState<"manual" | "screenshot">("manual")
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
   const [city, setCity] = useState("")
   const [service, setService] = useState("")
   const [problem, setProblem] = useState("")
   const [saving, setSaving] = useState(false)
+  const [analyzing, setAnalyzing] = useState(false)
+  const [dragOver, setDragOver] = useState(false)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const allServices = ["fontanero", "electricista", "cerrajero", "desatasco", "calderas"]
 
   const handleSave = async () => {
     if (!name || !phone || !service) return
     setSaving(true)
-    await onSave({ name, phone, city, service, problem, source: "manual" })
+    await onSave({ name, phone, city, service, problem, source: mode === "screenshot" ? "screenshot" : "manual" })
     setSaving(false)
   }
 
+  const handleFileSelect = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      alert("Por favor selecciona una imagen")
+      return
+    }
+
+    // Show preview
+    const url = URL.createObjectURL(file)
+    setPreviewUrl(url)
+
+    // Analyze with AI
+    setAnalyzing(true)
+    try {
+      const formData = new FormData()
+      formData.append("image", file)
+
+      const res = await fetch("/api/0x/analyze-screenshot", {
+        method: "POST",
+        body: formData,
+      })
+
+      const data = await res.json()
+
+      if (data.success && data.lead) {
+        setName(data.lead.name || "")
+        setPhone(data.lead.phone || "")
+        setCity(data.lead.city || "")
+        setService(data.lead.service || "")
+        setProblem(data.lead.problem || "")
+      } else if (data.error) {
+        alert(data.error)
+      }
+    } catch (error) {
+      console.error("Error analyzing screenshot:", error)
+      alert("Error al analizar la imagen")
+    } finally {
+      setAnalyzing(false)
+    }
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDragOver(false)
+    const file = e.dataTransfer.files[0]
+    if (file) handleFileSelect(file)
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDragOver(true)
+  }
+
+  const handleDragLeave = () => {
+    setDragOver(false)
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) handleFileSelect(file)
+  }
+
+  const handlePaste = async (e: React.ClipboardEvent) => {
+    const items = e.clipboardData.items
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.startsWith("image/")) {
+        const file = items[i].getAsFile()
+        if (file) handleFileSelect(file)
+        break
+      }
+    }
+  }
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="w-full max-w-md border border-zinc-700 bg-zinc-900 p-6">
-        <div className="flex items-center justify-between mb-6">
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm"
+      onPaste={handlePaste}
+    >
+      <div className="w-full sm:max-w-md h-[95vh] sm:h-auto overflow-y-auto border-t sm:border border-zinc-700 bg-zinc-900 p-4 sm:p-6 rounded-t-xl sm:rounded-none">
+        <div className="w-12 h-1 bg-zinc-700 rounded-full mx-auto mb-4 sm:hidden" />
+
+        <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-bold tracking-wider text-[#FF4D00]">NUEVO LEAD</h3>
           <button onClick={onClose} className="p-1 hover:bg-zinc-800 transition-colors">
             <X className="w-5 h-5 text-zinc-400" />
           </button>
         </div>
+
+        {/* Mode tabs */}
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => setMode("manual")}
+            className={`flex-1 py-2 text-xs font-medium border transition-colors flex items-center justify-center gap-2 ${
+              mode === "manual"
+                ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+            }`}
+          >
+            <Edit2 className="w-3 h-3" />
+            MANUAL
+          </button>
+          <button
+            onClick={() => setMode("screenshot")}
+            className={`flex-1 py-2 text-xs font-medium border transition-colors flex items-center justify-center gap-2 ${
+              mode === "screenshot"
+                ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
+            }`}
+          >
+            <ImageIcon className="w-3 h-3" />
+            CAPTURA IA
+          </button>
+        </div>
+
+        {/* Screenshot upload area */}
+        {mode === "screenshot" && (
+          <div className="mb-4">
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleInputChange} className="hidden" />
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              className={`border-2 border-dashed p-4 text-center cursor-pointer transition-all ${
+                dragOver ? "border-[#FF4D00] bg-[#FF4D00]/10" : "border-zinc-700 hover:border-zinc-600"
+              }`}
+            >
+              {analyzing ? (
+                <div className="flex flex-col items-center gap-2 py-4">
+                  <Loader2 className="w-8 h-8 text-[#FF4D00] animate-spin" />
+                  <p className="text-sm text-zinc-400">Analizando con IA...</p>
+                </div>
+              ) : previewUrl ? (
+                <div className="space-y-2">
+                  <img
+                    src={previewUrl || "/placeholder.svg"}
+                    alt="Preview"
+                    className="max-h-32 mx-auto object-contain"
+                  />
+                  <p className="text-xs text-zinc-500">Click para cambiar imagen</p>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2 py-4">
+                  <Upload className="w-8 h-8 text-zinc-500" />
+                  <p className="text-sm text-zinc-400">Arrastra una captura o haz click</p>
+                  <p className="text-xs text-zinc-500">También puedes pegar (Ctrl+V)</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
@@ -545,7 +697,7 @@ function LeadModal({
 
         <button
           onClick={handleSave}
-          disabled={saving || !name || !phone || !service}
+          disabled={saving || analyzing || !name || !phone || !service}
           className="w-full mt-6 py-3 bg-[#FF4D00] text-black font-bold tracking-wider hover:bg-[#FF4D00]/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? "GUARDANDO..." : "CREAR LEAD"}
@@ -555,6 +707,7 @@ function LeadModal({
   )
 }
 
+// Updated LeadDetailModal for mobile
 function LeadDetailModal({
   lead,
   partners,
@@ -567,13 +720,15 @@ function LeadDetailModal({
   lead: Lead
   partners: Partner[]
   onClose: () => void
-  onSave: (data: Partial<Lead>) => Promise<void>
+  onSave: (data: any) => void
   onStatusChange: (status: string) => void
   onPartnerAssign: (partnerId: string) => void
   onDelete: () => void
 }) {
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [analyzingScreenshot, setAnalyzingScreenshot] = useState(false)
+  const screenshotInputRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState(lead.name || "")
   const [phone, setPhone] = useState(lead.phone || "")
   const [city, setCity] = useState(lead.city || "")
@@ -611,6 +766,7 @@ function LeadDetailModal({
     call: { label: "Llamada", color: "text-blue-400" },
     chat: { label: "Chat IA", color: "text-purple-400" },
     manual: { label: "Manual", color: "text-zinc-400" },
+    screenshot: { label: "Screenshot IA", color: "text-cyan-400" }, // Added for screenshot source
   }
 
   const statusLabels: Record<string, { label: string; color: string }> = {
@@ -625,21 +781,27 @@ function LeadDetailModal({
 
   const handleSave = async () => {
     setSaving(true)
-    await onSave({
-      name,
-      phone,
-      city,
-      service,
-      problem,
-      lead_price: leadPrice,
-      service_time: serviceTime || null,
-      commission,
-      amount_charged: amountCharged,
-      client_cost: clientCost,
-      notes,
-    })
-    setSaving(false)
-    setEditing(false)
+    try {
+      await onSave({
+        name,
+        phone,
+        city,
+        service,
+        problem,
+        lead_price: leadPrice,
+        service_time: serviceTime || null,
+        commission,
+        amount_charged: amountCharged,
+        client_cost: clientCost,
+        notes,
+      })
+      console.log("[v0] Lead saved successfully")
+      setEditing(false)
+    } catch (error) {
+      console.error("[v0] Error saving lead:", error)
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleStatusChangeLocal = (newStatus: string) => {
@@ -651,6 +813,59 @@ function LeadDetailModal({
     setLocalPartnerId(partnerId || null)
     onPartnerAssign(partnerId)
   }
+
+  const handleScreenshotAnalysis = async (file: File) => {
+    setAnalyzingScreenshot(true)
+    try {
+      const base64 = await new Promise<string>((resolve) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result as string)
+        reader.readAsDataURL(file)
+      })
+
+      const res = await fetch("/api/0x/analyze-screenshot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64 }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        // Update fields with extracted data (only if not empty)
+        if (data.name) setName(data.name)
+        if (data.phone) setPhone(data.phone)
+        if (data.city) setCity(data.city)
+        if (data.service) setService(data.service)
+        if (data.problem) setProblem(data.problem)
+        setEditing(true) // Enable editing mode to review
+      }
+    } catch (error) {
+      console.error("Error analyzing screenshot:", error)
+    }
+    setAnalyzingScreenshot(false)
+  }
+
+  const handleScreenshotUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) handleScreenshotAnalysis(file)
+  }
+
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items
+      if (items) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.startsWith("image/")) {
+            const file = items[i].getAsFile()
+            if (file) handleScreenshotAnalysis(file)
+            break
+          }
+        }
+      }
+    }
+    window.addEventListener("paste", handlePaste)
+    return () => window.removeEventListener("paste", handlePaste)
+  }, [])
 
   const source = sourceLabels[lead.source || "chat"] || sourceLabels.chat
   const status = statusLabels[localStatus] || statusLabels.pending
@@ -666,47 +881,116 @@ function LeadDetailModal({
     })
   }
 
+  // Service emojis for lead detail
+  const serviceEmojis: Record<string, string> = {
+    fontanero: "🔧",
+    electricista: "⚡",
+    cerrajero: "🔑",
+    desatasco: "🚿",
+    calderas: "🔥",
+  }
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-zinc-700 bg-zinc-900"
+        className="w-full sm:max-w-lg h-[95vh] sm:h-auto sm:max-h-[90vh] overflow-hidden border-t sm:border border-zinc-700 bg-zinc-900 flex flex-col rounded-t-xl sm:rounded-none"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-zinc-900 border-b border-zinc-800 p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h3 className="text-sm font-bold tracking-wider text-[#FF4D00]">LEAD #{lead.id}</h3>
-            <span className={`text-xs px-2 py-0.5 border border-zinc-700 ${source.color}`}>{source.label}</span>
-            <span className={`text-xs px-2 py-0.5 border border-zinc-700 ${status.color}`}>{status.label}</span>
+        <div className="w-12 h-1 bg-zinc-700 rounded-full mx-auto mt-2 sm:hidden" />
+
+        <div className="p-3 sm:p-4 border-b border-zinc-800 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+            <span className="text-xl sm:text-2xl">{serviceEmojis[lead.service] || "📋"}</span>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm sm:text-base font-bold text-white truncate">
+                {name || lead.name || "Sin nombre"}
+              </h3>
+              <p className="text-[10px] sm:text-xs text-zinc-500">{city || lead.city || "Sin ciudad"}</p>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            {!editing ? (
-              <button
-                onClick={() => setEditing(true)}
-                className="p-2 hover:bg-zinc-800 transition-colors border border-zinc-700"
-                title="Editar"
-              >
-                <Edit2 className="w-4 h-4 text-zinc-400" />
-              </button>
-            ) : (
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <button
+              onClick={() => screenshotInputRef.current?.click()}
+              className="p-1.5 sm:p-2 border border-cyan-500/50 hover:bg-cyan-500/10 transition-colors"
+              title="Actualizar desde captura"
+            >
+              {analyzingScreenshot ? (
+                <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-500 animate-spin" />
+              ) : (
+                <ImageIcon className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-500" />
+              )}
+            </button>
+            <input
+              ref={screenshotInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleScreenshotUpload}
+              className="hidden"
+            />
+            {editing ? (
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="p-2 bg-[#FF4D00] hover:bg-[#FF4D00]/90 transition-colors"
-                title="Guardar"
+                className="px-3 py-1.5 sm:py-2 border border-green-500 bg-green-500/20 hover:bg-green-500/30 transition-colors flex items-center gap-1.5"
               >
-                <Save className="w-4 h-4 text-black" />
+                {saving ? (
+                  <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 animate-spin" />
+                ) : (
+                  <Check className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                )}
+                <span className="text-xs font-bold text-green-500">GUARDAR</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setEditing(true)}
+                className="p-1.5 sm:p-2 border border-zinc-700 hover:border-zinc-600 transition-colors"
+                title="Editar"
+              >
+                <Edit2 className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF4D00]" />
               </button>
             )}
-            <button onClick={onClose} className="p-2 hover:bg-zinc-800 transition-colors">
-              <X className="w-5 h-5 text-zinc-400" />
-            </button>
+            {editing && (
+              <button
+                onClick={() => {
+                  // Reset to original values
+                  setName(lead.name || "")
+                  setPhone(lead.phone || "")
+                  setCity(lead.city || "")
+                  setService(lead.service || "")
+                  setProblem(lead.problem || "")
+                  setLeadPrice(lead.lead_price || 0)
+                  setServiceTime(lead.service_time || "")
+                  setCommission(lead.commission || 0)
+                  setAmountCharged(lead.amount_charged || 0)
+                  setClientCost(lead.client_cost || 0)
+                  setNotes(lead.notes || "")
+                  setEditing(false)
+                }}
+                className="p-1.5 sm:p-2 border border-red-500/50 hover:bg-red-500/10 transition-colors"
+                title="Cancelar"
+              >
+                <X className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
+              </button>
+            )}
+            {!editing && (
+              <button onClick={onClose} className="p-1.5 sm:p-2 hover:bg-zinc-800 transition-colors">
+                <X className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-400" />
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="p-4 space-y-4">
+        {analyzingScreenshot && (
+          <div className="p-3 bg-cyan-500/10 border-b border-cyan-500/30 flex items-center gap-2">
+            <Loader2 className="w-4 h-4 text-cyan-400 animate-spin" />
+            <span className="text-sm text-cyan-400">Analizando captura con IA...</span>
+          </div>
+        )}
+
+        <div className="p-4 space-y-4 overflow-y-auto">
           <div className="grid grid-cols-3 gap-3 p-3 border border-[#FF4D00]/30 bg-[#FF4D00]/5">
             <div>
               <label className="text-[10px] text-zinc-500 block mb-1">COMISION ESTIMADA</label>
@@ -979,24 +1263,22 @@ function LeadCard({
   onTrash,
   onPriceChange,
   onExpand,
-  copied,
-  updating,
+  copiedLeadId,
+  updatingLeadId,
   onDragStart,
-  isDragging,
 }: {
   lead: Lead
   partners: Partner[]
   onStatusChange: (leadId: string, status: string) => void
   onPartnerAssign: (leadId: string, partnerId: string) => void
-  onWhatsApp: () => void
-  onCopy: () => void
-  onTrash: () => void
-  onPriceChange: (price: number) => void
-  onExpand: () => void
-  copied: boolean
-  updating: boolean
-  onDragStart?: (e: React.DragEvent) => void
-  isDragging?: boolean
+  onWhatsApp: (lead: Lead) => void
+  onCopy: (lead: Lead) => void
+  onTrash: (leadId: string) => void
+  onPriceChange: (leadId: string, price: number) => void
+  onExpand: (leadId: string) => void
+  copiedLeadId: string | null
+  updatingLeadId: string | null
+  onDragStart: (e: React.DragEvent) => void
 }) {
   const serviceEmojis: Record<string, string> = {
     fontanero: "🔧",
@@ -1011,82 +1293,95 @@ function LeadCard({
     call: { label: "TEL", color: "text-blue-400 border-blue-500/30 bg-blue-500/10" },
     chat: { label: "CHAT", color: "text-purple-400 border-purple-500/30 bg-purple-500/10" },
     manual: { label: "MAN", color: "text-zinc-400 border-zinc-500/30 bg-zinc-500/10" },
+    screenshot: { label: "IA", color: "text-cyan-400 border-cyan-500/30 bg-cyan-500/10" },
   }
 
   const partner = partners.find((p) => p.id === lead.partner_id)
   const source = sourceLabels[lead.source || "chat"] || sourceLabels.chat
 
+  const commission = Number(lead.commission) || 0
+  const amountCharged = Number(lead.amount_charged) || 0
+  const clientCost = Number(lead.client_cost) || 0
+  const hasFinancials = commission > 0 || amountCharged > 0 || clientCost > 0
+
   return (
     <div
       draggable
       onDragStart={onDragStart}
-      className={`p-3 border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800/30 transition-all cursor-grab active:cursor-grabbing group ${
-        isDragging ? "opacity-50 scale-95 border-[#FF4D00]" : ""
+      className={`p-2 sm:p-3 border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800/30 transition-all cursor-grab active:cursor-grabbing group ${
+        updatingLeadId === lead.id ? "opacity-50" : ""
       }`}
-      onClick={onExpand}
       data-lead-id={lead.id}
+      onClick={() => onExpand(lead.id)}
     >
-      <div className="flex items-start gap-2 mb-2">
-        <div className="flex items-center gap-1">
-          <GripVertical className="w-3 h-3 text-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <span className="text-lg">{serviceEmojis[lead.service] || "📋"}</span>
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="font-medium text-sm truncate">{lead.name || "Sin nombre"}</span>
-            <span className={`text-[9px] px-1 py-0.5 border ${source.color}`}>{source.label}</span>
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-base sm:text-lg shrink-0">{serviceEmojis[lead.service] || "📋"}</span>
+          <div className="min-w-0">
+            <p className="text-xs sm:text-sm font-medium truncate">{lead.name || "Sin nombre"}</p>
+            <p className="text-[10px] text-zinc-500 truncate">{lead.city || "Sin ciudad"}</p>
           </div>
-          <p className="text-xs text-zinc-500">
-            {lead.city} • {lead.service}
-          </p>
         </div>
-        <span className="text-xs text-zinc-600">
-          {new Date(lead.created_at).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}
-        </span>
-      </div>
-
-      <div className="grid grid-cols-3 gap-1 mb-2 text-[10px]">
-        <div className="bg-[#FF4D00]/10 border border-[#FF4D00]/30 px-1.5 py-1 text-center">
-          <span className="text-zinc-500 block">Comision</span>
-          <span className="text-[#FF4D00] font-bold">{lead.commission || 0}€</span>
-        </div>
-        <div className="bg-green-500/10 border border-green-500/30 px-1.5 py-1 text-center">
-          <span className="text-zinc-500 block">Cobrado</span>
-          <span className="text-green-500 font-bold">{lead.amount_charged || 0}€</span>
-        </div>
-        <div className="bg-blue-500/10 border border-blue-500/30 px-1.5 py-1 text-center">
-          <span className="text-zinc-500 block">Cliente</span>
-          <span className="text-blue-500 font-bold">{lead.client_cost || 0}€</span>
+        <div className="flex items-center gap-1 shrink-0">
+          <span className={`text-[8px] px-1 py-0.5 border ${source.color}`}>{source.label}</span>
+          <GripVertical className="w-3 h-3 text-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block" />
         </div>
       </div>
 
-      {lead.problem && <p className="text-xs text-zinc-400 mb-2 line-clamp-2">{lead.problem}</p>}
+      <div className="flex items-center gap-1.5 mb-2 text-[10px] sm:text-xs text-zinc-400">
+        <Phone className="w-3 h-3" />
+        <span className="font-mono">{lead.phone || "Sin teléfono"}</span>
+        {partner && (
+          <>
+            <span className="text-zinc-600">•</span>
+            <UserCheck className="w-3 h-3 text-[#FF4D00]" />
+            <span className="text-[#FF4D00] truncate max-w-[60px]">{partner.name}</span>
+          </>
+        )}
+      </div>
 
-      {lead.notes && (
-        <p className="text-xs text-yellow-400/70 mb-2 line-clamp-1 flex items-center gap-1">
-          <FileText className="w-3 h-3" />
-          {lead.notes}
-        </p>
-      )}
-
-      <p className="text-xs font-mono text-zinc-300 mb-2">{lead.phone}</p>
-
-      {partner && (
-        <div className="text-xs text-blue-400 mb-2 flex items-center gap-1">
-          <Users className="w-3 h-3" />
-          {partner.name}
+      <div className="grid grid-cols-3 gap-1 mb-2 text-[9px] sm:text-[10px]">
+        <div className="bg-zinc-800/50 p-1 text-center border border-zinc-700/50">
+          <p className="text-zinc-500 uppercase">Comisión</p>
+          <p className={`font-bold ${commission > 0 ? "text-[#FF4D00]" : "text-zinc-600"}`}>{commission}€</p>
         </div>
-      )}
+        <div className="bg-zinc-800/50 p-1 text-center border border-zinc-700/50">
+          <p className="text-zinc-500 uppercase">Cobrado</p>
+          <p className={`font-bold ${amountCharged > 0 ? "text-green-500" : "text-zinc-600"}`}>{amountCharged}€</p>
+        </div>
+        <div className="bg-zinc-800/50 p-1 text-center border border-zinc-700/50">
+          <p className="text-zinc-500 uppercase">Cliente</p>
+          <p className={`font-bold ${clientCost > 0 ? "text-blue-400" : "text-zinc-600"}`}>{clientCost}€</p>
+        </div>
+      </div>
 
-      <div className="flex items-center gap-1.5 flex-wrap" onClick={(e) => e.stopPropagation()}>
+      {lead.problem && <p className="text-[10px] text-zinc-500 mb-2 line-clamp-1 italic">"{lead.problem}"</p>}
+
+      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
         <button
-          onClick={onWhatsApp}
-          className="p-1.5 border border-green-600/30 bg-green-600/10 hover:bg-green-600/20 transition-colors"
+          onClick={(e) => {
+            e.stopPropagation()
+            onWhatsApp(lead)
+          }}
+          className="p-1.5 border border-green-500/50 hover:bg-green-500/10 transition-colors"
+          title="WhatsApp"
         >
-          <MessageCircle className="w-3.5 h-3.5 text-green-500" />
+          <MessageCircle className="w-3 h-3 text-green-500" />
         </button>
-        <button onClick={onCopy} className="p-1.5 border border-zinc-700 hover:border-zinc-600 transition-colors">
-          {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 text-zinc-400" />}
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            onCopy(lead)
+          }}
+          className="p-1.5 border border-zinc-700 hover:border-zinc-600 transition-colors"
+          title="Copiar"
+        >
+          {copiedLeadId === lead.id ? (
+            <Check className="w-3 h-3 text-green-500" />
+          ) : (
+            <Copy className="w-3 h-3 text-zinc-400" />
+          )}
         </button>
 
         <select
@@ -1095,10 +1390,10 @@ function LeadCard({
             e.stopPropagation()
             onPartnerAssign(lead.id, e.target.value)
           }}
-          className="flex-1 min-w-0 bg-zinc-800 border border-zinc-700 px-2 py-1 text-xs focus:border-[#FF4D00] outline-none"
           onClick={(e) => e.stopPropagation()}
+          className="flex-1 min-w-0 bg-zinc-800 border border-zinc-700 px-1 py-1 text-[10px] focus:border-[#FF4D00] outline-none truncate"
         >
-          <option value="">Partner</option>
+          <option value="">Asignar partner</option>
           {partners.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}
@@ -1107,10 +1402,14 @@ function LeadCard({
         </select>
 
         <button
-          onClick={onTrash}
-          className="p-1.5 border border-zinc-700 hover:border-red-600/50 hover:bg-red-600/10 transition-colors"
+          onClick={(e) => {
+            e.stopPropagation()
+            onTrash(lead.id)
+          }}
+          className="p-1.5 border border-zinc-700 hover:border-red-500 transition-colors"
+          title="Eliminar"
         >
-          <Trash2 className="w-3.5 h-3.5 text-zinc-400 hover:text-red-400" />
+          <Trash2 className="w-3 h-3 text-red-500" />
         </button>
       </div>
     </div>
@@ -1160,16 +1459,16 @@ function PipelineColumn({
 }) {
   const [isDragOver, setIsDragOver] = useState(false)
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleColumnDragOver = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragOver(true)
   }
 
-  const handleDragLeave = () => {
+  const handleColumnDragLeave = () => {
     setIsDragOver(false)
   }
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleColumnDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragOver(false)
     const leadId = e.dataTransfer.getData("leadId")
@@ -1178,17 +1477,17 @@ function PipelineColumn({
     }
   }
 
-  const colorClasses: Record<string, string> = {
-    yellow: "border-yellow-500",
-    blue: "border-blue-500",
-    purple: "border-purple-500",
-    orange: "border-orange-500",
-    green: "border-green-500",
-    red: "border-red-500",
-    cyan: "border-cyan-500", // Added for new status
+  const borderColors: Record<string, string> = {
+    yellow: "border-l-yellow-500",
+    blue: "border-l-blue-500",
+    purple: "border-l-purple-500",
+    orange: "border-l-orange-500",
+    green: "border-l-green-500",
+    red: "border-l-red-500",
+    cyan: "border-l-cyan-500", // Added for new status
   }
 
-  const textColorClasses: Record<string, string> = {
+  const textColors: Record<string, string> = {
     yellow: "text-yellow-500",
     blue: "text-blue-500",
     purple: "text-purple-500",
@@ -1199,34 +1498,36 @@ function PipelineColumn({
   }
 
   const bgColorClasses: Record<string, string> = {
-    yellow: "bg-yellow-500/10",
-    blue: "bg-blue-500/10",
-    purple: "bg-purple-500/10",
-    orange: "bg-orange-500/10",
-    green: "bg-green-500/10",
-    red: "bg-red-500/10",
-    cyan: "bg-cyan-500/10", // Added for new status
+    yellow: "bg-yellow-500/5",
+    blue: "bg-blue-500/5",
+    purple: "bg-purple-500/5",
+    orange: "bg-orange-500/5",
+    green: "bg-green-500/5",
+    red: "bg-red-500/5",
+    cyan: "bg-cyan-500/5", // Added for new status
   }
 
   return (
     <div
-      className={`flex flex-col h-full bg-zinc-900/30 border border-zinc-800 rounded-lg overflow-hidden transition-all ${isDragOver ? "bg-zinc-800/50" : ""}`}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
+      className={`flex flex-col border border-zinc-800 bg-zinc-900/30 ${expanded ? "h-full" : ""} min-w-[280px] sm:min-w-0`}
+      onDragOver={handleColumnDragOver}
+      onDragLeave={handleColumnDragLeave}
+      onDrop={handleColumnDrop}
     >
-      {/* Header - fixed height */}
-      <div
-        className={`flex items-center gap-2 px-3 py-2 border-l-4 ${colorClasses[color]} ${bgColorClasses[color]} shrink-0`}
-      >
-        <Icon className={`w-4 h-4 ${textColorClasses[color]}`} />
-        <span className={`text-xs font-bold ${textColorClasses[color]}`}>{label}</span>
-        <span className="text-xs text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">{leads.length}</span>
-        {revenue !== undefined && revenue > 0 && (
-          <span className={`text-xs ${textColorClasses[color]} ml-auto font-bold`}>{revenue}€</span>
-        )}
+      <div className={`p-2 sm:p-3 border-b shrink-0 ${borderColors[color]}`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Icon className={`w-3 h-3 sm:w-4 sm:h-4 ${textColors[color]}`} />
+            <span className={`text-[10px] sm:text-xs font-bold tracking-wider ${textColors[color]}`}>{label}</span>
+          </div>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <span className={`text-xs sm:text-sm font-bold ${textColors[color]}`}>{leads.length}</span>
+            {revenue !== undefined && <span className="text-[10px] sm:text-xs text-zinc-500">({revenue}€)</span>}
+          </div>
+        </div>
       </div>
-      {/* Scrollable content area - takes remaining space */}
+
+      {/* Scrollable content area */}
       <div
         className={`flex-1 overflow-y-auto p-2 space-y-2 min-h-0 transition-all ${
           isDragOver ? "ring-2 ring-[#FF4D00]/50 ring-inset" : ""
@@ -1243,13 +1544,13 @@ function PipelineColumn({
             onCopy={() => onCopy(lead)}
             onTrash={() => onTrash(lead.id)}
             onPriceChange={(price) => onPriceChange(lead.id, price)}
-            onExpand={() => onExpand(lead.id)}
-            copied={copiedLeadId === lead.id}
-            updating={updatingLeadId === lead.id}
+            onExpand={onExpand}
+            copiedLeadId={copiedLeadId}
+            updatingLeadId={updatingLeadId}
             onDragStart={(e) => {
               e.dataTransfer.setData("leadId", lead.id)
             }}
-            isDragging={draggedLeadId === lead.id}
+            // isDragging={draggedLeadId === lead.id} // Removed as it's not used in the original code
           />
         ))}
         {leads.length === 0 && (
@@ -1316,6 +1617,9 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
   const [draggedLeadId, setDraggedLeadId] = useState<string | null>(null)
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null)
   const [kanbanExpanded, setKanbanExpanded] = useState(false)
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileColumnIndex, setMobileColumnIndex] = useState(0)
 
   const expandedLead = expandedLeadId ? (stats.recentLeads || []).find((l) => l.id === expandedLeadId) || null : null
 
@@ -1476,23 +1780,27 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
   }
 
   const handleUpdateLead = async (leadId: string, data: Partial<Lead>) => {
-    setStats((prev) => ({
-      ...prev,
-      recentLeads: prev.recentLeads.map((lead) => (lead.id === leadId ? { ...lead, ...data } : lead)),
-    }))
-
     try {
+      console.log("[v0] handleUpdateLead sending:", { id: leadId, ...data })
       const res = await fetch("/api/0x/leads", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: leadId, ...data }),
       })
-      if (res.ok) {
+      const result = await res.json()
+      console.log("[v0] handleUpdateLead response:", result)
+
+      if (res.ok && result.success && result.lead) {
+        setStats((prev) => ({
+          ...prev,
+          recentLeads: prev.recentLeads.map((lead) => (lead.id === leadId ? { ...lead, ...result.lead } : lead)),
+        }))
         setNotification({ type: "success", message: "Lead actualizado" })
       } else {
-        setNotification({ type: "error", message: "Error al actualizar lead" })
+        setNotification({ type: "error", message: result.error || "Error al actualizar lead" })
       }
     } catch (error) {
+      console.error("[v0] handleUpdateLead error:", error)
       setNotification({ type: "error", message: "Error de conexión" })
     }
     setTimeout(() => setNotification(null), 3000)
@@ -1749,23 +2057,23 @@ ${lead.problem?.slice(0, 150)}
       )}
 
       <header className="relative z-10 border-b border-zinc-800/50 bg-zinc-900/30 backdrop-blur-xl sticky top-0">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 border border-[#FF4D00] flex items-center justify-center">
-              <Zap className="w-4 h-4 text-[#FF4D00]" />
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 border border-[#FF4D00] flex items-center justify-center">
+              <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF4D00]" />
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-wider">RAPIDFIX</h1>
-              <p className="text-[10px] text-zinc-500 hidden sm:block">PANEL</p>
+              <h1 className="text-xs sm:text-sm font-bold tracking-wider">RAPIDFIX</h1>
+              <p className="text-[8px] sm:text-[10px] text-zinc-500 hidden sm:block">PANEL</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <div className="relative" ref={dateFilterRef}>
               <button
                 ref={dateButtonRef}
                 onClick={() => setDateFilterOpen(!dateFilterOpen)}
-                className="flex items-center gap-1.5 px-2 py-1.5 border border-zinc-700 bg-zinc-900 hover:border-zinc-600 transition-colors text-xs"
+                className="flex items-center gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 border border-zinc-700 bg-zinc-900 hover:border-zinc-600 transition-colors text-[10px] sm:text-xs"
               >
                 <Filter className="w-3 h-3" />
                 <span className="hidden sm:inline">{dateRangeLabels[stats.dateRange] || "Todo"}</span>
@@ -1773,7 +2081,7 @@ ${lead.problem?.slice(0, 150)}
               </button>
             </div>
 
-            <div className="text-right hidden sm:block">
+            <div className="text-right hidden md:block">
               <p className="text-xs text-zinc-500">ACTIVO</p>
               <p className="text-xs font-mono text-[#FF4D00]">
                 {currentTime.toLocaleTimeString("es-ES", { hour12: false })}
@@ -1782,9 +2090,9 @@ ${lead.problem?.slice(0, 150)}
 
             <button
               onClick={handleLogout}
-              className="p-2 border border-zinc-700 hover:border-red-500/50 hover:bg-red-500/10 transition-all"
+              className="p-1.5 sm:p-2 border border-zinc-700 hover:border-red-500/50 hover:bg-red-500/10 transition-all"
             >
-              <LogOut className="w-4 h-4 text-zinc-400" />
+              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-400" />
             </button>
           </div>
         </div>
@@ -1809,21 +2117,21 @@ ${lead.problem?.slice(0, 150)}
         </div>
       )}
 
-      <main className="relative max-w-7xl mx-auto px-4 py-4 space-y-4">
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+      <main className="relative max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-4 space-y-2 sm:space-y-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5 sm:gap-2">
           <KPICard label="HOY" value={todayLeadsCount} icon={<Activity className="w-4 h-4" />} color="orange" />
           <KPICard
             label="PENDIENTES"
-            value={pendingLeads.length + contactedLeads.length + pendingAppointmentLeads.length} // Updated
+            value={pendingLeads.length + contactedLeads.length + pendingAppointmentLeads.length}
             subvalue={`${pendingRevenue}€ pot.`}
             icon={<Clock className="w-4 h-4" />}
             color="yellow"
           />
           <KPICard
             label="PDTE CITA"
-            value={pendingAppointmentLeads.length} // New KPI card for pending appointment
+            value={pendingAppointmentLeads.length}
             icon={<Calendar className="w-4 h-4" />}
-            color="cyan" // Use the new cyan color
+            color="cyan"
           />
           <KPICard label="CITAS" value={confirmedLeads.length} icon={<Calendar className="w-4 h-4" />} color="purple" />
           <KPICard
@@ -1843,36 +2151,35 @@ ${lead.problem?.slice(0, 150)}
           <KPICard label="PARTNERS" value={partnersList.length} icon={<Users className="w-4 h-4" />} color="zinc" />
         </div>
 
-        {/* Added totalCommission, totalCharged, totalClientCost to KPIs in the main component */}
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-2">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
           <KPICard
-            label="COMISIÓN TOTAL"
-            value={totalCommission.toFixed(2)}
+            label="COMISION"
+            value={`${totalCommission.toFixed(0)}€`}
             icon={<Euro className="w-4 h-4" />}
             color="orange"
           />
           <KPICard
-            label="IMPORTE COBRADO TOTAL"
-            value={totalCharged.toFixed(2)}
+            label="COBRADO"
+            value={`${totalCharged.toFixed(0)}€`}
             icon={<DollarSign className="w-4 h-4" />}
             color="green"
           />
           <KPICard
-            label="COSTE CLIENTE TOTAL"
-            value={totalClientCost.toFixed(2)}
+            label="COSTE CLI"
+            value={`${totalClientCost.toFixed(0)}€`}
             icon={<Euro className="w-4 h-4" />}
             color="blue"
           />
         </div>
 
-        <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
-          <div className="flex gap-4">
+        <div className="flex items-center justify-between border-b border-zinc-800 pb-2 overflow-x-auto">
+          <div className="flex gap-2 sm:gap-4 shrink-0">
             <button
               onClick={() => {
                 setActiveTab("pipeline")
                 setShowTrashed(false)
               }}
-              className={`text-sm font-medium transition-colors ${
+              className={`text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 activeTab === "pipeline" ? "text-[#FF4D00]" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
@@ -1880,7 +2187,7 @@ ${lead.problem?.slice(0, 150)}
             </button>
             <button
               onClick={() => setActiveTab("partners")}
-              className={`text-sm font-medium transition-colors ${
+              className={`text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 activeTab === "partners" ? "text-[#FF4D00]" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
@@ -1889,33 +2196,33 @@ ${lead.problem?.slice(0, 150)}
           </div>
 
           {activeTab === "pipeline" && !kanbanExpanded && !showTrashed && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0 ml-2">
               <select
                 value={serviceFilter}
                 onChange={(e) => setServiceFilter(e.target.value)}
-                className="bg-zinc-800 border border-zinc-700 px-2 py-1 text-xs focus:border-[#FF4D00] outline-none"
+                className="bg-zinc-800 border border-zinc-700 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs focus:border-[#FF4D00] outline-none"
               >
                 <option value="all">Todos</option>
-                <option value="fontanero">🔧 Fontanero</option>
-                <option value="electricista">⚡ Electricista</option>
-                <option value="cerrajero">🔑 Cerrajero</option>
-                <option value="desatasco">🚿 Desatasco</option>
-                <option value="calderas">🔥 Calderas</option>
+                <option value="fontanero">🔧</option>
+                <option value="electricista">⚡</option>
+                <option value="cerrajero">🔑</option>
+                <option value="desatasco">🚿</option>
+                <option value="calderas">🔥</option>
               </select>
 
               <button
                 onClick={() => setShowTrashed(!showTrashed)}
-                className={`flex items-center gap-1 px-2 py-1 text-xs border transition-colors ${
+                className={`flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs border transition-colors ${
                   showTrashed ? "border-red-500 text-red-500" : "border-zinc-700 text-zinc-500"
                 }`}
               >
                 <Trash2 className="w-3 h-3" />
-                {trashedLeads.length + rejectedLeads.length}
+                <span className="hidden sm:inline">{trashedLeads.length + rejectedLeads.length}</span>
               </button>
 
               <button
                 onClick={() => setKanbanExpanded(true)}
-                className="flex items-center gap-1 px-2 py-1 text-xs border border-zinc-700 hover:border-[#FF4D00] transition-colors"
+                className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs border border-zinc-700 hover:border-[#FF4D00] transition-colors"
                 title="Maximizar kanban"
               >
                 <Maximize2 className="w-3 h-3" />
@@ -1923,14 +2230,306 @@ ${lead.problem?.slice(0, 150)}
 
               <button
                 onClick={() => setShowLeadModal(true)}
-                className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#FF4D00] text-black"
+                className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold bg-[#FF4D00] text-black"
               >
                 <Plus className="w-3 h-3" />
-                LEAD
+                <span className="hidden sm:inline">LEAD</span>
               </button>
             </div>
           )}
         </div>
+
+        {!kanbanExpanded && activeTab === "pipeline" && !showTrashed && (
+          <>
+            {/* Mobile column navigation */}
+            <div className="flex items-center justify-between mb-2 sm:hidden">
+              <button
+                onClick={() => setMobileColumnIndex(Math.max(0, mobileColumnIndex - 1))}
+                disabled={mobileColumnIndex === 0}
+                className="p-1.5 border border-zinc-700 disabled:opacity-30"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <div className="flex gap-1">
+                {PIPELINE_STATUSES.map((s, i) => (
+                  <button
+                    key={s.key}
+                    onClick={() => setMobileColumnIndex(i)}
+                    className={`w-2 h-2 rounded-full transition-colors ${
+                      mobileColumnIndex === i ? "bg-[#FF4D00]" : "bg-zinc-700"
+                    }`}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={() => setMobileColumnIndex(Math.min(PIPELINE_STATUSES.length - 1, mobileColumnIndex + 1))}
+                disabled={mobileColumnIndex === PIPELINE_STATUSES.length - 1}
+                className="p-1.5 border border-zinc-700 disabled:opacity-30"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Desktop: grid, Mobile: horizontal scroll */}
+            <div
+              className="hidden sm:grid sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 h-[calc(100vh-320px)] sm:h-[calc(100vh-280px)] min-h-[300px] sm:min-h-[400px]"
+              onDragStart={(e) => {
+                const leadId = (e.target as HTMLElement).closest("[draggable]")?.getAttribute("data-lead-id")
+                if (leadId) setDraggedLeadId(leadId)
+              }}
+              onDragEnd={() => setDraggedLeadId(null)}
+            >
+              <PipelineColumn
+                status="pending"
+                label="PENDIENTE"
+                color="yellow"
+                icon={Clock}
+                leads={pendingLeads}
+                partners={partnersList}
+                onStatusChange={handleStatusChange}
+                onPartnerAssign={handlePartnerAssign}
+                onWhatsApp={openWhatsAppLead}
+                onCopy={handleCopyLead}
+                onTrash={handleTrashLead}
+                onPriceChange={handlePriceChange}
+                onExpand={setExpandedLeadId}
+                copiedLeadId={copiedLeadId}
+                updatingLeadId={updatingLeadId}
+                onDrop={handleDrop}
+                draggedLeadId={draggedLeadId}
+              />
+              <PipelineColumn
+                status="contacted"
+                label="CONTACTADO"
+                color="blue"
+                icon={Phone}
+                leads={contactedLeads}
+                partners={partnersList}
+                onStatusChange={handleStatusChange}
+                onPartnerAssign={handlePartnerAssign}
+                onWhatsApp={openWhatsAppLead}
+                onCopy={handleCopyLead}
+                onTrash={handleTrashLead}
+                onPriceChange={handlePriceChange}
+                onExpand={setExpandedLeadId}
+                copiedLeadId={copiedLeadId}
+                updatingLeadId={updatingLeadId}
+                onDrop={handleDrop}
+                draggedLeadId={draggedLeadId}
+              />
+              <PipelineColumn
+                status="pending_appointment"
+                label="PDTE CITA"
+                color="cyan"
+                icon={Calendar}
+                leads={pendingAppointmentLeads}
+                partners={partnersList}
+                onStatusChange={handleStatusChange}
+                onPartnerAssign={handlePartnerAssign}
+                onWhatsApp={openWhatsAppLead}
+                onCopy={handleCopyLead}
+                onTrash={handleTrashLead}
+                onPriceChange={handlePriceChange}
+                onExpand={setExpandedLeadId}
+                copiedLeadId={copiedLeadId}
+                updatingLeadId={updatingLeadId}
+                onDrop={handleDrop}
+                draggedLeadId={draggedLeadId}
+              />
+              <PipelineColumn
+                status="confirmed"
+                label="CITA"
+                color="purple"
+                icon={Calendar}
+                leads={confirmedLeads}
+                partners={partnersList}
+                onStatusChange={handleStatusChange}
+                onPartnerAssign={handlePartnerAssign}
+                onWhatsApp={openWhatsAppLead}
+                onCopy={handleCopyLead}
+                onTrash={handleTrashLead}
+                onPriceChange={handlePriceChange}
+                onExpand={setExpandedLeadId}
+                copiedLeadId={copiedLeadId}
+                updatingLeadId={updatingLeadId}
+                onDrop={handleDrop}
+                draggedLeadId={draggedLeadId}
+              />
+              <PipelineColumn
+                status="completed"
+                label="PDTE PAGO"
+                color="orange"
+                icon={CheckCircle}
+                leads={completedLeads}
+                partners={partnersList}
+                revenue={completedRevenue}
+                onStatusChange={handleStatusChange}
+                onPartnerAssign={handlePartnerAssign}
+                onWhatsApp={openWhatsAppLead}
+                onCopy={handleCopyLead}
+                onTrash={handleTrashLead}
+                onPriceChange={handlePriceChange}
+                onExpand={setExpandedLeadId}
+                copiedLeadId={copiedLeadId}
+                updatingLeadId={updatingLeadId}
+                onDrop={handleDrop}
+                draggedLeadId={draggedLeadId}
+              />
+              <PipelineColumn
+                status="paid"
+                label="PAGADO"
+                color="green"
+                icon={CreditCard}
+                leads={paidLeads}
+                partners={partnersList}
+                revenue={totalRevenue}
+                onStatusChange={handleStatusChange}
+                onPartnerAssign={handlePartnerAssign}
+                onWhatsApp={openWhatsAppLead}
+                onCopy={handleCopyLead}
+                onTrash={handleTrashLead}
+                onPriceChange={handlePriceChange}
+                onExpand={setExpandedLeadId}
+                copiedLeadId={copiedLeadId}
+                updatingLeadId={updatingLeadId}
+                onDrop={handleDrop}
+                draggedLeadId={draggedLeadId}
+              />
+            </div>
+
+            {/* Mobile: Single column view with swipe navigation */}
+            <div className="sm:hidden h-[calc(100vh-380px)] min-h-[300px]">
+              {mobileColumnIndex === 0 && (
+                <PipelineColumn
+                  status="pending"
+                  label="PENDIENTE"
+                  color="yellow"
+                  icon={Clock}
+                  leads={pendingLeads}
+                  partners={partnersList}
+                  onStatusChange={handleStatusChange}
+                  onPartnerAssign={handlePartnerAssign}
+                  onWhatsApp={openWhatsAppLead}
+                  onCopy={handleCopyLead}
+                  onTrash={handleTrashLead}
+                  onPriceChange={handlePriceChange}
+                  onExpand={setExpandedLeadId}
+                  copiedLeadId={copiedLeadId}
+                  updatingLeadId={updatingLeadId}
+                  onDrop={handleDrop}
+                  draggedLeadId={draggedLeadId}
+                />
+              )}
+              {mobileColumnIndex === 1 && (
+                <PipelineColumn
+                  status="contacted"
+                  label="CONTACTADO"
+                  color="blue"
+                  icon={Phone}
+                  leads={contactedLeads}
+                  partners={partnersList}
+                  onStatusChange={handleStatusChange}
+                  onPartnerAssign={handlePartnerAssign}
+                  onWhatsApp={openWhatsAppLead}
+                  onCopy={handleCopyLead}
+                  onTrash={handleTrashLead}
+                  onPriceChange={handlePriceChange}
+                  onExpand={setExpandedLeadId}
+                  copiedLeadId={copiedLeadId}
+                  updatingLeadId={updatingLeadId}
+                  onDrop={handleDrop}
+                  draggedLeadId={draggedLeadId}
+                />
+              )}
+              {mobileColumnIndex === 2 && (
+                <PipelineColumn
+                  status="pending_appointment"
+                  label="PDTE CITA"
+                  color="cyan"
+                  icon={Calendar}
+                  leads={pendingAppointmentLeads}
+                  partners={partnersList}
+                  onStatusChange={handleStatusChange}
+                  onPartnerAssign={handlePartnerAssign}
+                  onWhatsApp={openWhatsAppLead}
+                  onCopy={handleCopyLead}
+                  onTrash={handleTrashLead}
+                  onPriceChange={handlePriceChange}
+                  onExpand={setExpandedLeadId}
+                  copiedLeadId={copiedLeadId}
+                  updatingLeadId={updatingLeadId}
+                  onDrop={handleDrop}
+                  draggedLeadId={draggedLeadId}
+                />
+              )}
+              {mobileColumnIndex === 3 && (
+                <PipelineColumn
+                  status="confirmed"
+                  label="CITA"
+                  color="purple"
+                  icon={Calendar}
+                  leads={confirmedLeads}
+                  partners={partnersList}
+                  onStatusChange={handleStatusChange}
+                  onPartnerAssign={handlePartnerAssign}
+                  onWhatsApp={openWhatsAppLead}
+                  onCopy={handleCopyLead}
+                  onTrash={handleTrashLead}
+                  onPriceChange={handlePriceChange}
+                  onExpand={setExpandedLeadId}
+                  copiedLeadId={copiedLeadId}
+                  updatingLeadId={updatingLeadId}
+                  onDrop={handleDrop}
+                  draggedLeadId={draggedLeadId}
+                />
+              )}
+              {mobileColumnIndex === 4 && (
+                <PipelineColumn
+                  status="completed"
+                  label="PDTE PAGO"
+                  color="orange"
+                  icon={CheckCircle}
+                  leads={completedLeads}
+                  partners={partnersList}
+                  revenue={completedRevenue}
+                  onStatusChange={handleStatusChange}
+                  onPartnerAssign={handlePartnerAssign}
+                  onWhatsApp={openWhatsAppLead}
+                  onCopy={handleCopyLead}
+                  onTrash={handleTrashLead}
+                  onPriceChange={handlePriceChange}
+                  onExpand={setExpandedLeadId}
+                  copiedLeadId={copiedLeadId}
+                  updatingLeadId={updatingLeadId}
+                  onDrop={handleDrop}
+                  draggedLeadId={draggedLeadId}
+                />
+              )}
+              {mobileColumnIndex === 5 && (
+                <PipelineColumn
+                  status="paid"
+                  label="PAGADO"
+                  color="green"
+                  icon={CreditCard}
+                  leads={paidLeads}
+                  partners={partnersList}
+                  revenue={totalRevenue}
+                  onStatusChange={handleStatusChange}
+                  onPartnerAssign={handlePartnerAssign}
+                  onWhatsApp={openWhatsAppLead}
+                  onCopy={handleCopyLead}
+                  onTrash={handleTrashLead}
+                  onPriceChange={handlePriceChange}
+                  onExpand={setExpandedLeadId}
+                  copiedLeadId={copiedLeadId}
+                  updatingLeadId={updatingLeadId}
+                  onDrop={handleDrop}
+                  draggedLeadId={draggedLeadId}
+                />
+              )}
+            </div>
+          </>
+        )}
 
         {kanbanExpanded && activeTab === "pipeline" && (
           <div className="fixed inset-0 bg-black z-50 flex flex-col">
@@ -1968,7 +2567,7 @@ ${lead.problem?.slice(0, 150)}
             </div>
             {/* Grid - takes all remaining height */}
             <div
-              className="flex-1 grid grid-cols-5 gap-3 p-4 min-h-0 overflow-hidden"
+              className="flex-1 grid grid-cols-6 gap-3 p-4 min-h-0 overflow-hidden"
               onDragStart={(e) => {
                 const leadId = (e.target as HTMLElement).closest("[draggable]")?.getAttribute("data-lead-id")
                 if (leadId) setDraggedLeadId(leadId)
@@ -2016,9 +2615,9 @@ ${lead.problem?.slice(0, 150)}
                 expanded
               />
               <PipelineColumn
-                status="pending_appointment" // New status column
+                status="pending_appointment"
                 label="PDTE CITA"
-                color="cyan" // Use cyan color
+                color="cyan"
                 icon={Calendar}
                 leads={pendingAppointmentLeads}
                 partners={partnersList}
@@ -2098,134 +2697,6 @@ ${lead.problem?.slice(0, 150)}
                 expanded
               />
             </div>
-          </div>
-        )}
-
-        {!kanbanExpanded && activeTab === "pipeline" && !showTrashed && (
-          <div
-            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 h-[calc(100vh-280px)] min-h-[400px]"
-            onDragStart={(e) => {
-              const leadId = (e.target as HTMLElement).closest("[draggable]")?.getAttribute("data-lead-id")
-              if (leadId) setDraggedLeadId(leadId)
-            }}
-            onDragEnd={() => setDraggedLeadId(null)}
-          >
-            <PipelineColumn
-              status="pending"
-              label="PENDIENTE"
-              color="yellow"
-              icon={Clock}
-              leads={pendingLeads}
-              partners={partnersList}
-              onStatusChange={handleStatusChange}
-              onPartnerAssign={handlePartnerAssign}
-              onWhatsApp={openWhatsAppLead}
-              onCopy={handleCopyLead}
-              onTrash={handleTrashLead}
-              onPriceChange={handlePriceChange}
-              onExpand={setExpandedLeadId}
-              copiedLeadId={copiedLeadId}
-              updatingLeadId={updatingLeadId}
-              onDrop={handleDrop}
-              draggedLeadId={draggedLeadId}
-            />
-            <PipelineColumn
-              status="contacted"
-              label="CONTACTADO"
-              color="blue"
-              icon={Phone}
-              leads={contactedLeads}
-              partners={partnersList}
-              onStatusChange={handleStatusChange}
-              onPartnerAssign={handlePartnerAssign}
-              onWhatsApp={openWhatsAppLead}
-              onCopy={handleCopyLead}
-              onTrash={handleTrashLead}
-              onPriceChange={handlePriceChange}
-              onExpand={setExpandedLeadId}
-              copiedLeadId={copiedLeadId}
-              updatingLeadId={updatingLeadId}
-              onDrop={handleDrop}
-              draggedLeadId={draggedLeadId}
-            />
-            <PipelineColumn
-              status="pending_appointment" // New status column
-              label="PDTE CITA"
-              color="cyan" // Use cyan color
-              icon={Calendar}
-              leads={pendingAppointmentLeads}
-              partners={partnersList}
-              onStatusChange={handleStatusChange}
-              onPartnerAssign={handlePartnerAssign}
-              onWhatsApp={openWhatsAppLead}
-              onCopy={handleCopyLead}
-              onTrash={handleTrashLead}
-              onPriceChange={handlePriceChange}
-              onExpand={setExpandedLeadId}
-              copiedLeadId={copiedLeadId}
-              updatingLeadId={updatingLeadId}
-              onDrop={handleDrop}
-              draggedLeadId={draggedLeadId}
-            />
-            <PipelineColumn
-              status="confirmed"
-              label="CITA"
-              color="purple"
-              icon={Calendar}
-              leads={confirmedLeads}
-              partners={partnersList}
-              onStatusChange={handleStatusChange}
-              onPartnerAssign={handlePartnerAssign}
-              onWhatsApp={openWhatsAppLead}
-              onCopy={handleCopyLead}
-              onTrash={handleTrashLead}
-              onPriceChange={handlePriceChange}
-              onExpand={setExpandedLeadId}
-              copiedLeadId={copiedLeadId}
-              updatingLeadId={updatingLeadId}
-              onDrop={handleDrop}
-              draggedLeadId={draggedLeadId}
-            />
-            <PipelineColumn
-              status="completed"
-              label="PDTE PAGO"
-              color="orange"
-              icon={CheckCircle}
-              leads={completedLeads}
-              partners={partnersList}
-              revenue={completedRevenue}
-              onStatusChange={handleStatusChange}
-              onPartnerAssign={handlePartnerAssign}
-              onWhatsApp={openWhatsAppLead}
-              onCopy={handleCopyLead}
-              onTrash={handleTrashLead}
-              onPriceChange={handlePriceChange}
-              onExpand={setExpandedLeadId}
-              copiedLeadId={copiedLeadId}
-              updatingLeadId={updatingLeadId}
-              onDrop={handleDrop}
-              draggedLeadId={draggedLeadId}
-            />
-            <PipelineColumn
-              status="paid"
-              label="PAGADO"
-              color="green"
-              icon={CreditCard}
-              leads={paidLeads}
-              partners={partnersList}
-              revenue={totalRevenue}
-              onStatusChange={handleStatusChange}
-              onPartnerAssign={handlePartnerAssign}
-              onWhatsApp={openWhatsAppLead}
-              onCopy={handleCopyLead}
-              onTrash={handleTrashLead}
-              onPriceChange={handlePriceChange}
-              onExpand={setExpandedLeadId}
-              copiedLeadId={copiedLeadId}
-              updatingLeadId={updatingLeadId}
-              onDrop={handleDrop}
-              draggedLeadId={draggedLeadId}
-            />
           </div>
         )}
 
