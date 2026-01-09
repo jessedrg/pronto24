@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import {
   Users,
@@ -1750,28 +1750,82 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
   })
 
   const [currentTime, setCurrentTime] = useState(new Date())
+  const [activeTab, setActiveTab] = useState<"pipeline" | "partners">("pipeline")
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null)
+  const [showPartnerModal, setShowPartnerModal] = useState(false)
+  const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
+  const [showLeadModal, setShowLeadModal] = useState(false)
+  const [expandedLeadId, setExpandedLeadId] = useState<string | null>(null)
+  const [serviceFilter, setServiceFilter] = useState<string>("all")
+  const [showTrashed, setShowTrashed] = useState(false)
+  const [copiedLeadId, setCopiedLeadId] = useState<string | null>(null)
+  const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null) // Changed from selectedPartner
+  const [kanbanExpanded, setKanbanExpanded] = useState(false)
+  const [mobileColumnIndex, setMobileColumnIndex] = useState(0)
+  const [isRefreshing, setIsRefreshing] = useState(false) // Added refresh state
+
+  const refreshData = useCallback(async () => {
+    setIsRefreshing(true)
+    try {
+      const res = await fetch("/api/0x/dashboard") // Removed searchParams.toString() as it's not needed for refresh
+      if (!res.ok) {
+        setIsRefreshing(false)
+        return
+      }
+
+      const contentType = res.headers.get("content-type")
+      if (!contentType || !contentType.includes("application/json")) {
+        setIsRefreshing(false)
+        return
+      }
+
+      const data = await res.json()
+
+      setStats({
+        ...defaultStats,
+        ...data,
+        recentLeads: Array.isArray(data.recentLeads) ? data.recentLeads : [],
+        partnersList: Array.isArray(data.partnersList) ? data.partnersList : [],
+        byService: Array.isArray(data.byService) ? data.byService : [],
+        funnelStats: Array.isArray(data.funnelStats) ? data.funnelStats : [],
+        incompleteChats: Array.isArray(data.incompleteChats) ? data.incompleteChats : [],
+      })
+    } catch (error) {
+      console.error("Error refreshing data:", error)
+    } finally {
+      setIsRefreshing(false)
+    }
+  }, [defaultStats])
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refreshData()
+      }
+    }
+
+    const handleFocus = () => {
+      refreshData()
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+    window.addEventListener("focus", handleFocus)
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+      window.removeEventListener("focus", handleFocus)
+    }
+  }, [refreshData])
+
   const [dateFilterOpen, setDateFilterOpen] = useState(false)
   const dateButtonRef = useRef<HTMLButtonElement>(null)
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 })
   const [updatingLeadId, setUpdatingLeadId] = useState<string | null>(null)
-  const [showPartnerModal, setShowPartnerModal] = useState(false)
-  const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
-  const [activeTab, setActiveTab] = useState<"pipeline" | "partners">("pipeline")
   const dateFilterRef = useRef<HTMLDivElement>(null)
-  const [copiedLeadId, setCopiedLeadId] = useState<string | null>(null)
-  const [showTrashed, setShowTrashed] = useState(false)
-  const [showLeadModal, setShowLeadModal] = useState(false)
-  const [serviceFilter, setServiceFilter] = useState<string>("all")
-  const [expandedLeadId, setExpandedLeadId] = useState<string | null>(null)
   const [draggedLeadId, setDraggedLeadId] = useState<string | null>(null)
-  const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null)
-  const [kanbanExpanded, setKanbanExpanded] = useState(false)
-
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [mobileColumnIndex, setMobileColumnIndex] = useState(0)
 
   const expandedLead = expandedLeadId ? (stats.recentLeads || []).find((l) => l.id === expandedLeadId) || null : null
+  const selectedPartner = selectedPartnerId ? (stats.partnersList || []).find((p) => p.id === selectedPartnerId) : null // Use selectedPartnerId
 
   const serviceEmojis: Record<string, string> = {
     fontanero: "🔧",
@@ -2153,9 +2207,7 @@ ${lead.problem?.slice(0, 150)}
   }).length
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100">
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:48px_48px]" />
-
+    <div className="min-h-screen bg-zinc-950 text-zinc-100">
       {notification && (
         <div
           className={`fixed top-4 right-4 z-50 px-4 py-3 border ${
@@ -2197,53 +2249,59 @@ ${lead.problem?.slice(0, 150)}
         <PartnerDetailModal
           partner={selectedPartner}
           leads={recentLeads}
-          onClose={() => setSelectedPartner(null)}
+          onClose={() => setSelectedPartnerId(null)} // Changed to clear selectedPartnerId
           onLeadClick={(leadId) => {
-            setSelectedPartner(null)
+            setSelectedPartnerId(null) // Changed to clear selectedPartnerId
             setExpandedLeadId(leadId)
           }}
         />
       )}
 
-      <header className="relative z-10 border-b border-zinc-800/50 bg-zinc-900/30 backdrop-blur-xl sticky top-0">
-        <div className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 border border-[#FF4D00] flex items-center justify-center">
-              <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF4D00]" />
-            </div>
-            <div>
-              <h1 className="text-xs sm:text-sm font-bold tracking-wider">RAPIDFIX</h1>
-              <p className="text-[8px] sm:text-[10px] text-zinc-500 hidden sm:block">PANEL</p>
-            </div>
+      <header className="border-b border-zinc-800 px-2 sm:px-4 lg:px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF4D00]" />
+            <h1 className="text-xs sm:text-sm font-bold tracking-wider">
+              <span className="hidden sm:inline">URGENCIAS</span> 24H
+            </h1>
           </div>
-
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="relative" ref={dateFilterRef}>
-              <button
-                ref={dateButtonRef}
-                onClick={() => setDateFilterOpen(!dateFilterOpen)}
-                className="flex items-center gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 border border-zinc-700 bg-zinc-900 hover:border-zinc-600 transition-colors text-[10px] sm:text-xs"
-              >
-                <Filter className="w-3 h-3" />
-                <span className="hidden sm:inline">{dateRangeLabels[stats.dateRange] || "Todo"}</span>
-                <ChevronDown className={`w-3 h-3 transition-transform ${dateFilterOpen ? "rotate-180" : ""}`} />
-              </button>
-            </div>
-
-            <div className="text-right hidden md:block">
-              <p className="text-xs text-zinc-500">ACTIVO</p>
-              <p className="text-xs font-mono text-[#FF4D00]">
-                {currentTime.toLocaleTimeString("es-ES", { hour12: false })}
-              </p>
-            </div>
-
+          {/* CHANGE: Added refresh button */}
+          <button
+            onClick={refreshData}
+            disabled={isRefreshing}
+            className="p-1.5 hover:bg-zinc-800 transition-colors disabled:opacity-50"
+            title="Recargar datos"
+          >
+            <RotateCcw className={`w-4 h-4 text-zinc-400 ${isRefreshing ? "animate-spin" : ""}`} />
+          </button>
+          {isRefreshing && <span className="text-[10px] text-zinc-500 hidden sm:inline">Actualizando...</span>}
+        </div>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="relative" ref={dateFilterRef}>
             <button
-              onClick={handleLogout}
-              className="p-1.5 sm:p-2 border border-zinc-700 hover:border-red-500/50 hover:bg-red-500/10 transition-all"
+              ref={dateButtonRef}
+              onClick={() => setDateFilterOpen(!dateFilterOpen)}
+              className="flex items-center gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 border border-zinc-700 bg-zinc-900 hover:border-zinc-600 transition-colors text-[10px] sm:text-xs"
             >
-              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-400" />
+              <Filter className="w-3 h-3" />
+              <span className="hidden sm:inline">{dateRangeLabels[stats.dateRange] || "Todo"}</span>
+              <ChevronDown className={`w-3 h-3 transition-transform ${dateFilterOpen ? "rotate-180" : ""}`} />
             </button>
           </div>
+
+          <div className="text-right hidden md:block">
+            <p className="text-xs text-zinc-500">ACTIVO</p>
+            <p className="text-xs font-mono text-[#FF4D00]">
+              {currentTime.toLocaleTimeString("es-ES", { hour12: false })}
+            </p>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="p-1.5 sm:p-2 border border-zinc-700 hover:border-red-500/50 hover:bg-red-500/10 transition-all"
+          >
+            <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-400" />
+          </button>
         </div>
       </header>
 
@@ -2908,7 +2966,7 @@ ${lead.problem?.slice(0, 150)}
                   <div
                     key={partner.id}
                     className="p-3 hover:bg-zinc-800/20 transition-colors cursor-pointer"
-                    onClick={() => setSelectedPartner(partner)}
+                    onClick={() => setSelectedPartnerId(partner.id)} // Changed to set selectedPartnerId
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
