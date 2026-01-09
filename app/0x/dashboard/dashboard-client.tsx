@@ -2031,7 +2031,7 @@ ${lead.problem?.slice(0, 150)}
       )}
 
       <header className="relative z-10 border-b border-zinc-800/50 bg-zinc-900/30 backdrop-blur-xl sticky top-0">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
+        <div className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-7 h-7 sm:w-8 sm:h-8 border border-[#FF4D00] flex items-center justify-center">
               <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF4D00]" />
@@ -2091,7 +2091,7 @@ ${lead.problem?.slice(0, 150)}
         </div>
       )}
 
-      <main className="relative max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-4 space-y-2 sm:space-y-4">
+      <main className="relative px-2 sm:px-4 lg:px-6 py-2 sm:py-4 space-y-2 sm:space-y-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5 sm:gap-2">
           <KPICard label="HOY" value={todayLeadsCount} icon={<Activity className="w-4 h-4" />} color="orange" />
           <KPICard
