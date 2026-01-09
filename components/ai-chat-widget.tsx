@@ -531,7 +531,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Escribe tu mensaje..."
-                className="flex-1 px-4 py-2.5 bg-neutral-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 placeholder:text-neutral-400"
+                className="flex-1 px-4 py-2.5 bg-neutral-100 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-foreground/20 placeholder:text-neutral-400"
                 disabled={isLoading}
               />
               <Button
