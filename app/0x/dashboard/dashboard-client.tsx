@@ -37,6 +37,7 @@ import {
   Loader2,
   ChevronLeft,
   ChevronRight,
+  ListOrdered,
 } from "lucide-react"
 
 interface Partner {
@@ -739,6 +740,8 @@ function LeadDetailModal({
   const [commission, setCommission] = useState(lead.commission || 0)
   const [amountCharged, setAmountCharged] = useState(lead.amount_charged || 0)
   const [notes, setNotes] = useState(lead.notes || "")
+  const [activeTab, setActiveTab] = useState<"info" | "secuencia">("info")
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
 
   useEffect(() => {
     setName(lead.name || "")
@@ -762,7 +765,7 @@ function LeadDetailModal({
     call: { label: "Llamada", color: "text-blue-400" },
     chat: { label: "Chat IA", color: "text-purple-400" },
     manual: { label: "Manual", color: "text-zinc-400" },
-    screenshot: { label: "Screenshot IA", color: "text-cyan-400" }, // Added for screenshot source
+    screenshot: { label: "Screenshot IA", color: "text-cyan-400" },
   }
 
   const statusLabels: Record<string, { label: string; color: string }> = {
@@ -773,6 +776,57 @@ function LeadDetailModal({
     completed: { label: "Trabajo Acabado", color: "text-orange-400" },
     paid: { label: "Pagado", color: "text-green-400" },
     rejected: { label: "Rechazado", color: "text-red-400" },
+  }
+
+  const sequenceMessages = [
+    {
+      step: 1,
+      title: "Primer contacto",
+      message: `Hola${name ? ` ${name}` : ""}, soy de RapidFix. He recibido tu solicitud. ¿Me puedes explicar un poco mas el problema que tienes? Si es posible, enviame unas fotos para poder valorarlo mejor.`,
+      status: "pending",
+    },
+    {
+      step: 2,
+      title: "Preguntar ubicacion",
+      message: `Perfecto, gracias por la informacion. ¿En que zona te encuentras exactamente? Asi puedo asignarte al tecnico mas cercano.`,
+      status: "contacted",
+    },
+    {
+      step: 3,
+      title: "Confirmar disponibilidad",
+      message: `Genial. Tenemos un tecnico disponible en tu zona. ¿Cuando te vendria bien que pasara? ¿Manana por la manana o por la tarde?`,
+      status: "contacted",
+    },
+    {
+      step: 4,
+      title: "Confirmar cita",
+      message: `Perfecto, te confirmo la cita para [FECHA Y HORA]. El tecnico se pondra en contacto contigo 30 minutos antes de llegar. ¿Te parece bien?`,
+      status: "pending_appointment",
+    },
+    {
+      step: 5,
+      title: "Recordatorio cita",
+      message: `Hola${name ? ` ${name}` : ""}, te recuerdo que manana tienes la cita con nuestro tecnico. Te llamara 30 min antes. ¿Todo correcto?`,
+      status: "confirmed",
+    },
+    {
+      step: 6,
+      title: "Seguimiento post-servicio",
+      message: `Hola${name ? ` ${name}` : ""}, ¿que tal ha ido el servicio? ¿Ha quedado todo solucionado? Tu opinion nos ayuda a mejorar.`,
+      status: "completed",
+    },
+    {
+      step: 7,
+      title: "Solicitar valoracion",
+      message: `Nos alegra que todo haya salido bien. Si tienes un minuto, nos ayudaria mucho que dejaras una valoracion. ¡Gracias por confiar en RapidFix!`,
+      status: "paid",
+    },
+  ]
+
+  const handleCopyMessage = (message: string, index: number) => {
+    navigator.clipboard.writeText(message)
+    setCopiedIndex(index)
+    setTimeout(() => setCopiedIndex(null), 2000)
   }
 
   const handleSave = async () => {
@@ -977,6 +1031,31 @@ function LeadDetailModal({
           </div>
         </div>
 
+        <div className="flex border-b border-zinc-800 shrink-0">
+          <button
+            onClick={() => setActiveTab("info")}
+            className={`flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${
+              activeTab === "info"
+                ? "text-[#FF4D00] border-b-2 border-[#FF4D00] bg-[#FF4D00]/5"
+                : "text-zinc-500 hover:text-zinc-300"
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5" />
+            INFO
+          </button>
+          <button
+            onClick={() => setActiveTab("secuencia")}
+            className={`flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${
+              activeTab === "secuencia"
+                ? "text-[#FF4D00] border-b-2 border-[#FF4D00] bg-[#FF4D00]/5"
+                : "text-zinc-500 hover:text-zinc-300"
+            }`}
+          >
+            <ListOrdered className="w-3.5 h-3.5" />
+            SECUENCIA
+          </button>
+        </div>
+
         {analyzingScreenshot && (
           <div className="p-3 bg-cyan-500/10 border-b border-cyan-500/30 flex items-center gap-2">
             <Loader2 className="w-4 h-4 text-cyan-400 animate-spin" />
@@ -984,248 +1063,339 @@ function LeadDetailModal({
           </div>
         )}
 
-        <div className="p-4 space-y-4 overflow-y-auto">
-          <div className="grid grid-cols-2 gap-3 p-3 border border-[#FF4D00]/30 bg-[#FF4D00]/5">
+        {activeTab === "info" && (
+          <div className="p-4 space-y-4 overflow-y-auto flex-1">
+            <div className="grid grid-cols-2 gap-3 p-3 border border-[#FF4D00]/30 bg-[#FF4D00]/5">
+              <div>
+                <label className="text-[10px] text-zinc-500 block mb-1">COMISION ESTIMADA</label>
+                {editing ? (
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number"
+                      value={commission}
+                      onChange={(e) => setCommission(Number(e.target.value))}
+                      className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-[#FF4D00] outline-none"
+                    />
+                    <span className="text-[#FF4D00]">€</span>
+                  </div>
+                ) : (
+                  <p className="text-lg font-bold text-[#FF4D00]">{commission || 0}€</p>
+                )}
+              </div>
+              <div>
+                <label className="text-[10px] text-zinc-500 block mb-1">IMPORTE COBRADO</label>
+                {editing ? (
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number"
+                      value={amountCharged}
+                      onChange={(e) => setAmountCharged(Number(e.target.value))}
+                      className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-green-500 outline-none"
+                    />
+                    <span className="text-green-500">€</span>
+                  </div>
+                ) : (
+                  <p className="text-lg font-bold text-green-500">{amountCharged || 0}€</p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs text-zinc-500 block mb-1">NOMBRE</label>
+                {editing ? (
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                  />
+                ) : (
+                  <p className="text-sm font-medium">{name || "Sin nombre"}</p>
+                )}
+              </div>
+              <div>
+                <label className="text-xs text-zinc-500 block mb-1">TELEFONO</label>
+                {editing ? (
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm font-mono focus:border-[#FF4D00] outline-none"
+                  />
+                ) : (
+                  <p className="text-sm font-mono">{phone}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs text-zinc-500 block mb-1">CIUDAD</label>
+                {editing ? (
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                  />
+                ) : (
+                  <p className="text-sm">{city || "No especificada"}</p>
+                )}
+              </div>
+              <div>
+                <label className="text-xs text-zinc-500 block mb-1">SERVICIO</label>
+                {editing ? (
+                  <div className="flex flex-wrap gap-1">
+                    {allServices.map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setService(s)}
+                        className={`px-2 py-1 text-xs border transition-colors capitalize ${
+                          service === s
+                            ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                            : "border-zinc-700 hover:border-zinc-600"
+                        }`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm capitalize">{service}</p>
+                )}
+              </div>
+            </div>
+
             <div>
-              <label className="text-[10px] text-zinc-500 block mb-1">COMISION ESTIMADA</label>
+              <label className="text-xs text-zinc-500 block mb-1">PROBLEMA</label>
               {editing ? (
-                <div className="flex items-center gap-1">
+                <textarea
+                  value={problem}
+                  onChange={(e) => setProblem(e.target.value)}
+                  rows={3}
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none resize-none"
+                />
+              ) : (
+                <p className="text-sm text-zinc-300 bg-zinc-800/50 p-3 border border-zinc-800">
+                  {problem || "Sin descripcion"}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-xs text-zinc-500 block mb-1 flex items-center gap-1">
+                <FileText className="w-3 h-3" />
+                NOTAS
+              </label>
+              {editing ? (
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  rows={3}
+                  placeholder="Añade notas sobre este lead..."
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none resize-none"
+                />
+              ) : (
+                <p className="text-sm text-zinc-300 bg-zinc-800/50 p-3 border border-zinc-800 min-h-[60px]">
+                  {notes || "Sin notas"}
+                </p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs text-zinc-500 block mb-1">PRECIO LEAD (€)</label>
+                {editing ? (
                   <input
                     type="number"
-                    value={commission}
-                    onChange={(e) => setCommission(Number(e.target.value))}
-                    className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-[#FF4D00] outline-none"
+                    value={leadPrice}
+                    onChange={(e) => setLeadPrice(Number(e.target.value))}
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
                   />
-                  <span className="text-[#FF4D00]">€</span>
-                </div>
-              ) : (
-                <p className="text-lg font-bold text-[#FF4D00]">{commission || 0}€</p>
-              )}
-            </div>
-            <div>
-              <label className="text-[10px] text-zinc-500 block mb-1">IMPORTE COBRADO</label>
-              {editing ? (
-                <div className="flex items-center gap-1">
+                ) : (
+                  <p className="text-sm font-bold text-[#FF4D00]">{leadPrice ? `${leadPrice}€` : "Sin precio"}</p>
+                )}
+              </div>
+              <div>
+                <label className="text-xs text-zinc-500 block mb-1">FECHA SERVICIO</label>
+                {editing ? (
                   <input
-                    type="number"
-                    value={amountCharged}
-                    onChange={(e) => setAmountCharged(Number(e.target.value))}
-                    className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-green-500 outline-none"
+                    type="datetime-local"
+                    value={serviceTime || ""}
+                    onChange={(e) => setServiceTime(e.target.value)}
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
                   />
-                  <span className="text-green-500">€</span>
+                ) : (
+                  <p className="text-sm">{serviceTime ? formatDate(serviceTime) : "No programado"}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-800">
+              <div>
+                <label className="text-xs text-zinc-500 block mb-1">ESTADO</label>
+                <select
+                  value={localStatus}
+                  onChange={(e) => handleStatusChangeLocal(e.target.value)}
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                >
+                  <option value="pending">Pendiente</option>
+                  <option value="contacted">Contactado</option>
+                  <option value="pending_appointment">Pendiente de Cita</option>
+                  <option value="confirmed">Cita Confirmada</option>
+                  <option value="completed">Trabajo Acabado</option>
+                  <option value="paid">Pagado</option>
+                  <option value="rejected">Rechazado</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-zinc-500 block mb-1">PARTNER ASIGNADO</label>
+                <select
+                  value={localPartnerId || ""}
+                  onChange={(e) => handlePartnerAssignLocal(e.target.value)}
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                >
+                  <option value="">Sin asignar</option>
+                  {partners.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-800 text-xs text-zinc-500">
+              <div>
+                <span className="block mb-1">CREADO</span>
+                <span>{formatDate(lead.created_at)}</span>
+              </div>
+              {lead.requested_date && (
+                <div>
+                  <span className="block mb-1">FECHA SOLICITADA</span>
+                  <span>{formatDate(lead.requested_date)}</span>
                 </div>
-              ) : (
-                <p className="text-lg font-bold text-green-500">{amountCharged || 0}€</p>
               )}
+            </div>
+
+            <div className="flex items-center gap-2 pt-4 border-t border-zinc-800">
+              <a
+                href={`https://wa.me/34${phone?.replace(/\D/g, "")}?text=${encodeURIComponent(
+                  `Hola ${name || ""}, soy de RapidFix. He visto tu solicitud de ${service}. ¿Cuando te vendria bien que pasara el tecnico?`,
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium text-center transition-colors flex items-center justify-center gap-2"
+              >
+                <MessageCircle className="w-4 h-4" />
+                WhatsApp
+              </a>
+              <a
+                href={`tel:+34${phone?.replace(/\D/g, "")}`}
+                className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium text-center transition-colors flex items-center justify-center gap-2"
+              >
+                <Phone className="w-4 h-4" />
+                Llamar
+              </a>
+              <button
+                onClick={onDelete}
+                className="py-2 px-4 bg-red-600/20 hover:bg-red-600/30 border border-red-600/30 text-red-400 text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
             </div>
           </div>
+        )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs text-zinc-500 block mb-1">NOMBRE</label>
-              {editing ? (
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
-                />
-              ) : (
-                <p className="text-sm font-medium">{name || "Sin nombre"}</p>
-              )}
+        {activeTab === "secuencia" && (
+          <div className="p-4 space-y-3 overflow-y-auto flex-1">
+            <div className="p-3 bg-zinc-800/50 border border-zinc-700 mb-4">
+              <p className="text-xs text-zinc-400">
+                Mensajes predefinidos para convertir leads en clientes. Haz clic en cualquier mensaje para copiarlo y
+                pegarlo en WhatsApp.
+              </p>
             </div>
-            <div>
-              <label className="text-xs text-zinc-500 block mb-1">TELEFONO</label>
-              {editing ? (
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm font-mono focus:border-[#FF4D00] outline-none"
-                />
-              ) : (
-                <p className="text-sm font-mono">{phone}</p>
-              )}
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs text-zinc-500 block mb-1">CIUDAD</label>
-              {editing ? (
-                <input
-                  type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
-                />
-              ) : (
-                <p className="text-sm">{city || "No especificada"}</p>
-              )}
-            </div>
-            <div>
-              <label className="text-xs text-zinc-500 block mb-1">SERVICIO</label>
-              {editing ? (
-                <div className="flex flex-wrap gap-1">
-                  {allServices.map((s) => (
+            {sequenceMessages.map((seq, index) => {
+              const isCurrentStatus = localStatus === seq.status
+              const isPastStatus =
+                PIPELINE_STATUSES.findIndex((s) => s.key === localStatus) >
+                PIPELINE_STATUSES.findIndex((s) => s.key === seq.status)
+
+              return (
+                <div
+                  key={index}
+                  className={`p-3 border transition-all ${
+                    isCurrentStatus
+                      ? "border-[#FF4D00] bg-[#FF4D00]/10"
+                      : isPastStatus
+                        ? "border-zinc-700 bg-zinc-800/30 opacity-50"
+                        : "border-zinc-700 bg-zinc-800/50 hover:border-zinc-600"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`w-5 h-5 flex items-center justify-center text-xs font-bold rounded-full ${
+                          isCurrentStatus
+                            ? "bg-[#FF4D00] text-black"
+                            : isPastStatus
+                              ? "bg-zinc-600 text-zinc-400"
+                              : "bg-zinc-700 text-zinc-300"
+                        }`}
+                      >
+                        {seq.step}
+                      </span>
+                      <span className={`text-xs font-medium ${isCurrentStatus ? "text-[#FF4D00]" : "text-zinc-400"}`}>
+                        {seq.title}
+                      </span>
+                    </div>
+                    {isCurrentStatus && (
+                      <span className="text-[10px] px-2 py-0.5 bg-[#FF4D00]/20 text-[#FF4D00] border border-[#FF4D00]/30">
+                        ACTUAL
+                      </span>
+                    )}
+                  </div>
+
+                  <p className="text-sm text-zinc-300 mb-3 leading-relaxed">{seq.message}</p>
+
+                  <div className="flex items-center gap-2">
                     <button
-                      key={s}
-                      onClick={() => setService(s)}
-                      className={`px-2 py-1 text-xs border transition-colors capitalize ${
-                        service === s
-                          ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
-                          : "border-zinc-700 hover:border-zinc-600"
+                      onClick={() => handleCopyMessage(seq.message, index)}
+                      className={`flex-1 py-2 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${
+                        copiedIndex === index
+                          ? "bg-green-600/20 border border-green-500/50 text-green-400"
+                          : "bg-zinc-700/50 border border-zinc-600 hover:bg-zinc-700 text-zinc-300"
                       }`}
                     >
-                      {s}
+                      {copiedIndex === index ? (
+                        <>
+                          <Check className="w-3 h-3" />
+                          COPIADO
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3 h-3" />
+                          COPIAR
+                        </>
+                      )}
                     </button>
-                  ))}
+                    <a
+                      href={`https://wa.me/34${phone?.replace(/\D/g, "")}?text=${encodeURIComponent(seq.message)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-2 px-4 bg-green-600/20 border border-green-500/50 hover:bg-green-600/30 text-green-400 text-xs font-medium flex items-center justify-center gap-2 transition-colors"
+                    >
+                      <MessageCircle className="w-3 h-3" />
+                      ENVIAR
+                    </a>
+                  </div>
                 </div>
-              ) : (
-                <p className="text-sm capitalize">{service}</p>
-              )}
-            </div>
+              )
+            })}
           </div>
-
-          <div>
-            <label className="text-xs text-zinc-500 block mb-1">PROBLEMA</label>
-            {editing ? (
-              <textarea
-                value={problem}
-                onChange={(e) => setProblem(e.target.value)}
-                rows={3}
-                className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none resize-none"
-              />
-            ) : (
-              <p className="text-sm text-zinc-300 bg-zinc-800/50 p-3 border border-zinc-800">
-                {problem || "Sin descripcion"}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="text-xs text-zinc-500 block mb-1 flex items-center gap-1">
-              <FileText className="w-3 h-3" />
-              NOTAS
-            </label>
-            {editing ? (
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={3}
-                placeholder="Añade notas sobre este lead..."
-                className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none resize-none"
-              />
-            ) : (
-              <p className="text-sm text-zinc-300 bg-zinc-800/50 p-3 border border-zinc-800 min-h-[60px]">
-                {notes || "Sin notas"}
-              </p>
-            )}
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs text-zinc-500 block mb-1">PRECIO LEAD (€)</label>
-              {editing ? (
-                <input
-                  type="number"
-                  value={leadPrice}
-                  onChange={(e) => setLeadPrice(Number(e.target.value))}
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
-                />
-              ) : (
-                <p className="text-sm font-bold text-[#FF4D00]">{leadPrice ? `${leadPrice}€` : "Sin precio"}</p>
-              )}
-            </div>
-            <div>
-              <label className="text-xs text-zinc-500 block mb-1">FECHA SERVICIO</label>
-              {editing ? (
-                <input
-                  type="datetime-local"
-                  value={serviceTime || ""}
-                  onChange={(e) => setServiceTime(e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
-                />
-              ) : (
-                <p className="text-sm">{serviceTime ? formatDate(serviceTime) : "No programado"}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-800">
-            <div>
-              <label className="text-xs text-zinc-500 block mb-1">ESTADO</label>
-              <select
-                value={localStatus}
-                onChange={(e) => handleStatusChangeLocal(e.target.value)}
-                className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
-              >
-                <option value="pending">Pendiente</option>
-                <option value="contacted">Contactado</option>
-                <option value="pending_appointment">Pendiente de Cita</option>
-                <option value="confirmed">Cita Confirmada</option>
-                <option value="completed">Trabajo Acabado</option>
-                <option value="paid">Pagado</option>
-                <option value="rejected">Rechazado</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-zinc-500 block mb-1">PARTNER ASIGNADO</label>
-              <select
-                value={localPartnerId || ""}
-                onChange={(e) => handlePartnerAssignLocal(e.target.value)}
-                className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
-              >
-                <option value="">Sin asignar</option>
-                {partners.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-800 text-xs text-zinc-500">
-            <div>
-              <span className="block mb-1">CREADO</span>
-              <span>{formatDate(lead.created_at)}</span>
-            </div>
-            {lead.requested_date && (
-              <div>
-                <span className="block mb-1">FECHA SOLICITADA</span>
-                <span>{formatDate(lead.requested_date)}</span>
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2 pt-4 border-t border-zinc-800">
-            <a
-              href={`https://wa.me/34${phone?.replace(/\D/g, "")}?text=${encodeURIComponent(
-                `Hola ${name || ""}, soy de RapidFix. He visto tu solicitud de ${service}. ¿Cuando te vendria bien que pasara el tecnico?`,
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium text-center transition-colors flex items-center justify-center gap-2"
-            >
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp
-            </a>
-            <a
-              href={`tel:+34${phone?.replace(/\D/g, "")}`}
-              className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium text-center transition-colors flex items-center justify-center gap-2"
-            >
-              <Phone className="w-4 h-4" />
-              Llamar
-            </a>
-            <button
-              onClick={onDelete}
-              className="py-2 px-4 bg-red-600/20 hover:bg-red-600/30 border border-red-600/30 text-red-400 text-sm font-medium transition-colors flex items-center justify-center gap-2"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )
@@ -1756,14 +1926,14 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
 
   const handleUpdateLead = async (leadId: string, data: Partial<Lead>) => {
     try {
-      console.log("[v0] handleUpdateLead sending:", { id: leadId, ...data })
+      console.log("[v0] HandleUpdateLead sending:", { id: leadId, ...data })
       const res = await fetch("/api/0x/leads", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: leadId, ...data }),
       })
       const result = await res.json()
-      console.log("[v0] handleUpdateLead response:", result)
+      console.log("[v0] HandleUpdateLead response:", result)
 
       if (res.ok && result.success && result.lead) {
         setStats((prev) => ({
@@ -1775,7 +1945,7 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
         setNotification({ type: "error", message: result.error || "Error al actualizar lead" })
       }
     } catch (error) {
-      console.error("[v0] handleUpdateLead error:", error)
+      console.error("[v0] HandleUpdateLead error:", error)
       setNotification({ type: "error", message: "Error de conexión" })
     }
     setTimeout(() => setNotification(null), 3000)
