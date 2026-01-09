@@ -65,7 +65,6 @@ interface Lead {
   source?: string
   commission?: number // Added commission
   amount_charged?: number // Added amount_charged
-  client_cost?: number // Added client_cost
   notes?: string // Added notes
 }
 
@@ -707,7 +706,6 @@ function LeadModal({
   )
 }
 
-// Updated LeadDetailModal for mobile
 function LeadDetailModal({
   lead,
   partners,
@@ -740,7 +738,6 @@ function LeadDetailModal({
   const [localPartnerId, setLocalPartnerId] = useState(lead.partner_id)
   const [commission, setCommission] = useState(lead.commission || 0)
   const [amountCharged, setAmountCharged] = useState(lead.amount_charged || 0)
-  const [clientCost, setClientCost] = useState(lead.client_cost || 0)
   const [notes, setNotes] = useState(lead.notes || "")
 
   useEffect(() => {
@@ -755,7 +752,6 @@ function LeadDetailModal({
     setLocalPartnerId(lead.partner_id)
     setCommission(lead.commission || 0)
     setAmountCharged(lead.amount_charged || 0)
-    setClientCost(lead.client_cost || 0)
     setNotes(lead.notes || "")
   }, [lead])
 
@@ -792,7 +788,6 @@ function LeadDetailModal({
         service_time: serviceTime || null,
         commission,
         amount_charged: amountCharged,
-        client_cost: clientCost,
         notes,
       })
       console.log("[v0] Lead saved successfully")
@@ -965,7 +960,6 @@ function LeadDetailModal({
                   setServiceTime(lead.service_time || "")
                   setCommission(lead.commission || 0)
                   setAmountCharged(lead.amount_charged || 0)
-                  setClientCost(lead.client_cost || 0)
                   setNotes(lead.notes || "")
                   setEditing(false)
                 }}
@@ -991,7 +985,7 @@ function LeadDetailModal({
         )}
 
         <div className="p-4 space-y-4 overflow-y-auto">
-          <div className="grid grid-cols-3 gap-3 p-3 border border-[#FF4D00]/30 bg-[#FF4D00]/5">
+          <div className="grid grid-cols-2 gap-3 p-3 border border-[#FF4D00]/30 bg-[#FF4D00]/5">
             <div>
               <label className="text-[10px] text-zinc-500 block mb-1">COMISION ESTIMADA</label>
               {editing ? (
@@ -1022,22 +1016,6 @@ function LeadDetailModal({
                 </div>
               ) : (
                 <p className="text-lg font-bold text-green-500">{amountCharged || 0}€</p>
-              )}
-            </div>
-            <div>
-              <label className="text-[10px] text-zinc-500 block mb-1">COSTE CLIENTE</label>
-              {editing ? (
-                <div className="flex items-center gap-1">
-                  <input
-                    type="number"
-                    value={clientCost}
-                    onChange={(e) => setClientCost(Number(e.target.value))}
-                    className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-blue-500 outline-none"
-                  />
-                  <span className="text-blue-500">€</span>
-                </div>
-              ) : (
-                <p className="text-lg font-bold text-blue-500">{clientCost || 0}€</p>
               )}
             </div>
           </div>
@@ -1301,8 +1279,7 @@ function LeadCard({
 
   const commission = Number(lead.commission) || 0
   const amountCharged = Number(lead.amount_charged) || 0
-  const clientCost = Number(lead.client_cost) || 0
-  const hasFinancials = commission > 0 || amountCharged > 0 || clientCost > 0
+  const hasFinancials = commission > 0 || amountCharged > 0
 
   return (
     <div
@@ -1328,19 +1305,21 @@ function LeadCard({
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 mb-2 text-[10px] sm:text-xs text-zinc-400">
-        <Phone className="w-3 h-3" />
-        <span className="font-mono">{lead.phone || "Sin teléfono"}</span>
+      {/* Phone always on one line, partner on separate line if exists */}
+      <div className="mb-2">
+        <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-zinc-400">
+          <Phone className="w-3 h-3 shrink-0" />
+          <span className="font-mono whitespace-nowrap">{lead.phone || "Sin teléfono"}</span>
+        </div>
         {partner && (
-          <>
-            <span className="text-zinc-600">•</span>
-            <UserCheck className="w-3 h-3 text-[#FF4D00]" />
-            <span className="text-[#FF4D00] truncate max-w-[60px]">{partner.name}</span>
-          </>
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-xs mt-1">
+            <UserCheck className="w-3 h-3 text-[#FF4D00] shrink-0" />
+            <span className="text-[#FF4D00] truncate">{partner.name}</span>
+          </div>
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-1 mb-2 text-[9px] sm:text-[10px]">
+      <div className="grid grid-cols-2 gap-1 mb-2 text-[9px] sm:text-[10px]">
         <div className="bg-zinc-800/50 p-1 text-center border border-zinc-700/50">
           <p className="text-zinc-500 uppercase">Comisión</p>
           <p className={`font-bold ${commission > 0 ? "text-[#FF4D00]" : "text-zinc-600"}`}>{commission}€</p>
@@ -1348,10 +1327,6 @@ function LeadCard({
         <div className="bg-zinc-800/50 p-1 text-center border border-zinc-700/50">
           <p className="text-zinc-500 uppercase">Cobrado</p>
           <p className={`font-bold ${amountCharged > 0 ? "text-green-500" : "text-zinc-600"}`}>{amountCharged}€</p>
-        </div>
-        <div className="bg-zinc-800/50 p-1 text-center border border-zinc-700/50">
-          <p className="text-zinc-500 uppercase">Cliente</p>
-          <p className={`font-bold ${clientCost > 0 ? "text-blue-400" : "text-zinc-600"}`}>{clientCost}€</p>
         </div>
       </div>
 
@@ -1988,7 +1963,6 @@ ${lead.problem?.slice(0, 150)}
   // Calculate totals for new KPIs
   const totalCommission = stats.recentLeads.reduce((sum, l) => sum + (Number(l.commission) || 0), 0)
   const totalCharged = stats.recentLeads.reduce((sum, l) => sum + (Number(l.amount_charged) || 0), 0)
-  const totalClientCost = stats.recentLeads.reduce((sum, l) => sum + (Number(l.client_cost) || 0), 0)
 
   const pendingRevenue = [...pendingLeads, ...contactedLeads, ...pendingAppointmentLeads, ...confirmedLeads].reduce(
     // Updated
@@ -2164,12 +2138,7 @@ ${lead.problem?.slice(0, 150)}
             icon={<DollarSign className="w-4 h-4" />}
             color="green"
           />
-          <KPICard
-            label="COSTE CLI"
-            value={`${totalClientCost.toFixed(0)}€`}
-            icon={<Euro className="w-4 h-4" />}
-            color="blue"
-          />
+          {/* Removed clientCost KPI card */}
         </div>
 
         <div className="flex items-center justify-between border-b border-zinc-800 pb-2 overflow-x-auto">
