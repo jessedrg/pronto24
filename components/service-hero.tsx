@@ -55,8 +55,6 @@ export function ServiceHero({ iconName = "wrench", title, subtitle, description 
 
           {/* Benefits */}
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 pt-4 text-sm sm:text-base text-muted-foreground">
-            <span>Presupuesto gratis</span>
-            <span className="hidden sm:inline">•</span>
             <span>Sin compromiso</span>
             <span className="hidden sm:inline">•</span>
             <span>Profesionales verificados</span>
