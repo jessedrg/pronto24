@@ -1,10 +1,12 @@
 "use client"
 
 import { Logo } from "./logo"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Phone } from "lucide-react"
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+
+const PHONE_NUMBER = "+34711267223"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -48,10 +50,24 @@ export function Header() {
             <Link href="/cerrajero" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Cerrajero
             </Link>
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-sm font-semibold rounded-full transition-all hover:scale-105 shadow-lg shadow-green-500/25"
+            >
+              <Phone className="w-4 h-4" />
+              <span>711 267 223</span>
+            </a>
           </nav>
 
-          {/* Mobile: 24h badge + Menu Button */}
-          <div className="md:hidden flex items-center gap-3">
+          {/* Mobile: Phone + 24h badge + Menu Button */}
+          <div className="md:hidden flex items-center gap-2">
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-semibold rounded-full shadow-lg shadow-green-500/25"
+            >
+              <Phone className="w-3.5 h-3.5" />
+              <span>Llamar</span>
+            </a>
             <span className="flex items-center gap-1.5 text-xs font-medium text-[#FF4D00]">
               <span className="w-1.5 h-1.5 bg-[#FF4D00] rounded-full animate-pulse" />
               24h
@@ -69,6 +85,14 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border/50">
             <nav className="flex flex-col gap-1">
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                className="flex items-center gap-2 px-3 py-3 mx-1 mb-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-semibold rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Phone className="w-4 h-4" />
+                <span>Llamar ahora: 711 267 223</span>
+              </a>
               <Link
                 href="/fontanero"
                 className="px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
