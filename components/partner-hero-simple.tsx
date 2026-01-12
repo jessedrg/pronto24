@@ -1,10 +1,25 @@
+"use client"
+
 import { MessageCircle, Zap, Shield, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
 
 export function PartnerHeroSimple() {
-  const whatsappNumber = "34711267223"
+  const [phoneNumber, setPhoneNumber] = useState("711267223")
+
+  useEffect(() => {
+    fetch("/api/config/phone")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.phoneNumber) {
+          setPhoneNumber(data.phoneNumber)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
   const whatsappMessage = encodeURIComponent("Hola! Quiero trabajar con vosotros y recibir clientes urgentes.")
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
+  const whatsappLink = `https://wa.me/34${phoneNumber}?text=${whatsappMessage}`
 
   return (
     <section className="h-screen bg-[#fafafa] flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 overflow-hidden">

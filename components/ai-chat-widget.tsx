@@ -61,14 +61,32 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
   const [isLoading, setIsLoading] = useState(false)
   const [showTeaser, setShowTeaser] = useState(false)
   const [hasTrackedConversion, setHasTrackedConversion] = useState(false)
-  const [hasTrackedWhatsApp, setHasTrackedWhatsApp] = useState(false) // Track if WhatsApp lead was already sent
+  const [hasTrackedWhatsApp, setHasTrackedWhatsApp] = useState(false)
   const [progress, setProgress] = useState(0)
   const [availabilityTime, setAvailabilityTime] = useState(15)
   const [currentActivity, setCurrentActivity] = useState(recentActivity[0])
   const [sessionId] = useState(() => generateSessionId())
+  const [phoneNumber, setPhoneNumber] = useState("711267223")
+  const [phoneFormatted, setPhoneFormatted] = useState("711 267 223")
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const fetchPhoneConfig = async () => {
+      try {
+        const res = await fetch("/api/config/phone")
+        const data = await res.json()
+        if (data.phoneNumber) {
+          setPhoneNumber(data.phoneNumber)
+          setPhoneFormatted(data.formatted || data.phoneNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3"))
+        }
+      } catch (error) {
+        console.error("Error fetching phone config:", error)
+      }
+    }
+    fetchPhoneConfig()
+  }, [])
 
   useEffect(() => {
     if (isOpen === null) {
@@ -264,7 +282,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
   }
 
   const sendWhatsAppLead = async () => {
-    if (hasTrackedWhatsApp) return // Don't send duplicate leads
+    if (hasTrackedWhatsApp) return
 
     try {
       await fetch("/api/leads/whatsapp", {
@@ -299,6 +317,27 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
     }
   }
 
+  const handleCallClick = () => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "conversion", {
+        send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
+        value: 25.0,
+        currency: "EUR",
+      })
+      window.gtag("event", "phone_call_click", {
+        event_category: "conversion",
+        event_label: service || "general",
+        value: 25.0,
+      })
+      window.gtag("event", "generate_lead", {
+        event_category: "engagement",
+        event_label: "phone_call",
+        value: 25.0,
+        currency: "EUR",
+      })
+    }
+  }
+
   if (isOpen === null) {
     return null
   }
@@ -310,30 +349,10 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
           isOpen ? "bottom-4 right-4 md:bottom-6 md:right-[460px]" : "bottom-4 right-4 md:bottom-6 md:right-6"
         }`}
       >
-        {/* Call Button */}
         <a
-          href="tel:+34711267223"
+          href={`tel:+34${phoneNumber}`}
           className="group flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white pl-3 pr-4 py-2.5 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-          onClick={() => {
-            if (typeof window !== "undefined" && window.gtag) {
-              window.gtag("event", "conversion", {
-                send_to: "AW-16741652529/YiAVCI7M1NkbELGwha8-",
-                value: 25.0,
-                currency: "EUR",
-              })
-              window.gtag("event", "phone_call_click", {
-                event_category: "conversion",
-                event_label: service || "general",
-                value: 25.0,
-              })
-              window.gtag("event", "generate_lead", {
-                event_category: "engagement",
-                event_label: "phone_call",
-                value: 25.0,
-                currency: "EUR",
-              })
-            }
-          }}
+          onClick={handleCallClick}
         >
           <div className="relative">
             <Phone className="w-5 h-5" />
@@ -341,7 +360,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-bold text-sm">Llamar</span>
-            <span className="text-[10px] text-green-100">711 267 223</span>
+            <span className="text-[10px] text-green-100">{phoneFormatted}</span>
           </div>
         </a>
 
@@ -448,7 +467,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
             }}
           >
             <a
-              href={`https://wa.me/34711267223?text=${encodeURIComponent(`Hola! Necesito ayuda con un servicio ${getServiceFromMessages()}`)}`}
+              href={`https://wa.me/34${phoneNumber}?text=${encodeURIComponent(`Hola! Necesito ayuda con un servicio ${getServiceFromMessages()}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleWhatsAppClick}
@@ -500,95 +519,87 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
                         <button
                           key={item.label}
                           onClick={() => handleQuickReply(item.msg)}
-                          className="flex items-center gap-2 p-2.5 rounded-xl border border-neutral-200 hover:border-foreground hover:bg-foreground hover:text-background transition-all text-left group"
+                          className="flex items-center gap-2 p-2.5 rounded-xl border border-neutral-200 hover:border-foreground hover:bg-foreground/5 transition-all text-left"
                         >
-                          <span className="text-base">{item.icon}</span>
+                          <span className="text-lg">{item.icon}</span>
                           <span className="text-sm font-medium">{item.label}</span>
                         </button>
                       ))}
                     </div>
-                    <button
-                      onClick={() => handleQuickReply("Tengo un problema con la caldera")}
-                      className="w-full flex items-center justify-center gap-2 p-2.5 mt-2 rounded-xl border border-neutral-200 hover:border-foreground hover:bg-foreground hover:text-background transition-all text-sm font-medium"
-                    >
-                      <span>🔥</span>
-                      <span>Calderas</span>
-                    </button>
-                  </div>
-                )}
-
-                {service && (
-                  <div className="bg-white rounded-2xl p-4 shadow-sm">
-                    <p className="text-sm text-neutral-700">
-                      Veo que necesitas un servicio de <strong>{service}</strong>.
-                    </p>
-                    <p className="text-sm text-neutral-500 mt-1">¿Qué ha pasado exactamente?</p>
                   </div>
                 )}
               </div>
             )}
 
             {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-200`}
-              >
+              <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`rounded-2xl px-4 py-2.5 max-w-[85%] ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
                     message.role === "user"
                       ? "bg-foreground text-background rounded-br-sm"
-                      : "bg-white shadow-sm rounded-bl-sm"
+                      : "bg-white shadow-sm text-neutral-700 rounded-bl-sm"
                   }`}
                 >
-                  <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                 </div>
               </div>
             ))}
 
             {isLoading && (
-              <div className="flex justify-start animate-in fade-in duration-200">
+              <div className="flex justify-start">
                 <div className="bg-white shadow-sm rounded-2xl rounded-bl-sm px-4 py-3">
-                  <div className="flex gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 bg-neutral-300 rounded-full animate-bounce" />
                     <span
                       className="w-2 h-2 bg-neutral-300 rounded-full animate-bounce"
-                      style={{ animationDelay: "0ms" }}
+                      style={{ animationDelay: "0.1s" }}
                     />
                     <span
                       className="w-2 h-2 bg-neutral-300 rounded-full animate-bounce"
-                      style={{ animationDelay: "150ms" }}
-                    />
-                    <span
-                      className="w-2 h-2 bg-neutral-300 rounded-full animate-bounce"
-                      style={{ animationDelay: "300ms" }}
+                      style={{ animationDelay: "0.2s" }}
                     />
                   </div>
                 </div>
               </div>
             )}
+
+            {isLeadComplete && (
+              <div className="bg-green-50 border border-green-200 rounded-2xl p-4 animate-in fade-in duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <p className="font-semibold text-green-800 text-sm">¡Solicitud completada!</p>
+                </div>
+                <p className="text-xs text-green-700">Te contactaremos en menos de 5 minutos</p>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
-          <form onSubmit={handleSubmit} className="p-3 bg-white border-t border-neutral-100 shrink-0">
-            <div className="flex gap-2">
+          <div className="p-3 bg-neutral-50 border-t border-neutral-100 shrink-0 safe-area-inset-bottom">
+            <form onSubmit={handleSubmit} className="flex gap-2">
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Escribe tu mensaje..."
-                className="flex-1 px-4 py-2.5 bg-neutral-100 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-foreground/20 placeholder:text-neutral-400"
+                placeholder="Describe tu problema..."
+                className="flex-1 bg-white border border-neutral-200 rounded-full px-4 py-2.5 text-base focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-colors"
                 disabled={isLoading}
               />
               <Button
                 type="submit"
-                disabled={isLoading || !input.trim()}
                 size="icon"
-                className="h-10 w-10 rounded-xl shrink-0"
+                disabled={!input.trim() || isLoading}
+                className="h-10 w-10 rounded-full bg-foreground hover:bg-foreground/90 text-background"
               >
                 <ArrowRight className="h-4 w-4" />
               </Button>
-            </div>
-          </form>
+            </form>
+          </div>
         </Card>
       )}
     </>

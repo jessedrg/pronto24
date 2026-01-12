@@ -2,15 +2,31 @@
 
 import { Logo } from "./logo"
 import { Menu, X, Phone } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-const PHONE_NUMBER = "+34711267223"
-
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState("711267223")
+  const [phoneFormatted, setPhoneFormatted] = useState("711 267 223")
   const pathname = usePathname()
+
+  useEffect(() => {
+    const fetchPhoneConfig = async () => {
+      try {
+        const res = await fetch("/api/config/phone")
+        const data = await res.json()
+        if (data.phoneNumber) {
+          setPhoneNumber(data.phoneNumber)
+          setPhoneFormatted(data.formatted || data.phoneNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3"))
+        }
+      } catch (error) {
+        console.error("Error fetching phone config:", error)
+      }
+    }
+    fetchPhoneConfig()
+  }, [])
 
   if (pathname?.startsWith("/0x")) {
     return null
@@ -51,18 +67,18 @@ export function Header() {
               Cerrajero
             </Link>
             <a
-              href={`tel:${PHONE_NUMBER}`}
+              href={`tel:+34${phoneNumber}`}
               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-sm font-semibold rounded-full transition-all hover:scale-105 shadow-lg shadow-green-500/25"
             >
               <Phone className="w-4 h-4" />
-              <span>711 267 223</span>
+              <span>{phoneFormatted}</span>
             </a>
           </nav>
 
           {/* Mobile: Phone + 24h badge + Menu Button */}
           <div className="md:hidden flex items-center gap-2">
             <a
-              href={`tel:${PHONE_NUMBER}`}
+              href={`tel:+34${phoneNumber}`}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-semibold rounded-full shadow-lg shadow-green-500/25"
             >
               <Phone className="w-3.5 h-3.5" />
@@ -86,12 +102,12 @@ export function Header() {
           <div className="md:hidden py-4 border-t border-border/50">
             <nav className="flex flex-col gap-1">
               <a
-                href={`tel:${PHONE_NUMBER}`}
+                href={`tel:+34${phoneNumber}`}
                 className="flex items-center gap-2 px-3 py-3 mx-1 mb-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-semibold rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Phone className="w-4 h-4" />
-                <span>Llamar ahora: 711 267 223</span>
+                <span>Llamar ahora: {phoneFormatted}</span>
               </a>
               <Link
                 href="/fontanero"

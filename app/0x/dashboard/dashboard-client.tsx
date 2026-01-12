@@ -40,6 +40,13 @@ import {
   ListOrdered,
 } from "lucide-react"
 
+const PHONE_CONFIG_ENDPOINT = "/api/0x/phone-config"
+
+interface PhoneConfig {
+  activePhone: string
+  phoneOptions: { id: string; label: string; number: string }[]
+}
+
 interface Partner {
   id: string
   name: string
@@ -1004,30 +1011,6 @@ function LeadDetailModal({
                 <Edit2 className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF4D00]" />
               </button>
             )}
-            {editing && (
-              <button
-                onClick={() => {
-                  // Reset to original values
-                  setName(lead.name || "")
-                  setPhone(lead.phone || "")
-                  setCity(lead.city || "")
-                  setService(lead.service || "")
-                  setProblem(lead.problem || "")
-                  setLeadPrice(lead.lead_price || 0)
-                  setServiceTime(lead.service_time || "")
-                  setCommission(lead.commission || 0)
-                  setAmountCharged(lead.amount_charged || 0)
-                  setNotes(lead.notes || "")
-                  setPartnerId(lead.partner_id || null) // Reset partnerId
-                  setStatus(lead.status || "pending") // Reset status
-                  setEditing(false)
-                }}
-                className="p-1.5 sm:p-2 border border-red-500/50 hover:bg-red-500/10 transition-colors"
-                title="Cancelar"
-              >
-                <X className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
-              </button>
-            )}
             {!editing && (
               <button onClick={onClose} className="p-1.5 sm:p-2 hover:bg-zinc-800 transition-colors">
                 <X className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-400" />
@@ -1189,7 +1172,7 @@ function LeadDetailModal({
             </div>
 
             <div>
-              <label className="text-xs text-zinc-500 block mb-1 flex items-center gap-1">
+              <label className="text-xs text-zinc-500 block mb-1">
                 <FileText className="w-3 h-3" />
                 NOTAS
               </label>
@@ -1750,7 +1733,7 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
   })
 
   const [currentTime, setCurrentTime] = useState(new Date())
-  const [activeTab, setActiveTab] = useState<"pipeline" | "partners">("pipeline")
+  const [activeTab, setActiveTab] = useState<"pipeline" | "partners" | "config">("pipeline") // Added config tab
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null)
   const [showPartnerModal, setShowPartnerModal] = useState(false)
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
@@ -1764,10 +1747,64 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
   const [mobileColumnIndex, setMobileColumnIndex] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false) // Added refresh state
 
+  const [activePhone, setActivePhone] = useState("phone1")
+  const [phoneOptions, setPhoneOptions] = useState([
+    { id: "phone1", label: "Telefono Principal", number: "711267223" },
+    { id: "phone2", label: "Telefono Alternativo", number: "644536400" },
+  ])
+  const [savingPhone, setSavingPhone] = useState(false)
+  const [loadingPhoneConfig, setLoadingPhoneConfig] = useState(true)
+
+  useEffect(() => {
+    const loadPhoneConfig = async () => {
+      // Set loading state to true
+      setLoadingPhoneConfig(true)
+      try {
+        const res = await fetch(PHONE_CONFIG_ENDPOINT)
+        if (res.ok) {
+          const contentType = res.headers.get("content-type")
+          if (contentType && contentType.includes("application/json")) {
+            const config = await res.json()
+            console.log("[v0] Phone config loaded on mount:", config)
+            if (config.activePhone) {
+              console.log("[v0] Setting activePhone to:", config.activePhone)
+              setActivePhone(config.activePhone)
+            }
+            if (config.phoneOptions && Array.isArray(config.phoneOptions)) {
+              console.log("[v0] Setting phoneOptions to:", config.phoneOptions)
+              setPhoneOptions(config.phoneOptions)
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error loading phone config:", error)
+      } finally {
+        // Set loading state to false
+        setLoadingPhoneConfig(false)
+      }
+    }
+    loadPhoneConfig()
+  }, [])
+
+  useEffect(() => {
+    console.log("[v0] Current activePhone state:", activePhone)
+  }, [activePhone])
+
   const refreshData = useCallback(async () => {
     setIsRefreshing(true)
     try {
-      const res = await fetch("/api/0x/dashboard") // Removed searchParams.toString() as it's not needed for refresh
+      // Add fetch for phone config
+      const phoneRes = await fetch(PHONE_CONFIG_ENDPOINT)
+      let phoneConfig: PhoneConfig | null = null
+      if (phoneRes.ok) {
+        const contentType = phoneRes.headers.get("content-type")
+        if (contentType && contentType.includes("application/json")) {
+          phoneConfig = await phoneRes.json()
+        }
+      }
+
+      const params = new URLSearchParams(searchParams.toString())
+      const res = await fetch(`/api/0x/dashboard?${params.toString()}`) // Use searchParams here for dynamic range
       if (!res.ok) {
         setIsRefreshing(false)
         return
@@ -1790,12 +1827,20 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
         funnelStats: Array.isArray(data.funnelStats) ? data.funnelStats : [],
         incompleteChats: Array.isArray(data.incompleteChats) ? data.incompleteChats : [],
       })
+
+      // Update phone config state if fetched
+      if (phoneConfig) {
+        setActivePhone(phoneConfig.activePhone || "phone1")
+        if (phoneConfig.phoneOptions && Array.isArray(phoneConfig.phoneOptions)) {
+          setPhoneOptions(phoneConfig.phoneOptions)
+        }
+      }
     } catch (error) {
       console.error("Error refreshing data:", error)
     } finally {
       setIsRefreshing(false)
     }
-  }, [defaultStats])
+  }, [defaultStats, searchParams]) // Include searchParams here
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -2190,8 +2235,8 @@ ${lead.problem?.slice(0, 150)}
   const rejectedLeads = filteredLeads.filter((l) => l.status === "rejected")
 
   // Calculate totals for new KPIs
-  const totalCommission = stats.recentLeads.reduce((sum, l) => sum + (Number(l.commission) || 0), 0)
-  const totalCharged = stats.recentLeads.reduce((sum, l) => sum + (Number(l.amount_charged) || 0), 0)
+  const totalCommission = recentLeads.reduce((sum, l) => sum + (Number(l.commission) || 0), 0)
+  const totalCharged = recentLeads.reduce((sum, l) => sum + (Number(l.amount_charged) || 0), 0)
 
   const pendingRevenue = [...pendingLeads, ...contactedLeads, ...pendingAppointmentLeads, ...confirmedLeads].reduce(
     // Updated
@@ -2205,6 +2250,32 @@ ${lead.problem?.slice(0, 150)}
     const leadDate = new Date(l.created_at)
     return leadDate.toDateString() === today.toDateString()
   }).length
+
+  // Phone config save handler
+  const handleSavePhoneConfig = async () => {
+    setSavingPhone(true)
+    try {
+      console.log("[v0] Saving phone config:", { activePhone, phoneOptions })
+      const res = await fetch(PHONE_CONFIG_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activePhone, phoneOptions }),
+      })
+      const result = await res.json()
+      console.log("[v0] Phone config save response:", result)
+      if (res.ok && result.success) {
+        setNotification({ type: "success", message: "Configuración de teléfonos guardada" })
+      } else {
+        setNotification({ type: "error", message: result.error || "Error al guardar la configuración" })
+      }
+    } catch (error) {
+      console.error("Error saving phone config:", error)
+      setNotification({ type: "error", message: "Error de conexión" })
+    } finally {
+      setSavingPhone(false)
+      setTimeout(() => setNotification(null), 3000)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -2394,6 +2465,15 @@ ${lead.problem?.slice(0, 150)}
               }`}
             >
               Partners ({partnersList.length})
+            </button>
+            {/* Add "Config" tab button after "Partners" */}
+            <button
+              onClick={() => setActiveTab("config")}
+              className={`text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
+                activeTab === "config" ? "text-[#FF4D00]" : "text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              Config
             </button>
           </div>
 
@@ -3043,6 +3123,74 @@ ${lead.problem?.slice(0, 150)}
                 <div className="p-8 text-center text-zinc-500 text-sm">No hay partners. Crea uno nuevo.</div>
               )}
             </div>
+          </div>
+        )}
+
+        {/* Add a new tab content for phone config */}
+        {activeTab === "config" && (
+          <div className="border border-zinc-800 bg-zinc-900/30 p-4">
+            <h3 className="text-sm font-bold text-zinc-400 mb-4">CONFIGURACIÓN TELÉFONOS</h3>
+            {loadingPhoneConfig ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-6 h-6 animate-spin text-[#FF4D00]" />
+                <span className="ml-2 text-zinc-400">Cargando configuración...</span>
+              </div>
+            ) : (
+              <div className="space-y-4 max-w-lg">
+                <div>
+                  <label className="text-xs text-zinc-500 block mb-1">TELÉFONO ACTIVO</label>
+                  <select
+                    value={activePhone}
+                    onChange={(e) => setActivePhone(e.target.value)}
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                  >
+                    {phoneOptions.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.label} ({option.number})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs text-zinc-500 block mb-1">NÚMEROS DISPONIBLES</label>
+                  <div className="space-y-2">
+                    {phoneOptions.map((option) => (
+                      <div key={option.id} className="flex items-center justify-between p-2 border border-zinc-800">
+                        <div>
+                          <p className="text-sm font-medium">{option.label}</p>
+                          <p className="text-xs text-zinc-400 font-mono">{option.number}</p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            // Logic to remove or edit phone numbers if needed
+                            // For now, only allow setting active
+                            if (option.id !== activePhone) {
+                              setActivePhone(option.id)
+                            }
+                          }}
+                          className={`text-xs px-2 py-1 border transition-colors ${
+                            option.id === activePhone
+                              ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                              : "border-zinc-700 hover:border-zinc-600"
+                          }`}
+                        >
+                          {option.id === activePhone ? "ACTIVO" : "SELECCIONAR"}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleSavePhoneConfig}
+                  disabled={savingPhone}
+                  className="w-full py-3 bg-[#FF4D00] text-black font-bold tracking-wider hover:bg-[#FF4D00]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {savingPhone ? "GUARDANDO..." : "GUARDAR CONFIGURACIÓN"}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </main>
