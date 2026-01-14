@@ -84,10 +84,10 @@ export function ElectricistaContent() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            {/* Left Content */}
-            <div className="order-2 lg:order-1">
+            {/* Left Content - Shows FIRST on mobile */}
+            <div className="space-y-6">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-[#FF6B35] text-sm font-semibold mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-[#FF6B35] text-sm font-semibold">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
@@ -96,28 +96,28 @@ export function ElectricistaContent() {
               </div>
 
               {/* Main Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] mb-6">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1]">
                 <span className="text-foreground">¿Sin luz en casa?</span>
                 <span className="block text-[#FF6B35] mt-2">Llegamos en 10 min</span>
               </h1>
 
-              <p className="text-lg text-muted-foreground mb-8 max-w-xl">
+              <p className="text-base sm:text-lg text-muted-foreground max-w-xl">
                 Electricistas certificados disponibles{" "}
                 <strong className="text-foreground">24/7 en toda Catalunya y Málaga</strong>. Solucionamos cualquier
                 avería eléctrica de urgencia.
               </p>
 
               {/* Main CTA */}
-              <div className="space-y-4 mb-10">
+              <div className="space-y-4">
                 <a
                   href={`tel:+34${phoneNumber}`}
                   onClick={handleCall}
-                  className="group relative inline-flex items-center justify-center gap-4 w-full sm:w-auto px-8 py-5 bg-[#FF6B35] hover:bg-[#FF5722] text-white font-bold text-xl rounded-2xl shadow-lg shadow-[#FF6B35]/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-[#FF6B35]/30"
+                  className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-5 bg-[#FF6B35] hover:bg-[#FF5722] text-white font-bold text-lg sm:text-xl rounded-2xl shadow-lg shadow-[#FF6B35]/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-[#FF6B35]/30"
                 >
-                  <Phone className="w-6 h-6" />
-                  <span>LLAMAR AHORA - {phoneFormatted}</span>
+                  <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <span className="text-base sm:text-xl">LLAMAR - {phoneFormatted}</span>
                 </a>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-green-500" />
                     Sin compromiso
@@ -131,7 +131,7 @@ export function ElectricistaContent() {
 
               {/* Problems Quick Access */}
               <div className="space-y-3">
-                <p className="text-sm text-muted-foreground font-medium">¿Cuál es tu problema?</p>
+                <p className="text-xs sm:text-sm text-muted-foreground font-medium">¿Cuál es tu problema?</p>
                 <div className="flex flex-wrap gap-2">
                   {problems.map((item, i) => (
                     <a
@@ -159,11 +159,11 @@ export function ElectricistaContent() {
               </div>
             </div>
 
-            {/* Right - Image */}
-            <div className="order-1 lg:order-2 relative">
-              <div className="relative max-w-md mx-auto lg:max-w-none">
+            {/* Right - Image - Shows SECOND on mobile */}
+            <div className="relative">
+              <div className="relative max-w-sm sm:max-w-md mx-auto lg:max-w-none">
                 {/* Main Image */}
-                <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-border shadow-2xl">
+                <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
                     src="/images/electricista-profesional.jpg"
                     alt="Electricista profesional"
@@ -192,11 +192,11 @@ export function ElectricistaContent() {
                 </div>
 
                 {/* Stats Badge */}
-                <div className="absolute -top-4 -right-4 sm:top-4 sm:right-4 z-10">
-                  <div className="px-4 py-3 rounded-2xl bg-background border border-[#FF6B35]/30 shadow-xl">
+                <div className="absolute -top-3 -right-3 sm:top-4 sm:right-4 z-10">
+                  <div className="px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-background border border-[#FF6B35]/30 shadow-xl">
                     <div className="text-center">
-                      <div className="text-3xl font-black text-[#FF6B35]">10</div>
-                      <div className="text-xs text-muted-foreground font-medium">min llegada</div>
+                      <div className="text-2xl sm:text-3xl font-black text-[#FF6B35]">10</div>
+                      <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">min llegada</div>
                     </div>
                   </div>
                 </div>
