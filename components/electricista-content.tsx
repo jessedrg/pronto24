@@ -103,8 +103,8 @@ export function ElectricistaContent() {
 
               <p className="text-base sm:text-lg text-muted-foreground max-w-xl">
                 Electricistas certificados disponibles{" "}
-                <strong className="text-foreground">24/7 en toda Catalunya y Málaga</strong>. Solucionamos cualquier
-                avería eléctrica de urgencia.
+                <strong className="text-foreground">24/7 en toda Catalunya</strong>. Solucionamos cualquier avería
+                eléctrica de urgencia.
               </p>
 
               {/* Main CTA */}
@@ -231,12 +231,12 @@ export function ElectricistaContent() {
                   <MapPin className="w-8 h-8 text-[#FF6B35]" />
                 </div>
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-black text-foreground">Catalunya + Málaga</h2>
+                  <h2 className="text-2xl md:text-3xl font-black text-foreground">Toda Catalunya</h2>
                   <p className="text-muted-foreground">Llegamos en 10 minutos a cualquier punto</p>
                 </div>
               </div>
               <div className="flex flex-wrap justify-center gap-2">
-                {["Barcelona", "Girona", "Tarragona", "Lleida", "Málaga", "Marbella"].map((city) => (
+                {["Barcelona", "Girona", "Tarragona", "Lleida", "Sabadell", "Terrassa"].map((city) => (
                   <span
                     key={city}
                     className="px-4 py-2 rounded-full bg-background text-foreground text-sm font-medium border border-border"
