@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
-import { ElectricistaHero } from "@/components/electricista-hero"
+import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { AIChatWidget } from "@/components/ai-chat-widget"
+import { UrgencyBanner } from "@/components/urgency-banner"
+import { ElectricistaContent } from "@/components/electricista-content"
 
 export const metadata: Metadata = {
   title: "Electricista Urgente 24h | Llegamos en 10 min | Catalunya y Málaga",
@@ -17,8 +19,10 @@ export const metadata: Metadata = {
 
 export default function ElectricistaPage() {
   return (
-    <main className="min-h-screen bg-zinc-950">
-      <ElectricistaHero />
+    <main className="min-h-screen bg-background">
+      <UrgencyBanner />
+      <Header />
+      <ElectricistaContent />
       <Footer />
       <AIChatWidget service="electricista" />
     </main>
