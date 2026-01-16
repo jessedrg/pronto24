@@ -286,7 +286,7 @@ export async function generateStaticParams() {
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: rawId } = await params
-  const baseUrl = "https://www.rapidfix.es"
+  const baseUrl = "https://rapidfix.es"
   const date = new Date().toISOString().split("T")[0]
 
   const id = rawId.endsWith(".xml") ? rawId.slice(0, -4) : rawId
