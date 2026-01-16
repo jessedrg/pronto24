@@ -1,17 +1,38 @@
 import { PROFESSIONS, PROBLEMS, getAllCities } from "@/lib/seo-data"
 import type { NextRequest } from "next/server"
 
+export const dynamic = "force-static"
+export const revalidate = 86400 // 24 hours
+
+export function generateStaticParams() {
+  const params: { id: string }[] = []
+  const modifiers = ["", "-urgente", "-24-horas", "-economico", "-barato"]
+
+  for (const profession of PROFESSIONS) {
+    for (const modifier of modifiers) {
+      const sitemapId = modifier ? `${profession.id}${modifier}.xml` : `${profession.id}.xml`
+      params.push({ id: sitemapId })
+    }
+    params.push({ id: `${profession.id}-problemas.xml` })
+  }
+
+  return params
+}
+
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const baseUrl = "https://rapidfix.es"
   const cities = getAllCities()
-  const currentDate = new Date().toISOString()
+  const currentDate = new Date().toISOString().split("T")[0]
+
+  // Remove .xml extension for parsing
+  const sitemapId = id.replace(".xml", "")
 
   const urls: string[] = []
 
   // Check if it's a problems sitemap
-  if (id.endsWith("-problemas")) {
-    const professionId = id.replace("-problemas", "")
+  if (sitemapId.endsWith("-problemas")) {
+    const professionId = sitemapId.replace("-problemas", "")
     const profession = PROFESSIONS.find((p) => p.id === professionId)
 
     if (profession) {
@@ -24,14 +45,13 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
   } else {
     // Parse profession and modifier from id
-    // e.g., "electricista", "electricista-urgente", "electricista-24-horas"
-    let professionId = id
+    let professionId = sitemapId
     let modifier = ""
 
     const modifiers = ["-urgente", "-24-horas", "-economico", "-barato"]
     for (const mod of modifiers) {
-      if (id.endsWith(mod)) {
-        professionId = id.replace(mod, "")
+      if (sitemapId.endsWith(mod)) {
+        professionId = sitemapId.replace(mod, "")
         modifier = mod
         break
       }
@@ -68,7 +88,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   return new Response(xml, {
     headers: {
       "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=3600, s-maxage=3600",
+      "Cache-Control": "public, max-age=86400, s-maxage=86400",
     },
   })
 }
