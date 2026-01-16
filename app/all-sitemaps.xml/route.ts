@@ -1,24 +1,21 @@
-import { PROFESSIONS } from "@/lib/seo-data"
+const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
+const MODIFIERS = ["", "-urgente", "-24-horas", "-economico", "-barato", "-problemas"]
 
 export const dynamic = "force-dynamic"
-export const revalidate = 86400 // 24 hours
 
 export async function GET() {
   const baseUrl = "https://rapidfix.es"
   const currentDate = new Date().toISOString().split("T")[0]
 
-  // Generate sitemap index pointing to individual sitemaps
   const sitemaps: string[] = []
 
   // Add main sitemap
   sitemaps.push(`${baseUrl}/sitemap.xml`)
 
-  // Add sitemaps for each profession and modifier combination
-  const modifiers = ["", "-urgente", "-24-horas", "-economico", "-barato", "-problemas"]
-
+  // Add sitemaps for each profession and modifier
   for (const profession of PROFESSIONS) {
-    for (const mod of modifiers) {
-      sitemaps.push(`${baseUrl}/sitemaps/${profession.id}${mod}.xml`)
+    for (const mod of MODIFIERS) {
+      sitemaps.push(`${baseUrl}/sitemaps/${profession}${mod}.xml`)
     }
   }
 

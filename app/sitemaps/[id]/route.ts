@@ -1,25 +1,149 @@
-import { PROFESSIONS, PROBLEMS, getAllCities } from "@/lib/seo-data"
 import { NextResponse, type NextRequest } from "next/server"
 
+const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
+
+const MODIFIERS = ["", "-urgente", "-24-horas", "-economico", "-barato", "-problemas"]
+
+const PROBLEMS: Record<string, string[]> = {
+  electricista: ["apagon", "cortocircuito", "olor-quemado", "diferencial-salta", "enchufes-no-funcionan"],
+  fontanero: ["fuga-agua", "tuberia-rota", "inundacion", "atasco-grave", "grifo-gotea"],
+  cerrajero: ["puerta-bloqueada", "cerradura-rota", "llave-dentro", "robo", "cambio-cerradura"],
+  desatascos: ["wc-atascado", "fregadero-atascado", "arqueta-atascada", "mal-olor", "ducha-atascada"],
+  calderas: ["sin-agua-caliente", "caldera-no-enciende", "fuga-gas", "ruido-caldera", "revision-caldera"],
+}
+
+// Top 100 cities only to keep sitemaps manageable
+const CITIES = [
+  "barcelona",
+  "madrid",
+  "valencia",
+  "sevilla",
+  "malaga",
+  "bilbao",
+  "zaragoza",
+  "murcia",
+  "hospitalet-llobregat",
+  "badalona",
+  "terrassa",
+  "sabadell",
+  "mataro",
+  "santa-coloma-gramenet",
+  "cornella-llobregat",
+  "sant-boi-llobregat",
+  "sant-cugat-valles",
+  "rubi",
+  "granollers",
+  "mollet-valles",
+  "mostoles",
+  "alcala-henares",
+  "fuenlabrada",
+  "leganes",
+  "getafe",
+  "alcorcon",
+  "torrejon-ardoz",
+  "parla",
+  "alcobendas",
+  "las-rozas",
+  "pozuelo-alarcon",
+  "coslada",
+  "rivas-vaciamadrid",
+  "torrent",
+  "gandia",
+  "paterna",
+  "sagunto",
+  "alzira",
+  "xativa",
+  "ontinyent",
+  "alicante",
+  "elche",
+  "torrevieja",
+  "orihuela",
+  "benidorm",
+  "alcoy",
+  "elda",
+  "denia",
+  "marbella",
+  "fuengirola",
+  "torremolinos",
+  "benalmadena",
+  "estepona",
+  "mijas",
+  "velez-malaga",
+  "dos-hermanas",
+  "alcala-guadaira",
+  "utrera",
+  "mairena-aljarafe",
+  "carmona",
+  "granada",
+  "motril",
+  "almunecar",
+  "armilla",
+  "maracena",
+  "cordoba",
+  "lucena",
+  "puente-genil",
+  "montilla",
+  "cadiz",
+  "jerez-frontera",
+  "algeciras",
+  "san-fernando",
+  "el-puerto-santa-maria",
+  "almeria",
+  "el-ejido",
+  "roquetas-mar",
+  "nijar",
+  "girona",
+  "figueres",
+  "blanes",
+  "lloret-mar",
+  "olot",
+  "tarragona",
+  "reus",
+  "tortosa",
+  "salou",
+  "cambrils",
+  "lleida",
+  "balaguer",
+  "tarrega",
+  "mollerussa",
+  "san-sebastian",
+  "irun",
+  "errenteria",
+  "zarautz",
+  "vitoria-gasteiz",
+  "llodio",
+  "vigo",
+  "pontevedra",
+  "santiago-compostela",
+  "a-coruna",
+  "ferrol",
+  "valladolid",
+  "burgos",
+  "leon",
+  "salamanca",
+]
+
 export const dynamic = "force-dynamic"
-export const revalidate = 86400 // 24 hours
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const baseUrl = "https://rapidfix.es"
-  const cities = getAllCities()
   const currentDate = new Date().toISOString().split("T")[0]
 
-  // Remove .xml extension for parsing
+  // Remove .xml extension
   const sitemapId = id.replace(".xml", "")
 
-  const modifiers = ["", "-urgente", "-24-horas", "-economico", "-barato", "-problemas"]
+  // Validate sitemap ID
   let isValid = false
+  let professionId = ""
+  let modifier = ""
 
-  for (const profession of PROFESSIONS) {
-    for (const mod of modifiers) {
-      if (sitemapId === `${profession.id}${mod}`) {
+  for (const prof of PROFESSIONS) {
+    for (const mod of MODIFIERS) {
+      if (sitemapId === `${prof}${mod}`) {
         isValid = true
+        professionId = prof
+        modifier = mod
         break
       }
     }
@@ -27,48 +151,28 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   if (!isValid) {
-    return NextResponse.json({ error: "Sitemap not found" }, { status: 404 })
+    return NextResponse.json({ error: "Sitemap not found", id: sitemapId }, { status: 404 })
   }
 
   const urls: string[] = []
 
-  // Check if it's a problems sitemap
-  if (sitemapId.endsWith("-problemas")) {
-    const professionId = sitemapId.replace("-problemas", "")
-    const profession = PROFESSIONS.find((p) => p.id === professionId)
-
-    if (profession) {
-      const problems = PROBLEMS[professionId as keyof typeof PROBLEMS] || []
-      for (const problem of problems) {
-        for (const city of cities) {
-          urls.push(`${baseUrl}/problema/${professionId}/${problem.id}/${city}`)
-        }
+  if (modifier === "-problemas") {
+    // Problem pages
+    const problems = PROBLEMS[professionId] || []
+    for (const problem of problems) {
+      for (const city of CITIES) {
+        urls.push(`${baseUrl}/problema/${professionId}/${problem}/${city}`)
       }
+    }
+  } else if (modifier) {
+    // Modifier pages (urgente, 24-horas, economico, barato)
+    for (const city of CITIES) {
+      urls.push(`${baseUrl}/${professionId}${modifier}/${city}`)
     }
   } else {
-    // Parse profession and modifier from id
-    let professionId = sitemapId
-    let modifier = ""
-
-    const mods = ["-urgente", "-24-horas", "-economico", "-barato"]
-    for (const mod of mods) {
-      if (sitemapId.endsWith(mod)) {
-        professionId = sitemapId.replace(mod, "")
-        modifier = mod
-        break
-      }
-    }
-
-    const profession = PROFESSIONS.find((p) => p.id === professionId)
-
-    if (profession) {
-      for (const city of cities) {
-        if (modifier) {
-          urls.push(`${baseUrl}/${professionId}${modifier}/${city}`)
-        } else {
-          urls.push(`${baseUrl}/${professionId}/${city}`)
-        }
-      }
+    // Base profession pages
+    for (const city of CITIES) {
+      urls.push(`${baseUrl}/${professionId}/${city}`)
     }
   }
 
