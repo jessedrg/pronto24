@@ -21,20 +21,43 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    // Profession main pages
+    {
+      url: `${baseUrl}/electricista`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/fontanero`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/cerrajero`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/desatascos`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/calderas`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
   ]
 
   const modifiers = ["urgente", "24-horas", "economico", "barato"]
 
-  // Add profession main pages
+  // Add profession + city pages
   for (const profession of PROFESSIONS) {
-    routes.push({
-      url: `${baseUrl}/${profession.id}`,
-      lastModified: currentDate,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    })
-
-    // Add profession + city pages
     for (const city of cities) {
       // Base: /electricista/barcelona
       routes.push({
