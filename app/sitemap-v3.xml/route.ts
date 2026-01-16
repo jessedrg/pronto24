@@ -4,7 +4,7 @@ export const dynamic = "force-static"
 export const revalidate = 86400
 
 export async function GET() {
-  const baseUrl = "https://rapidfix.es"
+  const baseUrl = "https://www.rapidfix.es"
   const date = new Date().toISOString().split("T")[0]
 
   const professions = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
