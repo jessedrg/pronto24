@@ -30,22 +30,36 @@ const ICONS = {
 }
 
 interface ServiceLandingTemplateProps {
-  professionId: string
+  professionId?: string
+  profession?: (typeof PROFESSIONS)[0]
+  city?: { slug: string; name: string; province?: string }
   citySlug?: string
   problemId?: string
   isUrgent?: boolean
+  modifier?: string
+  modifierText?: string
 }
 
-export function ServiceLandingTemplate({ professionId, citySlug, problemId, isUrgent }: ServiceLandingTemplateProps) {
+export function ServiceLandingTemplate({
+  professionId,
+  profession: professionProp,
+  city: cityProp,
+  citySlug,
+  problemId,
+  isUrgent,
+  modifier,
+  modifierText,
+}: ServiceLandingTemplateProps) {
   const [phoneNumber, setPhoneNumber] = useState("711267223")
   const [phoneFormatted, setPhoneFormatted] = useState("711 267 223")
   const [activeUsers, setActiveUsers] = useState(12)
 
-  const profession = PROFESSIONS.find((p) => p.id === professionId)!
-  const cityName = citySlug ? getCityDisplayName(citySlug) : "Catalunya"
-  const provinceName = citySlug ? getCityProvince(citySlug) : ""
-  const nearbyCities = citySlug ? getNearbyCities(citySlug) : []
-  const problems = PROBLEMS[professionId as keyof typeof PROBLEMS] || []
+  const profession = professionProp || PROFESSIONS.find((p) => p.id === professionId)!
+  const cityName = cityProp?.name || (citySlug ? getCityDisplayName(citySlug) : "Catalunya")
+  const actualCitySlug = cityProp?.slug || citySlug
+  const provinceName = cityProp?.province || (actualCitySlug ? getCityProvince(actualCitySlug) : "")
+  const nearbyCities = actualCitySlug ? getNearbyCities(actualCitySlug) : []
+  const problems = PROBLEMS[profession.id as keyof typeof PROBLEMS] || []
   const currentProblem = problemId ? problems.find((p) => p.id === problemId) : null
 
   const IconComponent = ICONS[profession.icon as keyof typeof ICONS] || Zap
@@ -80,22 +94,88 @@ export function ServiceLandingTemplate({ professionId, citySlug, problemId, isUr
     }
   }
 
-  const title = currentProblem
-    ? `${currentProblem.name} en ${cityName}`
-    : isUrgent
-      ? `${profession.name} Urgente en ${cityName}`
-      : `${profession.name} en ${cityName}`
+  const getTitle = () => {
+    if (currentProblem) {
+      return `${currentProblem.name} en ${cityName}`
+    }
+    if (modifier === "24-horas") {
+      return `${profession.name} 24 Horas en ${cityName}`
+    }
+    if (modifier === "economico") {
+      return `${profession.name} Económico en ${cityName}`
+    }
+    if (modifier === "barato") {
+      return `${profession.name} Barato en ${cityName}`
+    }
+    if (isUrgent) {
+      return `${profession.name} Urgente en ${cityName}`
+    }
+    return `${profession.name} en ${cityName}`
+  }
 
-  const subtitle = currentProblem
-    ? `Solucionamos ${currentProblem.description.toLowerCase()} en ${cityName}. Llegamos en 10 minutos.`
-    : `${profession.namePlural} profesionales disponibles 24/7 en ${cityName}. Llegamos en 10 minutos.`
+  const getSubtitle = () => {
+    if (currentProblem) {
+      return `Solucionamos ${currentProblem.description.toLowerCase()} en ${cityName}. Llegamos en 10 minutos.`
+    }
+    if (modifier === "24-horas") {
+      return `Servicio de ${profession.namePlural.toLowerCase()} disponible las 24 horas del día, 7 días a la semana en ${cityName}. Noches, fines de semana y festivos.`
+    }
+    if (modifier === "economico" || modifier === "barato") {
+      return `${profession.namePlural} con los mejores precios en ${cityName}. Presupuesto sin compromiso. Calidad garantizada al mejor precio.`
+    }
+    if (isUrgent) {
+      return `${profession.namePlural} de urgencias disponibles ahora en ${cityName}. Llegamos en 10 minutos. Llama ya.`
+    }
+    return `${profession.namePlural} profesionales disponibles 24/7 en ${cityName}. Llegamos en 10 minutos.`
+  }
 
-  const guarantees = [
-    { icon: Timer, title: "10 min", subtitle: "Tiempo llegada", color: `text-[${profession.color}]` },
-    { icon: Shield, title: "Garantía", subtitle: "En cada trabajo", color: `text-[${profession.color}]` },
-    { icon: Award, title: "Certificados", subtitle: "Profesionales", color: `text-[${profession.color}]` },
-    { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones", color: `text-[${profession.color}]` },
-  ]
+  const getBadgeText = () => {
+    if (modifier === "24-horas") {
+      return `Servicio nocturno y festivos en ${cityName}`
+    }
+    if (modifier === "economico" || modifier === "barato") {
+      return `Mejores precios garantizados en ${cityName}`
+    }
+    if (isUrgent) {
+      return `${activeUsers} ${profession.namePlural.toLowerCase()} de urgencias disponibles`
+    }
+    return `${activeUsers} ${profession.namePlural.toLowerCase()} disponibles en ${cityName}`
+  }
+
+  const title = getTitle()
+  const subtitle = getSubtitle()
+  const badgeText = getBadgeText()
+
+  const getGuarantees = () => {
+    const baseGuarantees = [
+      { icon: Timer, title: "10 min", subtitle: "Tiempo llegada" },
+      { icon: Shield, title: "Garantía", subtitle: "En cada trabajo" },
+      { icon: Award, title: "Certificados", subtitle: "Profesionales" },
+      { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
+    ]
+
+    if (modifier === "economico" || modifier === "barato") {
+      return [
+        { icon: ThumbsUp, title: "Mejor Precio", subtitle: "Garantizado" },
+        { icon: Shield, title: "Sin Sorpresas", subtitle: "Precio cerrado" },
+        { icon: Award, title: "Calidad", subtitle: "Profesionales" },
+        { icon: Timer, title: "Gratis", subtitle: "Presupuesto" },
+      ]
+    }
+
+    if (modifier === "24-horas") {
+      return [
+        { icon: Clock, title: "24/7", subtitle: "Siempre disponibles" },
+        { icon: Timer, title: "Noches", subtitle: "Sin recargo" },
+        { icon: Award, title: "Festivos", subtitle: "Trabajamos" },
+        { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
+      ]
+    }
+
+    return baseGuarantees
+  }
+
+  const guarantees = getGuarantees()
 
   const reviews = [
     {
@@ -134,15 +214,15 @@ export function ServiceLandingTemplate({ professionId, citySlug, problemId, isUr
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
-                <span>
-                  {activeUsers} {profession.namePlural.toLowerCase()} disponibles en {cityName}
-                </span>
+                <span>{badgeText}</span>
               </div>
 
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1]">
                 <span className="text-foreground">{title}</span>
-                <span className="block text-[#FF6B35] mt-2">Llegamos en 10 min</span>
+                <span className="block text-[#FF6B35] mt-2">
+                  {modifier === "economico" || modifier === "barato" ? "Mejor Precio" : "Llegamos en 10 min"}
+                </span>
               </h1>
 
               <p className="text-base sm:text-lg text-muted-foreground max-w-xl">{subtitle}</p>
@@ -166,6 +246,12 @@ export function ServiceLandingTemplate({ professionId, citySlug, problemId, isUr
                     <CheckCircle2 className="w-4 h-4 text-green-500" />
                     Profesionales verificados
                   </span>
+                  {(modifier === "economico" || modifier === "barato") && (
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      Presupuesto gratis
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -219,7 +305,9 @@ export function ServiceLandingTemplate({ professionId, citySlug, problemId, isUr
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1">
-                        <div className="font-bold text-foreground">{profession.name} certificado</div>
+                        <div className="font-bold text-foreground">
+                          {profession.name} {modifierText ? modifierText.toLowerCase() : "certificado"}
+                        </div>
                         <div className="text-sm text-muted-foreground">Disponible en {cityName}</div>
                       </div>
                       <span className="relative flex h-3 w-3">
@@ -234,8 +322,17 @@ export function ServiceLandingTemplate({ professionId, citySlug, problemId, isUr
                 <div className="absolute -top-3 -right-3 sm:top-4 sm:right-4 z-10">
                   <div className="px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-background border border-[#FF6B35]/30 shadow-xl">
                     <div className="text-center">
-                      <div className="text-2xl sm:text-3xl font-black text-[#FF6B35]">10</div>
-                      <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">min llegada</div>
+                      {modifier === "economico" || modifier === "barato" ? (
+                        <>
+                          <div className="text-2xl sm:text-3xl font-black text-[#FF6B35]">-20%</div>
+                          <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">vs competencia</div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="text-2xl sm:text-3xl font-black text-[#FF6B35]">10</div>
+                          <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">min llegada</div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -279,7 +376,7 @@ export function ServiceLandingTemplate({ professionId, citySlug, problemId, isUr
                   {nearbyCities.map((city) => (
                     <a
                       key={city}
-                      href={`/${professionId}/${city}`}
+                      href={`/${profession.id}/${city}`}
                       className="px-4 py-2 rounded-full bg-background text-foreground text-sm font-medium border border-border hover:border-[#FF6B35]/50 transition-colors"
                     >
                       {getCityDisplayName(city)}
@@ -339,16 +436,18 @@ export function ServiceLandingTemplate({ professionId, citySlug, problemId, isUr
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF6B35]/10 text-[#FF6B35] text-sm font-medium mb-6">
             <Clock className="w-4 h-4" />
             <span>
-              {profession.namePlural} listos 24/7 en {cityName}
+              {profession.namePlural} {modifierText ? modifierText.toLowerCase() : ""} listos 24/7 en {cityName}
             </span>
           </div>
 
           <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
-            ¿Necesitas un {profession.name.toLowerCase()}?<span className="block text-[#FF6B35]">Llámanos ahora</span>
+            ¿Necesitas un {profession.name.toLowerCase()} {modifierText ? modifierText.toLowerCase() : ""}?
+            <span className="block text-[#FF6B35]">Llámanos ahora</span>
           </h2>
 
           <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-            Un {profession.name.toLowerCase()} certificado puede estar en tu casa en {cityName} en menos de 10 minutos.
+            Un {profession.name.toLowerCase()} {modifierText ? modifierText.toLowerCase() : "certificado"} puede estar
+            en tu casa en {cityName} en menos de 10 minutos.
           </p>
 
           <a

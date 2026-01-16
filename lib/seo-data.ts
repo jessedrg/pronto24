@@ -1498,3 +1498,159 @@ export function getNearbyCities(citySlug: string, limit = 6): string[] {
   const regionCities = CITIES_SPAIN[region as keyof typeof CITIES_SPAIN]
   return regionCities.filter((c) => c !== citySlug).slice(0, limit)
 }
+
+export const KEYWORD_MODIFIERS = [
+  { id: "24-horas", name: "24 Horas", searchIntent: "urgency" },
+  { id: "urgente", name: "Urgente", searchIntent: "urgency" },
+  { id: "economico", name: "Económico", searchIntent: "price" },
+  { id: "barato", name: "Barato", searchIntent: "price" },
+  { id: "profesional", name: "Profesional", searchIntent: "quality" },
+  { id: "de-confianza", name: "de Confianza", searchIntent: "trust" },
+  { id: "cerca-de-mi", name: "Cerca de Mí", searchIntent: "location" },
+  { id: "a-domicilio", name: "a Domicilio", searchIntent: "service" },
+  { id: "rapido", name: "Rápido", searchIntent: "urgency" },
+  { id: "de-guardia", name: "de Guardia", searchIntent: "availability" },
+  { id: "nocturno", name: "Nocturno", searchIntent: "availability" },
+  { id: "festivos", name: "Festivos", searchIntent: "availability" },
+  { id: "fin-de-semana", name: "Fin de Semana", searchIntent: "availability" },
+  { id: "hoy", name: "Hoy", searchIntent: "urgency" },
+  { id: "ahora", name: "Ahora", searchIntent: "urgency" },
+  { id: "autorizados", name: "Autorizados", searchIntent: "trust" },
+  { id: "certificado", name: "Certificado", searchIntent: "trust" },
+  { id: "garantizado", name: "Garantizado", searchIntent: "trust" },
+]
+
+export const LONG_TAIL_KEYWORDS = {
+  electricista: [
+    "reparacion-electrica",
+    "instalacion-electrica",
+    "averia-electrica",
+    "cuadro-electrico",
+    "cortocircuito",
+    "apagon",
+    "enchufes",
+    "iluminacion",
+    "boletin-electrico",
+    "aumento-potencia",
+  ],
+  fontanero: [
+    "fuga-de-agua",
+    "tuberia-rota",
+    "desatasco",
+    "cisterna",
+    "grifo",
+    "calentador",
+    "termo",
+    "inundacion",
+    "humedad",
+    "bajante",
+  ],
+  cerrajero: [
+    "apertura-puerta",
+    "cambio-cerradura",
+    "cerradura-rota",
+    "llave-rota",
+    "puerta-blindada",
+    "bombin",
+    "caja-fuerte",
+    "cerradura-seguridad",
+  ],
+  desatascos: [
+    "wc-atascado",
+    "fregadero-atascado",
+    "ducha-atascada",
+    "arqueta",
+    "bajante-atascado",
+    "camion-cuba",
+    "limpieza-tuberias",
+    "mal-olor-tuberias",
+  ],
+  calderas: [
+    "reparacion-caldera",
+    "revision-caldera",
+    "caldera-no-enciende",
+    "sin-agua-caliente",
+    "caldera-junkers",
+    "caldera-vaillant",
+    "caldera-saunier-duval",
+    "caldera-baxi",
+    "radiadores",
+    "calefaccion",
+  ],
+}
+
+export function getKeywordModifier(id: string) {
+  return KEYWORD_MODIFIERS.find((m) => m.id === id)
+}
+
+export function getLongTailKeywords(professionId: string) {
+  return LONG_TAIL_KEYWORDS[professionId as keyof typeof LONG_TAIL_KEYWORDS] || []
+}
+
+export function generateAllKeywordUrls() {
+  const urls: string[] = []
+  const professions = getAllProfessionSlugs()
+  const cities = getAllCitySlugs()
+
+  // Base URLs: /{profession}/{city}
+  professions.forEach((prof) => {
+    cities.forEach((city) => {
+      urls.push(`/${prof}/${city}`)
+    })
+  })
+
+  // Urgent URLs: /{profession}-urgente/{city}
+  professions.forEach((prof) => {
+    cities.forEach((city) => {
+      urls.push(`/${prof}-urgente/${city}`)
+    })
+  })
+
+  // 24h URLs: /{profession}-24-horas/{city}
+  professions.forEach((prof) => {
+    cities.forEach((city) => {
+      urls.push(`/${prof}-24-horas/${city}`)
+    })
+  })
+
+  // Economico URLs: /{profession}-economico/{city}
+  professions.forEach((prof) => {
+    cities.forEach((city) => {
+      urls.push(`/${prof}-economico/${city}`)
+    })
+  })
+
+  // Barato URLs: /{profession}-barato/{city}
+  professions.forEach((prof) => {
+    cities.forEach((city) => {
+      urls.push(`/${prof}-barato/${city}`)
+    })
+  })
+
+  return urls
+}
+
+// Helper to get all profession slugs
+export function getAllProfessionSlugs(): string[] {
+  return PROFESSIONS.map((profession) => profession.id)
+}
+
+// Helper to get all city slugs
+export function getAllCitySlugs(): string[] {
+  return Object.values(CITIES_SPAIN).flat()
+}
+
+// Helper functions to get profession and city by slug
+export function getProfessionBySlug(slug: string) {
+  return PROFESSIONS.find((p) => p.id === slug)
+}
+
+export function getCityBySlug(slug: string) {
+  const allCities = getAllCities()
+  if (!allCities.includes(slug)) return null
+  return {
+    slug,
+    name: getCityDisplayName(slug),
+    province: getCityRegion(slug),
+  }
+}

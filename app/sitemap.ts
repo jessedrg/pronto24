@@ -23,6 +23,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
+  const modifiers = ["urgente", "24-horas", "economico", "barato"]
+
   // Add profession main pages
   for (const profession of PROFESSIONS) {
     routes.push({
@@ -34,6 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Add profession + city pages
     for (const city of cities) {
+      // Base: /electricista/barcelona
       routes.push({
         url: `${baseUrl}/${profession.id}/${city}`,
         lastModified: currentDate,
@@ -41,13 +44,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.8,
       })
 
-      // Add urgent pages
-      routes.push({
-        url: `${baseUrl}/${profession.id}-urgente/${city}`,
-        lastModified: currentDate,
-        changeFrequency: "weekly",
-        priority: 0.85,
-      })
+      // All modifiers: /electricista-urgente/barcelona, /electricista-24-horas/barcelona, etc.
+      for (const modifier of modifiers) {
+        routes.push({
+          url: `${baseUrl}/${profession.id}-${modifier}/${city}`,
+          lastModified: currentDate,
+          changeFrequency: "weekly",
+          priority: modifier === "urgente" ? 0.85 : 0.8,
+        })
+      }
     }
 
     // Add problema + profession + problem + city pages
