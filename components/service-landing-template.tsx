@@ -17,6 +17,11 @@ import {
   Key,
   Waves,
   Flame,
+  Moon,
+  Calendar,
+  Navigation,
+  Home,
+  Euro,
 } from "lucide-react"
 import Image from "next/image"
 import { getCityDisplayName, getCityProvince, getNearbyCities, PROBLEMS, PROFESSIONS } from "@/lib/seo-data"
@@ -98,82 +103,166 @@ export function ServiceLandingTemplate({
     if (currentProblem) {
       return `${currentProblem.name} en ${cityName}`
     }
-    if (modifier === "24-horas") {
-      return `${profession.name} 24 Horas en ${cityName}`
+    switch (modifier) {
+      case "24-horas":
+        return `${profession.name} 24 Horas en ${cityName}`
+      case "economico":
+        return `${profession.name} Económico en ${cityName}`
+      case "barato":
+        return `${profession.name} Barato en ${cityName}`
+      case "a-domicilio":
+        return `${profession.name} a Domicilio en ${cityName}`
+      case "cerca-de-mi":
+        return `${profession.name} Cerca de Ti en ${cityName}`
+      case "de-guardia":
+        return `${profession.name} de Guardia en ${cityName}`
+      case "nocturno":
+        return `${profession.name} Nocturno en ${cityName}`
+      case "festivos":
+        return `${profession.name} Festivos en ${cityName}`
+      case "rapido":
+        return `${profession.name} Rápido en ${cityName}`
+      case "ahora":
+        return `${profession.name} Ahora en ${cityName}`
+      case "hoy":
+        return `${profession.name} Hoy en ${cityName}`
+      case "precio":
+        return `Precio ${profession.name} en ${cityName}`
+      case "presupuesto":
+        return `Presupuesto ${profession.name} en ${cityName}`
+      default:
+        if (isUrgent) {
+          return `${profession.name} Urgente en ${cityName}`
+        }
+        return `${profession.name} en ${cityName}`
     }
-    if (modifier === "economico") {
-      return `${profession.name} Económico en ${cityName}`
-    }
-    if (modifier === "barato") {
-      return `${profession.name} Barato en ${cityName}`
-    }
-    if (isUrgent) {
-      return `${profession.name} Urgente en ${cityName}`
-    }
-    return `${profession.name} en ${cityName}`
   }
 
   const getSubtitle = () => {
     if (currentProblem) {
       return `Solucionamos ${currentProblem.description.toLowerCase()} en ${cityName}. Llegamos en 10 minutos.`
     }
-    if (modifier === "24-horas") {
-      return `Servicio de ${profession.namePlural.toLowerCase()} disponible las 24 horas del día, 7 días a la semana en ${cityName}. Noches, fines de semana y festivos.`
+    switch (modifier) {
+      case "24-horas":
+        return `Servicio de ${profession.namePlural.toLowerCase()} disponible las 24 horas del día, 7 días a la semana en ${cityName}. Noches, fines de semana y festivos.`
+      case "economico":
+      case "barato":
+        return `${profession.namePlural} con los mejores precios en ${cityName}. Presupuesto sin compromiso. Calidad garantizada al mejor precio.`
+      case "a-domicilio":
+        return `${profession.namePlural} que van a tu casa en ${cityName}. Servicio a domicilio profesional. Llegamos en 10 minutos.`
+      case "cerca-de-mi":
+        return `El ${profession.name.toLowerCase()} más cercano a tu ubicación en ${cityName}. Profesionales en tu zona disponibles ahora.`
+      case "de-guardia":
+        return `${profession.name} de guardia disponible ahora mismo en ${cityName}. Servicio de emergencias 24/7.`
+      case "nocturno":
+        return `Servicio de ${profession.name.toLowerCase()} nocturno en ${cityName}. Trabajamos de noche sin recargo extra. De 22h a 8h.`
+      case "festivos":
+        return `${profession.namePlural} trabajando festivos, domingos y días especiales en ${cityName}. Todos los días del año.`
+      case "rapido":
+        return `El servicio de ${profession.name.toLowerCase()} más rápido de ${cityName}. Llegamos en 10 minutos garantizados.`
+      case "ahora":
+        return `${profession.namePlural} disponibles ahora mismo en ${cityName}. No esperes más, llámanos ya.`
+      case "hoy":
+        return `${profession.name} disponible hoy en ${cityName}. Servicio el mismo día garantizado.`
+      case "precio":
+        return `Consulta el precio de ${profession.name.toLowerCase()} en ${cityName}. Tarifas claras sin sorpresas. Presupuesto gratis.`
+      case "presupuesto":
+        return `Pide presupuesto gratis de ${profession.name.toLowerCase()} en ${cityName}. Sin compromiso y respuesta inmediata.`
+      default:
+        if (isUrgent) {
+          return `${profession.namePlural} de urgencias disponibles ahora en ${cityName}. Llegamos en 10 minutos. Llama ya.`
+        }
+        return `${profession.namePlural} profesionales disponibles 24/7 en ${cityName}. Llegamos en 10 minutos.`
     }
-    if (modifier === "economico" || modifier === "barato") {
-      return `${profession.namePlural} con los mejores precios en ${cityName}. Presupuesto sin compromiso. Calidad garantizada al mejor precio.`
-    }
-    if (isUrgent) {
-      return `${profession.namePlural} de urgencias disponibles ahora en ${cityName}. Llegamos en 10 minutos. Llama ya.`
-    }
-    return `${profession.namePlural} profesionales disponibles 24/7 en ${cityName}. Llegamos en 10 minutos.`
   }
 
   const getBadgeText = () => {
-    if (modifier === "24-horas") {
-      return `Servicio nocturno y festivos en ${cityName}`
+    switch (modifier) {
+      case "24-horas":
+        return `Servicio 24h disponible en ${cityName}`
+      case "economico":
+      case "barato":
+        return `Mejores precios garantizados en ${cityName}`
+      case "a-domicilio":
+        return `Vamos a tu casa en ${cityName}`
+      case "cerca-de-mi":
+        return `El más cercano a ti en ${cityName}`
+      case "de-guardia":
+        return `${activeUsers} profesionales de guardia ahora`
+      case "nocturno":
+        return `Servicio nocturno sin recargo`
+      case "festivos":
+        return `Trabajamos todos los festivos`
+      case "rapido":
+        return `Llegada express en 10 minutos`
+      case "ahora":
+        return `${activeUsers} profesionales disponibles AHORA`
+      case "hoy":
+        return `Servicio garantizado para hoy`
+      case "precio":
+        return `Presupuesto gratis sin compromiso`
+      case "presupuesto":
+        return `Respuesta inmediata garantizada`
+      default:
+        if (isUrgent) {
+          return `${activeUsers} ${profession.namePlural.toLowerCase()} de urgencias disponibles`
+        }
+        return `${activeUsers} ${profession.namePlural.toLowerCase()} disponibles en ${cityName}`
     }
-    if (modifier === "economico" || modifier === "barato") {
-      return `Mejores precios garantizados en ${cityName}`
+  }
+
+  const getGuarantees = () => {
+    switch (modifier) {
+      case "economico":
+      case "barato":
+      case "precio":
+      case "presupuesto":
+        return [
+          { icon: Euro, title: "Mejor Precio", subtitle: "Garantizado" },
+          { icon: Shield, title: "Sin Sorpresas", subtitle: "Precio cerrado" },
+          { icon: Award, title: "Calidad", subtitle: "Profesionales" },
+          { icon: Timer, title: "Gratis", subtitle: "Presupuesto" },
+        ]
+      case "24-horas":
+      case "nocturno":
+      case "festivos":
+        return [
+          { icon: Clock, title: "24/7", subtitle: "Siempre disponibles" },
+          { icon: Moon, title: "Noches", subtitle: "Sin recargo" },
+          { icon: Calendar, title: "Festivos", subtitle: "Trabajamos" },
+          { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
+        ]
+      case "cerca-de-mi":
+      case "a-domicilio":
+        return [
+          { icon: Navigation, title: "Cercano", subtitle: "En tu zona" },
+          { icon: Home, title: "A domicilio", subtitle: "Vamos a tu casa" },
+          { icon: Timer, title: "10 min", subtitle: "Tiempo llegada" },
+          { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
+        ]
+      case "de-guardia":
+      case "rapido":
+      case "ahora":
+      case "hoy":
+        return [
+          { icon: Zap, title: "Express", subtitle: "Super rápido" },
+          { icon: Timer, title: "10 min", subtitle: "Garantizado" },
+          { icon: Shield, title: "Garantía", subtitle: "Total" },
+          { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
+        ]
+      default:
+        return [
+          { icon: Timer, title: "10 min", subtitle: "Tiempo llegada" },
+          { icon: Shield, title: "Garantía", subtitle: "En cada trabajo" },
+          { icon: Award, title: "Certificados", subtitle: "Profesionales" },
+          { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
+        ]
     }
-    if (isUrgent) {
-      return `${activeUsers} ${profession.namePlural.toLowerCase()} de urgencias disponibles`
-    }
-    return `${activeUsers} ${profession.namePlural.toLowerCase()} disponibles en ${cityName}`
   }
 
   const title = getTitle()
   const subtitle = getSubtitle()
   const badgeText = getBadgeText()
-
-  const getGuarantees = () => {
-    const baseGuarantees = [
-      { icon: Timer, title: "10 min", subtitle: "Tiempo llegada" },
-      { icon: Shield, title: "Garantía", subtitle: "En cada trabajo" },
-      { icon: Award, title: "Certificados", subtitle: "Profesionales" },
-      { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
-    ]
-
-    if (modifier === "economico" || modifier === "barato") {
-      return [
-        { icon: ThumbsUp, title: "Mejor Precio", subtitle: "Garantizado" },
-        { icon: Shield, title: "Sin Sorpresas", subtitle: "Precio cerrado" },
-        { icon: Award, title: "Calidad", subtitle: "Profesionales" },
-        { icon: Timer, title: "Gratis", subtitle: "Presupuesto" },
-      ]
-    }
-
-    if (modifier === "24-horas") {
-      return [
-        { icon: Clock, title: "24/7", subtitle: "Siempre disponibles" },
-        { icon: Timer, title: "Noches", subtitle: "Sin recargo" },
-        { icon: Award, title: "Festivos", subtitle: "Trabajamos" },
-        { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
-      ]
-    }
-
-    return baseGuarantees
-  }
 
   const guarantees = getGuarantees()
 
