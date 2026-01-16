@@ -71,7 +71,6 @@ const PROBLEMS: Record<string, string[]> = {
   ],
 }
 
-// Top 150 cities for sitemaps
 const CITIES = [
   "barcelona",
   "hospitalet-llobregat",
@@ -265,36 +264,35 @@ export const revalidate = 86400
 export async function generateStaticParams() {
   const params: { id: string }[] = []
 
-  // Profession + suffix modifiers
   for (const profession of PROFESSIONS) {
     for (const mod of MODIFIERS) {
-      params.push({ id: mod === "" ? profession : `${profession}${mod}` })
+      const name = mod === "" ? profession : `${profession}${mod}`
+      params.push({ id: `${name}.xml` })
     }
   }
 
-  // Prefix modifiers
   for (const prefix of PREFIX_MODIFIERS) {
     for (const profession of PROFESSIONS) {
-      params.push({ id: `${prefix}${profession}` })
+      params.push({ id: `${prefix}${profession}.xml` })
     }
   }
 
-  // Problems
   for (const profession of PROFESSIONS) {
-    params.push({ id: `${profession}-problemas` })
+    params.push({ id: `${profession}-problemas.xml` })
   }
 
   return params
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
+  const { id: rawId } = await params
   const baseUrl = "https://rapidfix.es"
   const date = new Date().toISOString().split("T")[0]
 
+  const id = rawId.endsWith(".xml") ? rawId.slice(0, -4) : rawId
+
   const urls: string[] = []
 
-  // Check if it's a problems sitemap
   if (id.endsWith("-problemas")) {
     const profession = id.replace("-problemas", "")
     const problems = PROBLEMS[profession] || []
@@ -303,17 +301,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
       }
     }
-  }
-  // Check if it's a prefix modifier (precio-, presupuesto-)
-  else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
+  } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
     const prefix = id.startsWith("precio-") ? "precio-" : "presupuesto-"
     const profession = id.replace(prefix, "")
     for (const city of CITIES) {
       urls.push(`${baseUrl}/${prefix}${profession}/${city}`)
     }
-  }
-  // Check if it's a profession with suffix modifier
-  else {
+  } else {
     let profession = ""
     let modifier = ""
 
@@ -343,7 +337,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     }
   }
 
-  // Generate XML
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 

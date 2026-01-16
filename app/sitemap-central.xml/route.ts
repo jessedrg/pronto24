@@ -32,9 +32,9 @@ export async function GET() {
 
   for (const profession of professions) {
     for (const mod of modifiers) {
-      const smPath = mod === "" ? `/sm/${profession}` : `/sm/${profession}${mod}`
+      const smName = mod === "" ? profession : `${profession}${mod}`
       xml += `  <sitemap>\n`
-      xml += `    <loc>${baseUrl}${smPath}</loc>\n`
+      xml += `    <loc>${baseUrl}/sm/${smName}.xml</loc>\n`
       xml += `    <lastmod>${date}</lastmod>\n`
       xml += `  </sitemap>\n`
     }
@@ -43,7 +43,7 @@ export async function GET() {
   for (const prefix of prefixModifiers) {
     for (const profession of professions) {
       xml += `  <sitemap>\n`
-      xml += `    <loc>${baseUrl}/sm/${prefix}${profession}</loc>\n`
+      xml += `    <loc>${baseUrl}/sm/${prefix}${profession}.xml</loc>\n`
       xml += `    <lastmod>${date}</lastmod>\n`
       xml += `  </sitemap>\n`
     }
@@ -51,7 +51,7 @@ export async function GET() {
 
   for (const profession of professions) {
     xml += `  <sitemap>\n`
-    xml += `    <loc>${baseUrl}/sm/${profession}-problemas</loc>\n`
+    xml += `    <loc>${baseUrl}/sm/${profession}-problemas.xml</loc>\n`
     xml += `    <lastmod>${date}</lastmod>\n`
     xml += `  </sitemap>\n`
   }
