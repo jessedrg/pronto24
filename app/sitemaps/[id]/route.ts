@@ -1,23 +1,8 @@
 import { PROFESSIONS, PROBLEMS, getAllCities } from "@/lib/seo-data"
-import type { NextRequest } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
 
-export const dynamic = "force-static"
+export const dynamic = "force-dynamic"
 export const revalidate = 86400 // 24 hours
-
-export function generateStaticParams() {
-  const params: { id: string }[] = []
-  const modifiers = ["", "-urgente", "-24-horas", "-economico", "-barato"]
-
-  for (const profession of PROFESSIONS) {
-    for (const modifier of modifiers) {
-      const sitemapId = modifier ? `${profession.id}${modifier}.xml` : `${profession.id}.xml`
-      params.push({ id: sitemapId })
-    }
-    params.push({ id: `${profession.id}-problemas.xml` })
-  }
-
-  return params
-}
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -27,6 +12,23 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   // Remove .xml extension for parsing
   const sitemapId = id.replace(".xml", "")
+
+  const modifiers = ["", "-urgente", "-24-horas", "-economico", "-barato", "-problemas"]
+  let isValid = false
+
+  for (const profession of PROFESSIONS) {
+    for (const mod of modifiers) {
+      if (sitemapId === `${profession.id}${mod}`) {
+        isValid = true
+        break
+      }
+    }
+    if (isValid) break
+  }
+
+  if (!isValid) {
+    return NextResponse.json({ error: "Sitemap not found" }, { status: 404 })
+  }
 
   const urls: string[] = []
 
@@ -48,8 +50,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     let professionId = sitemapId
     let modifier = ""
 
-    const modifiers = ["-urgente", "-24-horas", "-economico", "-barato"]
-    for (const mod of modifiers) {
+    const mods = ["-urgente", "-24-horas", "-economico", "-barato"]
+    for (const mod of mods) {
       if (sitemapId.endsWith(mod)) {
         professionId = sitemapId.replace(mod, "")
         modifier = mod
