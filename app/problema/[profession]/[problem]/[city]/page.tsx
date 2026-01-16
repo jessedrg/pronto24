@@ -7,24 +7,11 @@ import { AIChatWidget } from "@/components/ai-chat-widget"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { PROFESSIONS, PROBLEMS, getAllCities, getCityDisplayName } from "@/lib/seo-data"
 
+export const dynamicParams = true
+export const revalidate = 604800 // 1 week in seconds
+
 interface PageProps {
   params: Promise<{ profession: string; problem: string; city: string }>
-}
-
-export async function generateStaticParams() {
-  const params: { profession: string; problem: string; city: string }[] = []
-  const cities = getAllCities()
-
-  for (const profession of PROFESSIONS) {
-    const problems = PROBLEMS[profession.id as keyof typeof PROBLEMS] || []
-    for (const problem of problems) {
-      for (const city of cities) {
-        params.push({ profession: profession.id, problem: problem.id, city })
-      }
-    }
-  }
-
-  return params
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

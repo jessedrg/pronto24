@@ -7,21 +7,11 @@ import { AIChatWidget } from "@/components/ai-chat-widget"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { PROFESSIONS, getAllCities, getCityDisplayName } from "@/lib/seo-data"
 
+export const dynamicParams = true
+export const revalidate = 604800 // 1 week in seconds
+
 interface PageProps {
   params: Promise<{ profession: string; city: string }>
-}
-
-export async function generateStaticParams() {
-  const params: { profession: string; city: string }[] = []
-  const cities = getAllCities()
-
-  for (const profession of PROFESSIONS) {
-    for (const city of cities) {
-      params.push({ profession: profession.id, city })
-    }
-  }
-
-  return params
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
