@@ -15,11 +15,11 @@ export async function GET() {
   // Add sitemaps for each profession and modifier
   for (const profession of PROFESSIONS) {
     for (const mod of MODIFIERS) {
-      sitemaps.push(`${baseUrl}/sitemaps/${profession}${mod}.xml`)
+      const sitemapName = `${profession}${mod}`
+      sitemaps.push(`${baseUrl}/sitemaps/${sitemapName}.xml`)
     }
   }
 
-  // Generate sitemap index XML
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
   xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 

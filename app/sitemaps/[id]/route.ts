@@ -1,7 +1,6 @@
-import { NextResponse, type NextRequest } from "next/server"
+import type { NextRequest } from "next/server"
 
 const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
-
 const MODIFIERS = ["", "-urgente", "-24-horas", "-economico", "-barato", "-problemas"]
 
 const PROBLEMS: Record<string, string[]> = {
@@ -12,7 +11,6 @@ const PROBLEMS: Record<string, string[]> = {
   calderas: ["sin-agua-caliente", "caldera-no-enciende", "fuga-gas", "ruido-caldera", "revision-caldera"],
 }
 
-// Top 100 cities only to keep sitemaps manageable
 const CITIES = [
   "barcelona",
   "madrid",
@@ -123,6 +121,13 @@ const CITIES = [
   "salamanca",
 ]
 
+const VALID_IDS: string[] = []
+for (const prof of PROFESSIONS) {
+  for (const mod of MODIFIERS) {
+    VALID_IDS.push(`${prof}${mod}`)
+  }
+}
+
 export const dynamic = "force-dynamic"
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -130,34 +135,38 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const baseUrl = "https://rapidfix.es"
   const currentDate = new Date().toISOString().split("T")[0]
 
-  // Remove .xml extension
-  const sitemapId = id.replace(".xml", "")
+  const sitemapId = id.endsWith(".xml") ? id.slice(0, -4) : id
 
-  // Validate sitemap ID
-  let isValid = false
   let professionId = ""
   let modifier = ""
 
   for (const prof of PROFESSIONS) {
     for (const mod of MODIFIERS) {
       if (sitemapId === `${prof}${mod}`) {
-        isValid = true
         professionId = prof
         modifier = mod
         break
       }
     }
-    if (isValid) break
+    if (professionId) break
   }
 
-  if (!isValid) {
-    return NextResponse.json({ error: "Sitemap not found", id: sitemapId }, { status: 404 })
+  if (!professionId) {
+    return new Response(
+      `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Sitemap not found: ${sitemapId} -->
+</urlset>`,
+      {
+        status: 200,
+        headers: { "Content-Type": "application/xml" },
+      },
+    )
   }
 
   const urls: string[] = []
 
   if (modifier === "-problemas") {
-    // Problem pages
     const problems = PROBLEMS[professionId] || []
     for (const problem of problems) {
       for (const city of CITIES) {
@@ -165,18 +174,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       }
     }
   } else if (modifier) {
-    // Modifier pages (urgente, 24-horas, economico, barato)
     for (const city of CITIES) {
       urls.push(`${baseUrl}/${professionId}${modifier}/${city}`)
     }
   } else {
-    // Base profession pages
     for (const city of CITIES) {
       urls.push(`${baseUrl}/${professionId}/${city}`)
     }
   }
 
-  // Generate XML
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 
