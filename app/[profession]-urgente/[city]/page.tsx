@@ -8,22 +8,16 @@ import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { PROFESSIONS, getAllCities, getCityDisplayName } from "@/lib/seo-data"
 
 interface PageProps {
-  params: Promise<{ "profession-urgente": string; city: string }>
-}
-
-function extractProfessionFromUrgent(slug: string): string | null {
-  // Handle URLs like "electricista-urgente" -> "electricista"
-  const match = slug.match(/^(.+)-urgente$/)
-  return match ? match[1] : null
+  params: Promise<{ profession: string; city: string }>
 }
 
 export async function generateStaticParams() {
-  const params: { "profession-urgente": string; city: string }[] = []
+  const params: { profession: string; city: string }[] = []
   const cities = getAllCities()
 
   for (const profession of PROFESSIONS) {
     for (const city of cities) {
-      params.push({ "profession-urgente": `${profession.id}-urgente`, city })
+      params.push({ profession: profession.id, city })
     }
   }
 
@@ -32,10 +26,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params
-  const professionId = extractProfessionFromUrgent(resolvedParams["profession-urgente"])
+  const professionId = resolvedParams.profession
   const citySlug = resolvedParams.city
-
-  if (!professionId) return {}
 
   const profession = PROFESSIONS.find((p) => p.id === professionId)
   if (!profession) return {}
@@ -51,10 +43,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function UrgentProfessionCityPage({ params }: PageProps) {
   const resolvedParams = await params
-  const professionId = extractProfessionFromUrgent(resolvedParams["profession-urgente"])
+  const professionId = resolvedParams.profession
   const citySlug = resolvedParams.city
-
-  if (!professionId) notFound()
 
   const profession = PROFESSIONS.find((p) => p.id === professionId)
   const cities = getAllCities()
