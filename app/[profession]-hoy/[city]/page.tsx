@@ -1,11 +1,10 @@
 import type { Metadata } from "next"
-import { notFound } from "next/navigation"
 import { Header } from "@/components/header"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { Footer } from "@/components/footer"
 import { AIChatWidget } from "@/components/ai-chat-widget"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
-import { PROFESSIONS, getAllCities, getCityDisplayName } from "@/lib/seo-data"
+import { PROFESSIONS, getCityDisplayName } from "@/lib/seo-data"
 
 export const dynamicParams = true
 export const revalidate = 604800
@@ -17,8 +16,13 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { profession: professionId, city: citySlug } = await params
   const profession = PROFESSIONS.find((p) => p.id === professionId)
-  if (!profession) return {}
   const cityName = getCityDisplayName(citySlug)
+  if (!profession) {
+    return {
+      title: `Servicio Hoy ${cityName} | Rapidfix`,
+      description: `Servicio disponible hoy en ${cityName}. Llama: 711 267 223.`,
+    }
+  }
   return {
     title: `${profession.name} Hoy ${cityName} - Servicio Mismo Día | Rapidfix`,
     description: `${profession.name} disponible hoy en ${cityName}. Servicio el mismo día. No esperes más. Llegamos en 10 minutos. Llama: 711 267 223.`,
@@ -28,16 +32,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Page({ params }: PageProps) {
   const { profession: professionId, city: citySlug } = await params
-  const profession = PROFESSIONS.find((p) => p.id === professionId)
-  const cities = getAllCities()
-  if (!profession || !cities.includes(citySlug)) notFound()
+  const profession = PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <UrgencyBanner />
       <Header />
       <main className="flex-1">
-        <ServiceLandingTemplate professionId={professionId} citySlug={citySlug} modifier="hoy" modifierText="Hoy" />
+        <ServiceLandingTemplate professionId={profession.id} citySlug={citySlug} modifier="hoy" modifierText="Hoy" />
       </main>
       <Footer />
       <AIChatWidget />

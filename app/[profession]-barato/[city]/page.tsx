@@ -1,70 +1,53 @@
 import type { Metadata } from "next"
-import { notFound } from "next/navigation"
 import { Header } from "@/components/header"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { Footer } from "@/components/footer"
 import { AIChatWidget } from "@/components/ai-chat-widget"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
-import { getProfessionBySlug, getCityBySlug } from "@/lib/seo-data"
+import { PROFESSIONS, getCityDisplayName } from "@/lib/seo-data"
 
 export const dynamicParams = true
 export const revalidate = 604800
 
-type Props = {
+interface PageProps {
   params: Promise<{ profession: string; city: string }>
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { profession: professionSlug, city: citySlug } = await params
-  const profession = getProfessionBySlug(professionSlug)
-  const city = getCityBySlug(citySlug)
-
-  if (!profession || !city) {
-    return { title: "Servicio no encontrado" }
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { profession: professionId, city: citySlug } = await params
+  const profession = PROFESSIONS.find((p) => p.id === professionId)
+  const cityName = getCityDisplayName(citySlug)
+  if (!profession) {
+    return {
+      title: `Servicio Barato ${cityName} | Rapidfix`,
+      description: `Servicio barato en ${cityName}. Mejor precio garantizado. Llama: 711 267 223.`,
+    }
   }
-
-  const title = `${profession.name} Barato en ${city.name} | Mejor Precio Garantizado`
-  const description = `${profession.name} barato en ${city.name}. Los mejores precios de la zona. Presupuesto sin compromiso. Profesionales de confianza.`
-
   return {
-    title,
-    description,
-    keywords: [
-      `${profession.name.toLowerCase()} barato ${city.name.toLowerCase()}`,
-      `${profession.name.toLowerCase()} economico ${city.name.toLowerCase()}`,
-      `${profession.name.toLowerCase()} low cost ${city.name.toLowerCase()}`,
-      `${profession.name.toLowerCase()} mejor precio ${city.name.toLowerCase()}`,
-    ],
-    openGraph: {
-      title,
-      description,
-      type: "website",
-    },
+    title: `${profession.name} Barato en ${cityName} | Mejor Precio Garantizado`,
+    description: `${profession.name} barato en ${cityName}. Los mejores precios de la zona. Presupuesto sin compromiso. Profesionales de confianza.`,
+    keywords: `${profession.id} barato ${cityName}, ${profession.id} economico ${cityName}, ${profession.id} low cost ${cityName}`,
   }
 }
 
-export default async function ProfessionBaratoPage({ params }: Props) {
-  const { profession: professionSlug, city: citySlug } = await params
-  const profession = getProfessionBySlug(professionSlug)
-  const city = getCityBySlug(citySlug)
-
-  if (!profession || !city) {
-    notFound()
-  }
+export default async function Page({ params }: PageProps) {
+  const { profession: professionId, city: citySlug } = await params
+  const profession = PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
 
   return (
-    <main className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <UrgencyBanner />
       <Header />
-      <ServiceLandingTemplate
-        profession={profession}
-        city={city}
-        isUrgent={false}
-        modifier="barato"
-        modifierText="Barato"
-      />
+      <main className="flex-1">
+        <ServiceLandingTemplate
+          professionId={profession.id}
+          citySlug={citySlug}
+          modifier="barato"
+          modifierText="Barato"
+        />
+      </main>
       <Footer />
       <AIChatWidget />
-    </main>
+    </div>
   )
 }
