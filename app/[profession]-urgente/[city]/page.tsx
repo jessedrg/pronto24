@@ -18,9 +18,15 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { profession: professionId, city: citySlug } = await params
-  if (!VALID_PROFESSIONS.includes(professionId)) return { title: "No encontrado" }
+  console.log("[v0] generateMetadata - professionId:", professionId, "citySlug:", citySlug)
+  if (!VALID_PROFESSIONS.includes(professionId)) {
+    console.log("[v0] generateMetadata - INVALID profession, returning not found metadata")
+    return { title: "No encontrado" }
+  }
   const profession = PROFESSIONS.find((p) => p.id === professionId)
+  console.log("[v0] generateMetadata - profession found:", profession?.id)
   const cityName = getCityDisplayName(citySlug)
+  console.log("[v0] generateMetadata - cityName:", cityName)
   if (!profession) {
     return {
       title: `Servicio URGENTE ${cityName} | Rapidfix`,
@@ -35,9 +41,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function Page({ params }: PageProps) {
+  console.log("[v0] Page - params:", params)
   const { profession: professionId, city: citySlug } = await params
-  if (!VALID_PROFESSIONS.includes(professionId)) notFound()
+  console.log("[v0] Page - professionId:", professionId, "citySlug:", citySlug)
+  console.log("[v0] Page - VALID_PROFESSIONS:", VALID_PROFESSIONS)
+  console.log("[v0] Page - includes result:", VALID_PROFESSIONS.includes(professionId))
+
+  if (!VALID_PROFESSIONS.includes(professionId)) {
+    console.log("[v0] Page - calling notFound() because profession is invalid")
+    notFound()
+  }
+
+  console.log("[v0] Page - profession is valid, continuing...")
   const profession = PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
+  console.log("[v0] Page - profession found:", profession?.id)
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <UrgencyBanner />
