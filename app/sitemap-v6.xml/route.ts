@@ -23,6 +23,11 @@ export async function GET() {
     "-rapido",
     "-ahora",
     "-hoy",
+    "-profesional",
+    "-de-confianza",
+    "-con-garantia",
+    "-mismo-dia",
+    "-fin-de-semana",
   ]
 
   const prefixModifiers = ["precio-", "presupuesto-"]
@@ -30,31 +35,28 @@ export async function GET() {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
   xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 
-  // Profession + modifier combinations
   for (const profession of professions) {
     for (const mod of modifiers) {
       const smName = mod === "" ? profession : `${profession}${mod}`
       xml += `  <sitemap>\n`
-      xml += `    <loc>${baseUrl}/sm/${smName}.xml</loc>\n`
+      xml += `    <loc>${baseUrl}/xml-sitemaps/${smName}.xml</loc>\n`
       xml += `    <lastmod>${date}</lastmod>\n`
       xml += `  </sitemap>\n`
     }
   }
 
-  // Prefix modifiers (precio-, presupuesto-)
   for (const prefix of prefixModifiers) {
     for (const profession of professions) {
       xml += `  <sitemap>\n`
-      xml += `    <loc>${baseUrl}/sm/${prefix}${profession}.xml</loc>\n`
+      xml += `    <loc>${baseUrl}/xml-sitemaps/${prefix}${profession}.xml</loc>\n`
       xml += `    <lastmod>${date}</lastmod>\n`
       xml += `  </sitemap>\n`
     }
   }
 
-  // Problems sitemaps
   for (const profession of professions) {
     xml += `  <sitemap>\n`
-    xml += `    <loc>${baseUrl}/sm/${profession}-problemas.xml</loc>\n`
+    xml += `    <loc>${baseUrl}/xml-sitemaps/${profession}-problemas.xml</loc>\n`
     xml += `    <lastmod>${date}</lastmod>\n`
     xml += `  </sitemap>\n`
   }
