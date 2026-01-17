@@ -35,19 +35,19 @@ export async function GET() {
   for (const profession of PROFESSIONS) {
     for (const modifier of MODIFIERS) {
       const id = modifier ? `${profession}${modifier}` : profession
-      sitemaps.push(`${baseUrl}/sitemaps/${id}.xml`)
+      sitemaps.push(`${baseUrl}/xmlsitemaps/${id}.xml`)
     }
   }
 
   // Prefix sitemaps (precio, presupuesto)
   for (const profession of PROFESSIONS) {
-    sitemaps.push(`${baseUrl}/sitemaps/precio-${profession}.xml`)
-    sitemaps.push(`${baseUrl}/sitemaps/presupuesto-${profession}.xml`)
+    sitemaps.push(`${baseUrl}/xmlsitemaps/precio-${profession}.xml`)
+    sitemaps.push(`${baseUrl}/xmlsitemaps/presupuesto-${profession}.xml`)
   }
 
   // Problems sitemaps
   for (const profession of PROFESSIONS) {
-    sitemaps.push(`${baseUrl}/sitemaps/${profession}-problemas.xml`)
+    sitemaps.push(`${baseUrl}/xmlsitemaps/${profession}-problemas.xml`)
   }
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'

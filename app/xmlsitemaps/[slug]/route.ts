@@ -542,12 +542,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     const baseUrl = "https://rapidfix.es"
     const date = new Date().toISOString().split("T")[0]
 
-    // Remove .xml extension if present
     const id = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
-
     const urls: string[] = []
 
-    // Check if it's a problems sitemap
     if (id.endsWith("-problemas")) {
       const profession = id.replace("-problemas", "")
       const problems = PROBLEMS[profession] || []
@@ -556,9 +553,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
           urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
         }
       }
-    }
-    // Check if it's a precio/presupuesto sitemap
-    else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
+    } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
       const prefix = id.startsWith("precio-") ? "precio" : "presupuesto"
       const profession = id.replace(`${prefix}-`, "")
       if (VALID_PROFESSIONS.includes(profession)) {
@@ -566,18 +561,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
           urls.push(`${baseUrl}/${prefix}-${profession}/${city}`)
         }
       }
-    }
-    // Check profession + modifier combinations
-    else {
+    } else {
       let foundProfession = ""
       let foundModifier = ""
 
-      // First check if it's just a profession
       if (VALID_PROFESSIONS.includes(id)) {
         foundProfession = id
         foundModifier = ""
       } else {
-        // Check profession + modifier combinations
         for (const prof of VALID_PROFESSIONS) {
           for (const mod of MODIFIERS) {
             if (mod && id === `${prof}${mod}`) {
@@ -601,7 +592,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       }
     }
 
-    // Build XML
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for (const url of urls) {
