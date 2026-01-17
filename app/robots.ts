@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/admin/"],
     },
-    sitemap: "https://rapidfix.es/sitemap.xml",
+    sitemap: "https://rapidfix.es/sitemap-v10.xml",
   }
 }

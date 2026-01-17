@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server"
+import { getAllCities } from "@/lib/seo-data"
 
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
-const CITIES = [
+const MAX_URLS_PER_SITEMAP = 50000
+
+const _CITIES = [
   // Catalunya - Barcelona
   "barcelona",
   "hospitalet-llobregat",
@@ -544,28 +547,109 @@ const PROBLEMS: Record<string, string[]> = {
 
 const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
+function parseBaseIdAndPage(id: string): { baseId: string; page: number | null } {
+  const match = id.match(/^(.*)--(\d+)$/)
+  if (!match) return { baseId: id, page: null }
+  const page = Number(match[2])
+  if (!Number.isFinite(page) || page < 1) return { baseId: id, page: null }
+  return { baseId: match[1], page }
+}
+
+function buildSitemapIndexXml(baseUrl: string, date: string, locs: string[]): string {
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+  xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+  for (const loc of locs) {
+    xml += `  <sitemap>\n    <loc>${loc}</loc>\n    <lastmod>${date}</lastmod>\n  </sitemap>\n`
+  }
+  xml += "</sitemapindex>"
+  return xml
+}
+
+function buildUrlsetXml(date: string, urls: string[]): string {
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+  for (const url of urls) {
+    xml += `  <url>\n    <loc>${url}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`
+  }
+  xml += "</urlset>"
+  return xml
+}
+
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
     const baseUrl = "https://rapidfix.es"
     const date = new Date().toISOString().split("T")[0]
+    const cities = getAllCities()
 
-    const id = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
-    const urls: string[] = []
+    const rawId = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
+    const { baseId, page } = parseBaseIdAndPage(rawId)
 
-    if (id.endsWith("-problemas")) {
-      const profession = id.replace("-problemas", "")
+    let totalUrls = 0
+
+    if (baseId.endsWith("-problemas")) {
+      const profession = baseId.replace("-problemas", "")
       const problems = PROBLEMS[profession] || []
-      for (const problem of problems) {
-        for (const city of CITIES) {
-          urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
+      totalUrls = problems.length * cities.length
+    } else if (baseId.startsWith("precio-") || baseId.startsWith("presupuesto-")) {
+      const prefix = baseId.startsWith("precio-") ? "precio" : "presupuesto"
+      const profession = baseId.replace(`${prefix}-`, "")
+      totalUrls = PROFESSIONS.includes(profession) ? cities.length : 0
+    } else {
+      let foundProfession = ""
+
+      if (PROFESSIONS.includes(baseId)) {
+        foundProfession = baseId
+      } else {
+        for (const prof of PROFESSIONS) {
+          for (const mod of MODIFIERS) {
+            if (mod && baseId === `${prof}${mod}`) {
+              foundProfession = prof
+              break
+            }
+          }
+          if (foundProfession) break
         }
       }
-    } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
-      const prefix = id.startsWith("precio-") ? "precio" : "presupuesto"
-      const profession = id.replace(`${prefix}-`, "")
+
+      totalUrls = foundProfession ? cities.length : 0
+    }
+
+    const totalPages = totalUrls > 0 ? Math.ceil(totalUrls / MAX_URLS_PER_SITEMAP) : 0
+
+    if (page === null && totalPages > 1) {
+      const locs = Array.from({ length: totalPages }, (_, i) => `${baseUrl}/${baseId}--${i + 1}.xml`)
+      const xml = buildSitemapIndexXml(baseUrl, date, locs)
+      return new NextResponse(xml, {
+        status: 200,
+        headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=86400" },
+      })
+    }
+
+    const effectivePage = page ?? 1
+    const startIndex = (effectivePage - 1) * MAX_URLS_PER_SITEMAP
+    const endIndexExclusive = Math.min(startIndex + MAX_URLS_PER_SITEMAP, totalUrls)
+
+    const urls: string[] = []
+
+    if (baseId.endsWith("-problemas")) {
+      const profession = baseId.replace("-problemas", "")
+      const problems = PROBLEMS[profession] || []
+      let idx = 0
+      for (const problem of problems) {
+        for (const city of cities) {
+          if (idx >= endIndexExclusive) break
+          if (idx >= startIndex) urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
+          idx += 1
+        }
+        if (idx >= endIndexExclusive) break
+      }
+    } else if (baseId.startsWith("precio-") || baseId.startsWith("presupuesto-")) {
+      const prefix = baseId.startsWith("precio-") ? "precio" : "presupuesto"
+      const profession = baseId.replace(`${prefix}-`, "")
       if (PROFESSIONS.includes(profession)) {
-        for (const city of CITIES) {
+        const citiesSlice = cities.slice(startIndex, endIndexExclusive)
+        for (const city of citiesSlice) {
           urls.push(`${baseUrl}/${prefix}-${profession}/${city}`)
         }
       }
@@ -573,13 +657,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       let foundProfession = ""
       let foundModifier = ""
 
-      if (PROFESSIONS.includes(id)) {
-        foundProfession = id
+      if (PROFESSIONS.includes(baseId)) {
+        foundProfession = baseId
         foundModifier = ""
       } else {
         for (const prof of PROFESSIONS) {
           for (const mod of MODIFIERS) {
-            if (mod && id === `${prof}${mod}`) {
+            if (mod && baseId === `${prof}${mod}`) {
               foundProfession = prof
               foundModifier = mod
               break
@@ -590,7 +674,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       }
 
       if (foundProfession) {
-        for (const city of CITIES) {
+        const citiesSlice = cities.slice(startIndex, endIndexExclusive)
+        for (const city of citiesSlice) {
           if (foundModifier) {
             urls.push(`${baseUrl}/${foundProfession}${foundModifier}/${city}`)
           } else {
@@ -600,12 +685,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       }
     }
 
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    for (const url of urls) {
-      xml += `  <url>\n    <loc>${url}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`
-    }
-    xml += "</urlset>"
+    const xml = buildUrlsetXml(date, urls)
 
     return new NextResponse(xml, {
       status: 200,
