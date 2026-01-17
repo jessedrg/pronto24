@@ -507,9 +507,9 @@ const PROBLEMS: Record<string, string[]> = {
   ],
 }
 
-export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+export async function GET(request: Request, { params }: { params: { slug: string } }) {
   try {
-    const { slug } = await params
+    const { slug } = params
     const baseUrl = "https://www.rapidfix.es"
     const date = new Date().toISOString().split("T")[0]
     const id = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
@@ -521,7 +521,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       const problems = PROBLEMS[profession] || []
       for (const problem of problems) {
         for (const city of CITIES) {
-          urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
+          urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}/`)
         }
       }
     } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
@@ -529,7 +529,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       const profession = id.replace(`${prefix}-`, "")
       if (VALID_PROFESSIONS.includes(profession)) {
         for (const city of CITIES) {
-          urls.push(`${baseUrl}/${prefix}-${profession}/${city}`)
+          urls.push(`${baseUrl}/${prefix}-${profession}/${city}/`)
         }
       }
     } else {
@@ -555,9 +555,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       if (foundProfession) {
         for (const city of CITIES) {
           if (foundModifier) {
-            urls.push(`${baseUrl}/${foundProfession}${foundModifier}/${city}`)
+            urls.push(`${baseUrl}/${foundProfession}${foundModifier}/${city}/`)
           } else {
-            urls.push(`${baseUrl}/${foundProfession}/${city}`)
+            urls.push(`${baseUrl}/${foundProfession}/${city}/`)
           }
         }
       }
