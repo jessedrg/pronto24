@@ -508,16 +508,11 @@ const PROBLEMS: Record<string, string[]> = {
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
-  console.log("[v0] API Sitemap route called")
-
   try {
     const { slug } = await params
-    console.log("[v0] Sitemap slug received:", slug)
-
     const baseUrl = "https://rapidfix.es"
     const date = new Date().toISOString().split("T")[0]
     const id = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
-    console.log("[v0] Parsed sitemap id:", id)
 
     const urls: string[] = []
 
@@ -567,8 +562,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
         }
       }
     }
-
-    console.log("[v0] Generated", urls.length, "URLs for sitemap", id)
 
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

@@ -12,6 +12,8 @@ export const revalidate = 604800
 
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
+const RESERVED_PATHS = ["sitemaps", "api", "problema", "precio", "presupuesto"]
+
 const KNOWN_MODIFIERS = [
   "urgente",
   "24-horas",
@@ -94,6 +96,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProfessionCityPage({ params }: PageProps) {
   const { profession: rawProfession, city: citySlug } = await params
+
+  if (RESERVED_PATHS.includes(rawProfession)) {
+    notFound()
+  }
+
   const { professionId, modifier } = parseProfessionAndModifier(rawProfession)
 
   if (!VALID_PROFESSIONS.includes(professionId)) {
