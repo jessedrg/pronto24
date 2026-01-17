@@ -553,7 +553,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     const id = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
     const urls: string[] = []
 
-    // Problems sitemap
     if (id.endsWith("-problemas")) {
       const profession = id.replace("-problemas", "")
       const problems = PROBLEMS[profession] || []
@@ -562,9 +561,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
           urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
         }
       }
-    }
-    // Prefix sitemaps (precio-, presupuesto-)
-    else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
+    } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
       const prefix = id.startsWith("precio-") ? "precio" : "presupuesto"
       const profession = id.replace(`${prefix}-`, "")
       if (PROFESSIONS.includes(profession)) {
@@ -572,18 +569,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
           urls.push(`${baseUrl}/${prefix}-${profession}/${city}`)
         }
       }
-    }
-    // Profession + modifier sitemaps
-    else {
+    } else {
       let foundProfession = ""
       let foundModifier = ""
 
-      // Check if it's just a profession
       if (PROFESSIONS.includes(id)) {
         foundProfession = id
         foundModifier = ""
       } else {
-        // Check profession + modifier
         for (const prof of PROFESSIONS) {
           for (const mod of MODIFIERS) {
             if (mod && id === `${prof}${mod}`) {
@@ -616,10 +609,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
 
     return new NextResponse(xml, {
       status: 200,
-      headers: {
-        "Content-Type": "application/xml; charset=utf-8",
-        "Cache-Control": "public, max-age=86400",
-      },
+      headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=86400" },
     })
   } catch (error) {
     console.error("Sitemap error:", error)
