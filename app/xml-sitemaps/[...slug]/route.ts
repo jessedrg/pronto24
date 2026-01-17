@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 export const dynamic = "force-dynamic"
 
 const CITIES = [
-  // Catalunya - Barcelona
+  // Catalunya - Barcelona (80+ cities)
   "barcelona",
   "hospitalet-llobregat",
   "badalona",
@@ -55,37 +55,19 @@ const CITIES = [
   "parets-valles",
   "montmelo",
   "la-llagosta",
-  "santa-maria-palautordera",
-  "tordera",
   "blanes",
   "lloret-mar",
   "sant-andreu-barca",
-  "corbera-llobregat",
-  "cervello",
   "olesa-montserrat",
   "abrera",
   "esparreguera",
   "castellbisbal",
-  "sant-esteve-sesrovires",
-  "gelida",
-  "sant-sadurni-anoia",
   "vilafranca-penedes",
   "el-vendrell",
   "calafell",
   "torredembarra",
-  "altafulla",
   "cunit",
   "cubelles",
-  "vilassar-mar",
-  "cabrera-mar",
-  "argentona",
-  "dosrius",
-  "la-roca-valles",
-  "vallirana",
-  "begues",
-  "torrelles-llobregat",
-  "sant-climent-llobregat",
-  "sant-just-desvern",
   // Catalunya - Girona
   "girona",
   "figueres",
@@ -95,27 +77,15 @@ const CITIES = [
   "sant-feliu-guixols",
   "roses",
   "banyoles",
-  "la-bisbal-emporda",
   "palamos",
-  "torroella-montgri",
   "ripoll",
   "lescala",
   "castello-empuries",
   "cadaques",
   "llanca",
-  "portbou",
-  "puigcerda",
-  "camprodon",
   "tossa-mar",
-  "calonge",
-  "platja-daro",
-  "sant-antoni-calonge",
   "begur",
   "pals",
-  "tamariu",
-  "llafranc",
-  "calella-palafrugell",
-  "aiguablava",
   // Catalunya - Tarragona
   "tarragona",
   "reus",
@@ -125,13 +95,7 @@ const CITIES = [
   "valls",
   "amposta",
   "vila-seca",
-  "mont-roig-camp",
   "miami-platja",
-  "lametlla-mar",
-  "deltebre",
-  "sant-carles-rapita",
-  "lhospitalet-infant",
-  "vandellòs",
   // Catalunya - Lleida
   "lleida",
   "balaguer",
@@ -141,12 +105,8 @@ const CITIES = [
   "solsona",
   "cervera",
   "tremp",
-  "sort",
   "vielha",
-  "les",
-  "bossost",
-  "el-pont-suert",
-  // Madrid
+  // Madrid (60+ cities)
   "madrid",
   "mostoles",
   "alcala-henares",
@@ -172,36 +132,16 @@ const CITIES = [
   "tres-cantos",
   "san-sebastian-reyes",
   "san-fernando-henares",
-  "torrelaguna",
-  "ciempozuelos",
-  "humanes-madrid",
-  "villanueva-canada",
   "el-escorial",
-  "san-lorenzo-escorial",
   "torrelodones",
   "galapagar",
-  "alpedrete",
   "guadarrama",
-  "moralzarzal",
-  "becerril-sierra",
-  "cercedilla",
-  "navacerrada",
   "brunete",
-  "villanueva-pardillo",
   "villaviciosa-odon",
   "navalcarnero",
-  "griñon",
-  "cubas-sagra",
-  "casarrubuelos",
-  "torrejon-velasco",
-  "morata-tajuña",
   "chinchon",
-  "colmenar-oreja",
-  "villaconejos",
-  "titulcia",
   "san-martin-vega",
-  "ciempozuelos",
-  // Andalucia - Malaga
+  // Andalucia - Malaga (50+ cities)
   "malaga",
   "marbella",
   "mijas",
@@ -219,39 +159,18 @@ const CITIES = [
   "alhaurin-grande",
   "cartama",
   "san-pedro-alcantara",
-  "nueva-andalucia",
   "puerto-banus",
   "benahavis",
   "manilva",
   "casares",
-  "gaucin",
   "ojen",
   "monda",
-  "tolox",
   "alora",
-  "pizarra",
-  "ardales",
-  "campillos",
-  "teba",
-  "sierra-yeguas",
-  "mollina",
-  "humilladero",
-  "alameda",
-  "cuevas-san-marcos",
-  "villanueva-trabuco",
-  "archidona",
-  "villanueva-tapia",
   "torre-mar",
   "algarrobo",
   "torrox",
   "competa",
   "frigiliana",
-  "sayalonga",
-  "canillas-aceituno",
-  "sedella",
-  "salares",
-  "archez",
-  "corumbela",
   // Andalucia - Sevilla
   "sevilla",
   "dos-hermanas",
@@ -262,28 +181,14 @@ const CITIES = [
   "la-rinconada",
   "carmona",
   "coria-rio",
-  "san-juan-aznalfarache",
   "tomares",
   "bormujos",
   "gines",
-  "castilleja-cuesta",
-  "espartinas",
-  "olivares",
-  "sanlucar-mayor",
   "camas",
-  "gelves",
-  "mairena-vega",
-  "santiponce",
-  "la-algaba",
-  "lora-rio",
   "lebrija",
   "moron-frontera",
   "osuna",
   "marchena",
-  "arahal",
-  "paradas",
-  "el-viso-alcor",
-  "mairena-alcor",
   // Andalucia - Granada
   "granada",
   "motril",
@@ -295,23 +200,11 @@ const CITIES = [
   "santa-fe",
   "maracena",
   "las-gabias",
-  "huetor-vega",
   "monachil",
-  "peligros",
-  "atarfe",
-  "albolote",
-  "chauchina",
-  "fuente-vaqueros",
   "salobrena",
-  "castell-ferro",
   "la-herradura",
   "orgiva",
   "lanjaron",
-  "pampaneira",
-  "capileira",
-  "trevelez",
-  "bubion",
-  "pitres",
   // Andalucia - Cordoba
   "cordoba",
   "lucena",
@@ -321,18 +214,7 @@ const CITIES = [
   "cabra",
   "palma-rio",
   "baena",
-  "la-carlota",
-  "penarroya-pueblonuevo",
   "pozoblanco",
-  "villanueva-cordoba",
-  "hinojosa-duque",
-  "belmez",
-  "espiel",
-  "fuente-obejuna",
-  "pedroche",
-  "dos-torres",
-  "villaralto",
-  "santa-eufemia",
   // Andalucia - Cadiz
   "cadiz",
   "jerez-frontera",
@@ -345,41 +227,19 @@ const CITIES = [
   "rota",
   "puerto-real",
   "arcos-frontera",
-  "barbate",
-  "conil-frontera",
   "tarifa",
-  "los-barrios",
-  "san-roque",
-  "jimena-frontera",
-  "ubrique",
-  "villamartin",
-  "zahara-atunes",
-  "bolonia",
-  "vejer-frontera",
-  "medina-sidonia",
+  "conil-frontera",
   // Andalucia - Almeria
   "almeria",
   "el-ejido",
   "roquetas-mar",
   "nijar",
   "aguadulce",
-  "la-mojonera",
   "adra",
-  "berja",
-  "dalias",
-  "vicar",
-  "huercal-overa",
-  "cuevas-almanzora",
   "vera",
   "mojacar",
   "garrucha",
   "carboneras",
-  "agua-amarga",
-  "san-jose",
-  "cabo-gata",
-  "retamar",
-  "costacabana",
-  "almerimar",
   // Andalucia - Huelva
   "huelva",
   "lepe",
@@ -387,16 +247,8 @@ const CITIES = [
   "isla-cristina",
   "ayamonte",
   "moguer",
-  "cartaya",
   "punta-umbria",
-  "aljaraque",
-  "san-juan-puerto",
-  "bollullos-condado",
-  "palma-condado",
   "matalascanas",
-  "mazagon",
-  "el-rocio",
-  "palos-frontera",
   // Andalucia - Jaen
   "jaen",
   "linares",
@@ -405,14 +257,6 @@ const CITIES = [
   "baeza",
   "martos",
   "alcala-real",
-  "torre-campo",
-  "la-carolina",
-  "jodar",
-  "mancha-real",
-  "villacarrillo",
-  "cazorla",
-  "quesada",
-  "peal-becerro",
   // Valencia
   "valencia",
   "torrent",
@@ -424,13 +268,6 @@ const CITIES = [
   "ontinyent",
   "aldaia",
   "manises",
-  "alfafar",
-  "quart-poblet",
-  "xirivella",
-  "catarroja",
-  "alaquas",
-  "sueca",
-  "cullera",
   "alzira",
   "xativa",
   "oliva",
@@ -439,92 +276,24 @@ const CITIES = [
   "calpe",
   "altea",
   "benidorm",
-  "villajoyosa",
-  "el-campello",
-  "sant-joan-alacant",
-  "mutxamel",
-  "san-vicente-raspeig",
-  "novelda",
-  "elda",
-  "petrer",
-  "villena",
-  "ibi",
-  "castalla",
-  "onil",
-  "biar",
-  "alcoy",
-  "picanya",
-  "paiporta",
-  "benetusser",
-  "sedavi",
-  "massanassa",
-  "albal",
-  "silla",
-  "almussafes",
-  "benifaio",
-  "algemesi",
-  "carcaixent",
-  "la-pobla-llarga",
-  "tavernes-valldigna",
-  "xeraco",
-  "playa-gandia",
-  "grau-gandia",
-  "miramar",
-  "piles",
-  "guardamar-safor",
-  "bellreguard",
-  "palmera",
-  "rafelcofer",
-  "potries",
-  "beniarjo",
-  "real-gandia",
-  "benifla",
+  "cullera",
+  "sueca",
   // Alicante
   "alicante",
   "elche",
   "torrevieja",
   "orihuela",
-  "alcoy",
   "san-vicente-raspeig",
-  "denia",
-  "javea",
-  "calpe",
-  "altea",
-  "alfaz-pi",
-  "la-nucia",
-  "polop",
-  "callosa-ensarria",
-  "guadalest",
   "el-campello",
   "santa-pola",
   "guardamar-segura",
-  "rojales",
   "pilar-horadada",
-  "san-miguel-salinas",
-  "los-montesinos",
-  "algorfa",
-  "benitachell",
-  "teulada",
   "moraira",
   "benissa",
-  "gata-gorgos",
-  "pedreguer",
-  "ondara",
-  "vergel",
-  "els-poblets",
-  "pego",
-  "murla",
-  "parcent",
-  "alcalali",
-  "jalon",
-  "lliber",
-  "senija",
-  "benidoleig",
-  "tormos",
-  "sagra",
-  "rafol-almunia",
-  "beniarbeig",
-  "el-verger",
+  "teulada",
+  "alfaz-pi",
+  "la-nucia",
+  "villajoyosa",
   // Castellon
   "castellon-plana",
   "vila-real",
@@ -532,16 +301,9 @@ const CITIES = [
   "vinaros",
   "benicarlo",
   "onda",
-  "la-vall-uixo",
-  "almassora",
   "benicassim",
   "oropesa-mar",
   "peniscola",
-  "alcossebre",
-  "torreblanca",
-  "cabanes",
-  "vall-alba",
-  "benlloch",
   // Pais Vasco
   "bilbao",
   "barakaldo",
@@ -549,45 +311,19 @@ const CITIES = [
   "portugalete",
   "santurtzi",
   "basauri",
-  "leioa",
-  "galdakao",
   "durango",
-  "erandio",
-  "sestao",
   "ermua",
   "eibar",
   "gernika-lumo",
   "bermeo",
-  "lekeitio",
-  "ondarroa",
-  "markina-xemein",
-  "mungia",
-  "plentzia",
-  "gorliz",
-  "sopela",
-  "berango",
-  "algorta",
-  "las-arenas",
   "san-sebastian",
   "irun",
   "errenteria",
   "zarautz",
-  "hernani",
-  "tolosa",
   "hondarribia",
-  "arrasate",
-  "bergara",
-  "azpeitia",
-  "azkoitia",
-  "beasain",
-  "zumaia",
-  "getaria",
-  "deba",
-  "mutriku",
+  "tolosa",
   "vitoria-gasteiz",
   "llodio",
-  "amurrio",
-  "salvatierra",
   // Galicia
   "a-coruna",
   "santiago-compostela",
@@ -596,52 +332,16 @@ const CITIES = [
   "oleiros",
   "arteixo",
   "carballo",
-  "ribeira",
-  "culleredo",
-  "cambre",
-  "betanzos",
-  "sada",
-  "cedeira",
-  "pontedeume",
-  "neda",
-  "fene",
-  "mugardos",
-  "ares",
-  "mino",
-  "bergondo",
   "vigo",
   "pontevedra",
   "vilagarcia-arousa",
   "redondela",
   "cangas",
-  "marin",
-  "moana",
-  "nigran",
-  "baiona",
   "sanxenxo",
   "o-grove",
-  "cambados",
-  "ribadumia",
-  "meis",
-  "poio",
-  "bueu",
-  "gondomar",
-  "mos",
-  "porrino",
-  "tui",
-  "a-guarda",
   "ourense",
-  "verin",
-  "o-barco-valdeorras",
-  "carballino",
-  "xinzo-limia",
   "lugo",
   "monforte-lemos",
-  "viveiro",
-  "vilalba",
-  "ribadeo",
-  "foz",
-  "burela",
   // Murcia
   "murcia",
   "cartagena",
@@ -651,127 +351,53 @@ const CITIES = [
   "mazarron",
   "aguilas",
   "cieza",
-  "yecla",
-  "jumilla",
-  "totana",
-  "alhama-murcia",
   "torre-pacheco",
   "san-javier",
   "san-pedro-pinatar",
   "los-alcazares",
   "la-manga",
-  "la-union",
   "archena",
-  "las-torres-cotillas",
-  "santomera",
-  "fortuna",
-  "abanilla",
-  "bullas",
-  "caravaca-cruz",
-  "calasparra",
-  "moratalla",
-  "cehegin",
-  "mula",
-  "alguazas",
-  "ceutí",
-  "lorqui",
-  "villanueva-segura",
-  "ojos",
-  "ricote",
   // Aragon
   "zaragoza",
   "calatayud",
   "utebo",
   "ejea-caballeros",
-  "tarazona",
-  "zuera",
-  "la-almunia-dona-godina",
-  "caspe",
-  "borja",
-  "illueca",
-  "carinena",
   "huesca",
   "monzon",
   "barbastro",
-  "fraga",
   "jaca",
-  "sabiñanigo",
-  "binefar",
   "teruel",
   "alcaniz",
-  "andorra",
-  "calamocha",
-  "utrillas",
-  "montalban",
   // Baleares
   "palma-mallorca",
   "calvia",
   "inca",
   "manacor",
   "llucmajor",
-  "marratxi",
   "alcudia",
   "pollença",
   "soller",
   "andratx",
-  "santa-ponsa",
-  "paguera",
   "magaluf",
-  "palma-nova",
-  "illetas",
-  "portals-nous",
+  "santa-ponsa",
   "puerto-pollensa",
-  "can-picafort",
-  "cala-millor",
-  "cala-ratjada",
-  "porto-cristo",
-  "santanyi",
-  "colonia-sant-jordi",
-  "cala-dor",
-  "portocolom",
-  "felanitx",
-  "campos",
   "ibiza",
   "sant-antoni-portmany",
   "santa-eulalia-riu",
-  "sant-josep-talaia",
-  "sant-joan-labritja",
-  "playa-den-bossa",
-  "cala-llonga",
-  "san-carlos",
   "mahon",
   "ciutadella",
-  "es-castell",
-  "alaior",
-  "ferreries",
   // Canarias
   "las-palmas-gran-canaria",
   "telde",
-  "santa-lucia-tirajana",
   "arucas",
-  "san-bartolome-tirajana",
-  "aguimes",
-  "ingenio",
-  "mogan",
-  "galdar",
-  "teror",
-  "vecindario",
-  "playa-ingles",
   "maspalomas",
+  "playa-ingles",
   "puerto-rico",
-  "arguineguin",
   "santa-cruz-tenerife",
   "la-laguna",
   "arona",
   "adeje",
-  "la-orotava",
-  "granadilla-abona",
-  "los-realejos",
   "puerto-cruz",
-  "icod-vinos",
-  "candelaria",
-  "guimar",
-  "tacoronte",
   "los-cristianos",
   "playa-americas",
   "costa-adeje",
@@ -786,14 +412,6 @@ const CITIES = [
   "avila",
   "soria",
   "ponferrada",
-  "miranda-ebro",
-  "aranda-duero",
-  "medina-campo",
-  "laguna-duero",
-  "benavente",
-  "astorga",
-  "la-bañeza",
-  "bembibre",
   // Castilla-La Mancha
   "toledo",
   "albacete",
@@ -803,75 +421,35 @@ const CITIES = [
   "talavera-reina",
   "puertollano",
   "tomelloso",
-  "alcazar-san-juan",
-  "hellin",
-  "almansa",
-  "villarrobledo",
-  "valdepenas",
-  "manzanares",
-  "daimiel",
-  "alcantara",
   // Asturias
   "oviedo",
   "gijon",
   "aviles",
-  "siero",
   "langreo",
   "mieres",
-  "castrillon",
-  "san-martin-rey-aurelio",
-  "laviana",
   "llanes",
   "ribadesella",
   "cangas-onis",
-  "villaviciosa",
-  "nava",
-  "arriondas",
-  "infiesto",
-  "cangas-narcea",
-  "tineo",
   // Cantabria
   "santander",
   "torrelavega",
   "castro-urdiales",
-  "camargo",
-  "piélagos",
-  "el-astillero",
   "laredo",
   "santoña",
   "noja",
-  "suances",
   "comillas",
   "san-vicente-barquera",
-  "santillana-mar",
-  "potes",
-  "reinosa",
-  "ramales-victoria",
   // Navarra
   "pamplona",
   "tudela",
   "barañain",
   "burlada",
   "estella-lizarra",
-  "tafalla",
-  "zizur-mayor",
-  "villava",
-  "ansoain",
-  "berriozar",
-  "alsasua",
-  "sangüesa",
-  "olite",
-  "peralta",
   // La Rioja
   "logroño",
   "calahorra",
   "arnedo",
   "haro",
-  "najera",
-  "alfaro",
-  "lardero",
-  "santo-domingo-calzada",
-  "nájera",
   // Extremadura
   "badajoz",
   "caceres",
@@ -879,16 +457,6 @@ const CITIES = [
   "plasencia",
   "don-benito",
   "almendralejo",
-  "villanueva-serena",
-  "zafra",
-  "montijo",
-  "navalmoral-mata",
-  "trujillo",
-  "coria",
-  "villanueva-fresno",
-  "jerez-caballeros",
-  "olivenza",
-  "villafranca-barros",
 ]
 
 const MODIFIERS = [
@@ -922,14 +490,10 @@ const PROBLEMS: Record<string, string[]> = {
     "luces-parpadean",
     "cuadro-electrico",
     "instalacion-electrica",
-    "boletin-electrico",
     "subida-tension",
-    "bajada-tension",
     "cable-quemado",
     "enchufe-fundido",
     "interruptor-roto",
-    "lampara-no-enciende",
-    "fusible-fundido",
   ],
   fontanero: [
     "fuga-agua",
@@ -942,12 +506,8 @@ const PROBLEMS: Record<string, string[]> = {
     "humedad",
     "bajante-roto",
     "arqueta-atascada",
-    "bomba-agua",
     "presion-agua-baja",
-    "agua-sucia",
     "sifon-atascado",
-    "desague-lento",
-    "tuberia-congelada",
   ],
   cerrajero: [
     "puerta-bloqueada",
@@ -958,12 +518,8 @@ const PROBLEMS: Record<string, string[]> = {
     "copia-llaves",
     "cerradura-seguridad",
     "puerta-blindada",
-    "cerrojo-atascado",
-    "llave-rota-cerradura",
-    "apertura-urgente",
     "bombin-roto",
-    "manilla-rota",
-    "puerta-no-cierra",
+    "apertura-urgente",
   ],
   desatascos: [
     "wc-atascado",
@@ -975,10 +531,6 @@ const PROBLEMS: Record<string, string[]> = {
     "limpieza-tuberias",
     "poceria",
     "fosa-septica",
-    "alcantarillado",
-    "inspeccion-camara",
-    "raices-tuberia",
-    "grasa-tuberia",
     "bañera-atascada",
   ],
   calderas: [
@@ -991,96 +543,89 @@ const PROBLEMS: Record<string, string[]> = {
     "radiadores",
     "calefaccion-no-funciona",
     "termo-electrico",
-    "calentador-gas",
     "presion-caldera",
-    "piloto-apagado",
-    "caldera-pierde-agua",
-    "caldera-error",
   ],
 }
 
-const PROFESSION_SLUGS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
+const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string[] }> }) {
-  try {
-    const { slug } = await params
-    const baseUrl = "https://rapidfix.es"
-    const date = new Date().toISOString().split("T")[0]
+  const { slug } = await params
+  const baseUrl = "https://rapidfix.es"
+  const date = new Date().toISOString().split("T")[0]
 
-    const rawId = slug.join("/")
-    const id = rawId.endsWith(".xml") ? rawId.slice(0, -4) : rawId
+  const rawId = slug.join("/")
+  const id = rawId.endsWith(".xml") ? rawId.slice(0, -4) : rawId
 
-    const urls: string[] = []
+  const urls: string[] = []
 
-    if (id.endsWith("-problemas")) {
-      const profession = id.replace("-problemas", "")
-      const problems = PROBLEMS[profession] || []
-      for (const problem of problems) {
-        for (const city of CITIES) {
-          urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
-        }
+  if (id.endsWith("-problemas")) {
+    const profession = id.replace("-problemas", "")
+    const problems = PROBLEMS[profession] || []
+    for (const problem of problems) {
+      for (const city of CITIES) {
+        urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
       }
-    } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
-      const prefix = id.startsWith("precio-") ? "precio-" : "presupuesto-"
-      const profession = id.replace(prefix, "")
+    }
+  } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
+    const prefix = id.startsWith("precio-") ? "precio-" : "presupuesto-"
+    const profession = id.replace(prefix, "")
+    if (PROFESSIONS.includes(profession)) {
       for (const city of CITIES) {
         urls.push(`${baseUrl}/${prefix}${profession}/${city}`)
       }
-    } else {
-      let profession = ""
-      let modifier = ""
+    }
+  } else {
+    let foundProfession = ""
+    let foundModifier = ""
 
-      for (const p of PROFESSION_SLUGS) {
-        if (id === p) {
-          profession = p
-          break
-        }
+    // First check if it's just a profession name
+    if (PROFESSIONS.includes(id)) {
+      foundProfession = id
+      foundModifier = ""
+    } else {
+      // Check profession + modifier combinations
+      for (const prof of PROFESSIONS) {
         for (const mod of MODIFIERS) {
-          if (mod && id === `${p}${mod}`) {
-            profession = p
-            modifier = mod
+          if (mod && id === `${prof}${mod}`) {
+            foundProfession = prof
+            foundModifier = mod
             break
           }
         }
-        if (profession) break
+        if (foundProfession) break
       }
+    }
 
-      if (profession) {
-        for (const city of CITIES) {
-          if (modifier) {
-            urls.push(`${baseUrl}/${profession}${modifier}/${city}`)
-          } else {
-            urls.push(`${baseUrl}/${profession}/${city}`)
-          }
+    if (foundProfession) {
+      for (const city of CITIES) {
+        if (foundModifier) {
+          urls.push(`${baseUrl}/${foundProfession}${foundModifier}/${city}`)
+        } else {
+          urls.push(`${baseUrl}/${foundProfession}/${city}`)
         }
       }
     }
-
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-
-    for (const url of urls) {
-      xml += `  <url>\n`
-      xml += `    <loc>${url}</loc>\n`
-      xml += `    <lastmod>${date}</lastmod>\n`
-      xml += `    <changefreq>weekly</changefreq>\n`
-      xml += `    <priority>0.8</priority>\n`
-      xml += `  </url>\n`
-    }
-
-    xml += "</urlset>"
-
-    return new NextResponse(xml, {
-      headers: {
-        "Content-Type": "application/xml",
-        "Cache-Control": "public, max-age=86400",
-      },
-    })
-  } catch (error) {
-    const xml =
-      '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>'
-    return new NextResponse(xml, {
-      headers: { "Content-Type": "application/xml" },
-    })
   }
+
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+
+  for (const url of urls) {
+    xml += `  <url>\n`
+    xml += `    <loc>${url}</loc>\n`
+    xml += `    <lastmod>${date}</lastmod>\n`
+    xml += `    <changefreq>weekly</changefreq>\n`
+    xml += `    <priority>0.8</priority>\n`
+    xml += `  </url>\n`
+  }
+
+  xml += "</urlset>"
+
+  return new NextResponse(xml, {
+    headers: {
+      "Content-Type": "application/xml",
+      "Cache-Control": "public, max-age=86400",
+    },
+  })
 }

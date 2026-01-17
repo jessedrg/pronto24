@@ -35,6 +35,7 @@ export async function GET() {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
   xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 
+  // profession + suffix modifiers
   for (const profession of professions) {
     for (const mod of modifiers) {
       const smName = mod === "" ? profession : `${profession}${mod}`
@@ -45,6 +46,7 @@ export async function GET() {
     }
   }
 
+  // prefix + profession
   for (const prefix of prefixModifiers) {
     for (const profession of professions) {
       xml += `  <sitemap>\n`
@@ -54,6 +56,7 @@ export async function GET() {
     }
   }
 
+  // profession-problemas
   for (const profession of professions) {
     xml += `  <sitemap>\n`
     xml += `    <loc>${baseUrl}/xml-sitemaps/${profession}-problemas.xml</loc>\n`
