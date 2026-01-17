@@ -59,7 +59,7 @@ export function ServiceLandingTemplate({
   const [phoneFormatted, setPhoneFormatted] = useState("711 267 223")
   const [activeUsers, setActiveUsers] = useState(12)
 
-  const profession = professionProp || PROFESSIONS.find((p) => p.id === professionId)!
+  const profession = professionProp || PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
   const cityName = cityProp?.name || (citySlug ? getCityDisplayName(citySlug) : "Catalunya")
   const actualCitySlug = cityProp?.slug || citySlug
   const provinceName = cityProp?.province || (actualCitySlug ? getCityProvince(actualCitySlug) : "")
@@ -67,7 +67,7 @@ export function ServiceLandingTemplate({
   const problems = PROBLEMS[profession.id as keyof typeof PROBLEMS] || []
   const currentProblem = problemId ? problems.find((p) => p.id === problemId) : null
 
-  const IconComponent = ICONS[profession.icon as keyof typeof ICONS] || Zap
+  const IconComponent = profession?.icon ? ICONS[profession.icon as keyof typeof ICONS] || Zap : Zap
 
   useEffect(() => {
     const fetchPhone = async () => {
