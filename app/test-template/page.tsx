@@ -1,4 +1,4 @@
-import ServiceLandingTemplate from "@/components/service-landing-template"
+import { ServiceLandingTemplate } from "@/components/service-landing-template"
 
 export default function TestTemplatePage() {
   return (
