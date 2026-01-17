@@ -17,8 +17,6 @@ const MODIFIERS = [
   "-hoy",
 ]
 
-const PREFIX_MODIFIERS = ["precio-", "presupuesto-"]
-
 const PROBLEMS: Record<string, string[]> = {
   electricista: [
     "apagon",
@@ -75,15 +73,22 @@ export const revalidate = 86400
 
 const PROFESSION_SLUGS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
-export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id: rawId } = await params
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string[] }> }) {
+  const { slug } = await params
   const baseUrl = "https://rapidfix.es"
   const date = new Date().toISOString().split("T")[0]
 
+  // Join all slug segments and remove .xml extension
+  const rawId = slug.join("/")
   const id = rawId.endsWith(".xml") ? rawId.slice(0, -4) : rawId
 
-  const allCities = getAllCities()
-  const citySlugs = allCities.map((c) => c.slug)
+  let citySlugs: string[] = []
+  try {
+    citySlugs = getAllCities()
+  } catch (error) {
+    // Fallback to a few cities if seo-data fails
+    citySlugs = ["barcelona", "madrid", "sevilla", "valencia", "malaga"]
+  }
 
   const urls: string[] = []
 
