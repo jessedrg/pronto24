@@ -1,5 +1,756 @@
 import { NextResponse } from "next/server"
-import { getAllCities } from "@/lib/seo-data"
+
+export const dynamic = "force-dynamic"
+
+const CITIES = [
+  // Catalunya - Barcelona
+  "barcelona",
+  "hospitalet-llobregat",
+  "badalona",
+  "terrassa",
+  "sabadell",
+  "mataro",
+  "santa-coloma-gramenet",
+  "cornella-llobregat",
+  "sant-boi-llobregat",
+  "rubi",
+  "manresa",
+  "vilanova-geltru",
+  "viladecans",
+  "castelldefels",
+  "el-prat-llobregat",
+  "granollers",
+  "cerdanyola-valles",
+  "mollet-valles",
+  "gava",
+  "esplugues-llobregat",
+  "sant-cugat-valles",
+  "sant-feliu-llobregat",
+  "vic",
+  "igualada",
+  "ripollet",
+  "sant-adria-besos",
+  "montcada-reixac",
+  "sant-pere-ribes",
+  "sitges",
+  "martorell",
+  "pineda-mar",
+  "sant-joan-despi",
+  "premia-mar",
+  "calella",
+  "el-masnou",
+  "mongat",
+  "malgrat-mar",
+  "arenys-mar",
+  "canet-mar",
+  "cardedeu",
+  "molins-rei",
+  "sant-vicenc-dels-horts",
+  "palleja",
+  "barbera-valles",
+  "santa-perpetua-mogoda",
+  "llinars-valles",
+  "la-garriga",
+  "caldes-montbui",
+  "parets-valles",
+  "montmelo",
+  "la-llagosta",
+  "santa-maria-palautordera",
+  "tordera",
+  "blanes",
+  "lloret-mar",
+  "sant-andreu-barca",
+  "corbera-llobregat",
+  "cervello",
+  "olesa-montserrat",
+  "abrera",
+  "esparreguera",
+  "castellbisbal",
+  "sant-esteve-sesrovires",
+  "gelida",
+  // Catalunya - Girona
+  "girona",
+  "figueres",
+  "lloret-mar",
+  "blanes",
+  "olot",
+  "salt",
+  "palafrugell",
+  "sant-feliu-guixols",
+  "roses",
+  "banyoles",
+  "la-bisbal-emporda",
+  "palamos",
+  "torroella-montgri",
+  "ripoll",
+  "lescala",
+  "castello-empuries",
+  "cadaques",
+  "llanca",
+  "portbou",
+  "puigcerda",
+  "camprodon",
+  "tossa-mar",
+  "calonge",
+  // Catalunya - Tarragona
+  "tarragona",
+  "reus",
+  "tortosa",
+  "el-vendrell",
+  "cambrils",
+  "salou",
+  "valls",
+  "amposta",
+  "vila-seca",
+  "calafell",
+  "torredembarra",
+  "cunit",
+  "altafulla",
+  "mont-roig-camp",
+  "miami-platja",
+  "lametlla-mar",
+  "deltebre",
+  "sant-carles-rapita",
+  // Catalunya - Lleida
+  "lleida",
+  "balaguer",
+  "tarrega",
+  "mollerussa",
+  "la-seu-urgell",
+  "solsona",
+  "cervera",
+  "tremp",
+  "sort",
+  "vielha",
+  "les",
+  "bossost",
+  // Madrid
+  "madrid",
+  "mostoles",
+  "alcala-henares",
+  "fuenlabrada",
+  "leganes",
+  "getafe",
+  "alcorcon",
+  "torrejon-ardoz",
+  "parla",
+  "alcobendas",
+  "las-rozas",
+  "pozuelo-alarcon",
+  "coslada",
+  "rivas-vaciamadrid",
+  "valdemoro",
+  "majadahonda",
+  "collado-villalba",
+  "aranjuez",
+  "arganda-rey",
+  "boadilla-monte",
+  "pinto",
+  "colmenar-viejo",
+  "tres-cantos",
+  "san-sebastian-reyes",
+  "san-fernando-henares",
+  "torrelaguna",
+  "ciempozuelos",
+  "humanes-madrid",
+  "villanueva-canada",
+  "el-escorial",
+  "san-lorenzo-escorial",
+  "torrelodones",
+  "villalba",
+  "galapagar",
+  "alpedrete",
+  "guadarrama",
+  "moralzarzal",
+  "becerril-sierra",
+  "cercedilla",
+  "navacerrada",
+  "brunete",
+  "villanueva-pardillo",
+  "villaviciosa-odon",
+  "mostoles",
+  "navalcarnero",
+  // Andalucia - Malaga
+  "malaga",
+  "marbella",
+  "mijas",
+  "fuengirola",
+  "torremolinos",
+  "benalmadena",
+  "estepona",
+  "velez-malaga",
+  "rincon-victoria",
+  "antequera",
+  "ronda",
+  "nerja",
+  "alhaurin-torre",
+  "coin",
+  "alhaurin-grande",
+  "cartama",
+  "torremolinos",
+  "san-pedro-alcantara",
+  "nueva-andalucia",
+  "puerto-banus",
+  "benahavis",
+  "manilva",
+  "casares",
+  "gaucin",
+  "ojen",
+  "monda",
+  "tolox",
+  "alora",
+  "pizarra",
+  "ardales",
+  "campillos",
+  "teba",
+  "sierra-yeguas",
+  "mollina",
+  "humilladero",
+  // Andalucia - Sevilla
+  "sevilla",
+  "dos-hermanas",
+  "alcala-guadaira",
+  "utrera",
+  "mairena-aljarafe",
+  "ecija",
+  "la-rinconada",
+  "carmona",
+  "coria-rio",
+  "san-juan-aznalfarache",
+  "tomares",
+  "bormujos",
+  "gines",
+  "castilleja-cuesta",
+  "espartinas",
+  "olivares",
+  "sanlucar-mayor",
+  "camas",
+  "gelves",
+  "mairena-vega",
+  "santiponce",
+  "la-algaba",
+  "lora-rio",
+  "lebrija",
+  "moron-frontera",
+  "osuna",
+  "marchena",
+  "arahal",
+  // Andalucia - Granada
+  "granada",
+  "motril",
+  "armilla",
+  "almunecar",
+  "loja",
+  "baza",
+  "guadix",
+  "santa-fe",
+  "maracena",
+  "las-gabias",
+  "huetor-vega",
+  "monachil",
+  "peligros",
+  "atarfe",
+  "albolote",
+  "chauchina",
+  "fuente-vaqueros",
+  "salobrena",
+  "castell-ferro",
+  "la-herradura",
+  "orgiva",
+  "lanjaron",
+  "pampaneira",
+  "capileira",
+  "trevelez",
+  // Andalucia - Cordoba
+  "cordoba",
+  "lucena",
+  "puente-genil",
+  "montilla",
+  "priego-cordoba",
+  "cabra",
+  "palma-rio",
+  "baena",
+  "la-carlota",
+  "penarroya-pueblonuevo",
+  "pozoblanco",
+  "villanueva-cordoba",
+  "hinojosa-duque",
+  "belmez",
+  "espiel",
+  "fuente-obejuna",
+  // Andalucia - Cadiz
+  "cadiz",
+  "jerez-frontera",
+  "algeciras",
+  "san-fernando",
+  "el-puerto-santa-maria",
+  "chiclana-frontera",
+  "sanlucar-barrameda",
+  "la-linea-concepcion",
+  "rota",
+  "puerto-real",
+  "arcos-frontera",
+  "barbate",
+  "conil-frontera",
+  "tarifa",
+  "los-barrios",
+  "san-roque",
+  "jimena-frontera",
+  "ubrique",
+  "villamartin",
+  // Andalucia - Almeria
+  "almeria",
+  "el-ejido",
+  "roquetas-mar",
+  "nijar",
+  "aguadulce",
+  "la-mojonera",
+  "adra",
+  "berja",
+  "dalias",
+  "vicar",
+  "huercal-overa",
+  "cuevas-almanzora",
+  "vera",
+  "mojacar",
+  "garrucha",
+  "carboneras",
+  "agua-amarga",
+  "san-jose",
+  // Andalucia - Huelva
+  "huelva",
+  "lepe",
+  "almonte",
+  "isla-cristina",
+  "ayamonte",
+  "moguer",
+  "cartaya",
+  "punta-umbria",
+  "aljaraque",
+  "san-juan-puerto",
+  "bollullos-condado",
+  "palma-condado",
+  "matalascanas",
+  "mazagon",
+  "el-rocio",
+  // Andalucia - Jaen
+  "jaen",
+  "linares",
+  "andujar",
+  "ubeda",
+  "baeza",
+  "martos",
+  "alcala-real",
+  "torre-campo",
+  "la-carolina",
+  "jodar",
+  "mancha-real",
+  "villacarrillo",
+  // Valencia
+  "valencia",
+  "torrent",
+  "gandia",
+  "paterna",
+  "sagunto",
+  "mislata",
+  "burjassot",
+  "ontinyent",
+  "aldaia",
+  "manises",
+  "alfafar",
+  "quart-poblet",
+  "xirivella",
+  "catarroja",
+  "alaquas",
+  "sueca",
+  "cullera",
+  "alzira",
+  "xativa",
+  "oliva",
+  "denia",
+  "javea",
+  "calpe",
+  "altea",
+  "benidorm",
+  "villajoyosa",
+  "el-campello",
+  "sant-joan-alacant",
+  "mutxamel",
+  "san-vicente-raspeig",
+  "novelda",
+  "elda",
+  "petrer",
+  "villena",
+  "ibi",
+  "castalla",
+  "onil",
+  "biar",
+  "alcoy",
+  // Alicante
+  "alicante",
+  "elche",
+  "torrevieja",
+  "orihuela",
+  "benidorm",
+  "alcoy",
+  "elda",
+  "san-vicente-raspeig",
+  "petrer",
+  "villena",
+  "denia",
+  "javea",
+  "calpe",
+  "altea",
+  "alfaz-pi",
+  "la-nucia",
+  "polop",
+  "callosa-ensarria",
+  "guadalest",
+  "villajoyosa",
+  "el-campello",
+  "santa-pola",
+  "guardamar-segura",
+  "rojales",
+  "pilar-horadada",
+  "san-miguel-salinas",
+  "los-montesinos",
+  "algorfa",
+  // Castellon
+  "castellon-plana",
+  "vila-real",
+  "burriana",
+  "vinaros",
+  "benicarlo",
+  "onda",
+  "la-vall-uixo",
+  "almassora",
+  "benicassim",
+  "oropesa-mar",
+  "peniscola",
+  // Pais Vasco - Bizkaia
+  "bilbao",
+  "barakaldo",
+  "getxo",
+  "portugalete",
+  "santurtzi",
+  "basauri",
+  "leioa",
+  "galdakao",
+  "durango",
+  "erandio",
+  "sestao",
+  "ermua",
+  "eibar",
+  "gernika-lumo",
+  "bermeo",
+  "lekeitio",
+  "ondarroa",
+  "markina-xemein",
+  "mungia",
+  "plentzia",
+  "gorliz",
+  "sopela",
+  "berango",
+  "algorta",
+  "las-arenas",
+  // Pais Vasco - Gipuzkoa
+  "san-sebastian",
+  "irun",
+  "errenteria",
+  "zarautz",
+  "hernani",
+  "tolosa",
+  "hondarribia",
+  "eibar",
+  "arrasate",
+  "bergara",
+  "azpeitia",
+  "azkoitia",
+  "beasain",
+  "zumaia",
+  "getaria",
+  "deba",
+  "mutriku",
+  "oñati",
+  "lazkao",
+  // Pais Vasco - Araba
+  "vitoria-gasteiz",
+  "llodio",
+  "amurrio",
+  "salvatierra",
+  "oyón",
+  // Galicia - A Coruña
+  "a-coruna",
+  "santiago-compostela",
+  "ferrol",
+  "naron",
+  "oleiros",
+  "arteixo",
+  "carballo",
+  "ribeira",
+  "culleredo",
+  "cambre",
+  "betanzos",
+  "sada",
+  "cedeira",
+  "pontedeume",
+  "neda",
+  "fene",
+  "mugardos",
+  "ares",
+  "mino",
+  "bergondo",
+  // Galicia - Pontevedra
+  "vigo",
+  "pontevedra",
+  "vilagarcia-arousa",
+  "redondela",
+  "cangas",
+  "marin",
+  "moana",
+  "nigran",
+  "baiona",
+  "sanxenxo",
+  "o-grove",
+  "cambados",
+  "ribadumia",
+  "meis",
+  "poio",
+  "bueu",
+  "gondomar",
+  "mos",
+  "porriño",
+  "tui",
+  "a-guarda",
+  // Galicia - Ourense
+  "ourense",
+  "verin",
+  "o-barco-valdeorras",
+  "carballino",
+  "xinzo-limia",
+  // Galicia - Lugo
+  "lugo",
+  "monforte-lemos",
+  "viveiro",
+  "vilalba",
+  "ribadeo",
+  "foz",
+  "burela",
+  // Murcia
+  "murcia",
+  "cartagena",
+  "lorca",
+  "molina-segura",
+  "alcantarilla",
+  "mazarron",
+  "aguilas",
+  "cieza",
+  "yecla",
+  "jumilla",
+  "totana",
+  "alhama-murcia",
+  "torre-pacheco",
+  "san-javier",
+  "san-pedro-pinatar",
+  "los-alcazares",
+  "la-manga",
+  "la-union",
+  "archena",
+  "las-torres-cotillas",
+  "santomera",
+  // Aragon - Zaragoza
+  "zaragoza",
+  "calatayud",
+  "utebo",
+  "ejea-caballeros",
+  "tarazona",
+  "zuera",
+  "la-almunia-doña-godina",
+  "caspe",
+  "borja",
+  "illueca",
+  "cariñena",
+  // Aragon - Huesca
+  "huesca",
+  "monzon",
+  "barbastro",
+  "fraga",
+  "jaca",
+  "sabiñanigo",
+  "binefar",
+  // Aragon - Teruel
+  "teruel",
+  "alcañiz",
+  "andorra",
+  "calamocha",
+  "utrillas",
+  "montalban",
+  // Baleares
+  "palma-mallorca",
+  "calvia",
+  "inca",
+  "manacor",
+  "llucmajor",
+  "marratxi",
+  "alcudia",
+  "pollença",
+  "soller",
+  "andratx",
+  "santa-ponsa",
+  "paguera",
+  "magaluf",
+  "palma-nova",
+  "illetas",
+  "portals-nous",
+  "puerto-pollensa",
+  "can-picafort",
+  "cala-millor",
+  "cala-ratjada",
+  "porto-cristo",
+  "santanyi",
+  "colonia-sant-jordi",
+  "cala-dor",
+  "portocolom",
+  "felanitx",
+  "campos",
+  // Ibiza
+  "ibiza",
+  "sant-antoni-portmany",
+  "santa-eulalia-riu",
+  "sant-josep-talaia",
+  "sant-joan-labritja",
+  "playa-den-bossa",
+  "cala-llonga",
+  "san-carlos",
+  // Menorca
+  "mahon",
+  "ciutadella",
+  "es-castell",
+  "alaior",
+  "ferreries",
+  "es-migjorn-gran",
+  // Canarias - Las Palmas
+  "las-palmas-gran-canaria",
+  "telde",
+  "santa-lucia-tirajana",
+  "arucas",
+  "san-bartolome-tirajana",
+  "aguimes",
+  "ingenio",
+  "mogan",
+  "galdar",
+  "teror",
+  "vecindario",
+  "playa-ingles",
+  "maspalomas",
+  "puerto-rico",
+  "arguineguin",
+  // Canarias - Tenerife
+  "santa-cruz-tenerife",
+  "la-laguna",
+  "arona",
+  "adeje",
+  "la-orotava",
+  "granadilla-abona",
+  "los-realejos",
+  "puerto-cruz",
+  "icod-vinos",
+  "candelaria",
+  "guimar",
+  "tacoronte",
+  "los-cristianos",
+  "playa-americas",
+  "costa-adeje",
+  // Castilla y Leon
+  "valladolid",
+  "burgos",
+  "salamanca",
+  "leon",
+  "palencia",
+  "zamora",
+  "segovia",
+  "avila",
+  "soria",
+  "ponferrada",
+  "miranda-ebro",
+  "aranda-duero",
+  "medina-campo",
+  // Castilla-La Mancha
+  "toledo",
+  "albacete",
+  "ciudad-real",
+  "guadalajara",
+  "cuenca",
+  "talavera-reina",
+  "puertollano",
+  "tomelloso",
+  "alcazar-san-juan",
+  "hellin",
+  "almansa",
+  "villarrobledo",
+  // Asturias
+  "oviedo",
+  "gijon",
+  "aviles",
+  "siero",
+  "langreo",
+  "mieres",
+  "castrillon",
+  "san-martin-rey-aurelio",
+  "laviana",
+  "llanes",
+  "ribadesella",
+  "cangas-onis",
+  // Cantabria
+  "santander",
+  "torrelavega",
+  "castro-urdiales",
+  "camargo",
+  "piélagos",
+  "el-astillero",
+  "laredo",
+  "santoña",
+  "noja",
+  "suances",
+  "comillas",
+  "san-vicente-barquera",
+  "santillana-mar",
+  "potes",
+  // Navarra
+  "pamplona",
+  "tudela",
+  "barañain",
+  "burlada",
+  "estella-lizarra",
+  "tafalla",
+  "zizur-mayor",
+  "villava",
+  "ansoain",
+  "berriozar",
+  "alsasua",
+  "sangüesa",
+  // La Rioja
+  "logroño",
+  "calahorra",
+  "arnedo",
+  "haro",
+  "najera",
+  "alfaro",
+  "lardero",
+  // Extremadura
+  "badajoz",
+  "caceres",
+  "merida",
+  "plasencia",
+  "don-benito",
+  "almendralejo",
+  "villanueva-serena",
+  "zafra",
+  "montijo",
+  "navalmoral-mata",
+  "trujillo",
+  "coria",
+]
 
 const MODIFIERS = [
   "",
@@ -28,6 +779,10 @@ const PROBLEMS: Record<string, string[]> = {
     "cuadro-electrico",
     "instalacion-electrica",
     "boletin-electrico",
+    "subida-tension",
+    "bajada-tension",
+    "cable-quemado",
+    "enchufe-fundido",
   ],
   fontanero: [
     "fuga-agua",
@@ -38,6 +793,11 @@ const PROBLEMS: Record<string, string[]> = {
     "cisterna-no-funciona",
     "calentador",
     "humedad",
+    "bajante-roto",
+    "arqueta-atascada",
+    "bomba-agua",
+    "presion-agua-baja",
+    "agua-sucia",
   ],
   cerrajero: [
     "puerta-bloqueada",
@@ -47,6 +807,10 @@ const PROBLEMS: Record<string, string[]> = {
     "cambio-cerradura",
     "copia-llaves",
     "cerradura-seguridad",
+    "puerta-blindada",
+    "cerrojo-atascado",
+    "llave-rota-cerradura",
+    "apertura-urgente",
   ],
   desatascos: [
     "wc-atascado",
@@ -56,6 +820,10 @@ const PROBLEMS: Record<string, string[]> = {
     "ducha-atascada",
     "bajante-atascado",
     "limpieza-tuberias",
+    "poceria",
+    "fosa-septica",
+    "alcantarillado",
+    "inspeccion-camara",
   ],
   calderas: [
     "sin-agua-caliente",
@@ -65,95 +833,98 @@ const PROBLEMS: Record<string, string[]> = {
     "revision-caldera",
     "cambio-caldera",
     "radiadores",
+    "calefaccion-no-funciona",
+    "termo-electrico",
+    "calentador-gas",
+    "presion-caldera",
   ],
 }
-
-export const dynamic = "force-dynamic"
-export const revalidate = 86400
 
 const PROFESSION_SLUGS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string[] }> }) {
-  const { slug } = await params
-  const baseUrl = "https://rapidfix.es"
-  const date = new Date().toISOString().split("T")[0]
-
-  // Join all slug segments and remove .xml extension
-  const rawId = slug.join("/")
-  const id = rawId.endsWith(".xml") ? rawId.slice(0, -4) : rawId
-
-  let citySlugs: string[] = []
   try {
-    citySlugs = getAllCities()
-  } catch (error) {
-    // Fallback to a few cities if seo-data fails
-    citySlugs = ["barcelona", "madrid", "sevilla", "valencia", "malaga"]
-  }
+    const { slug } = await params
+    const baseUrl = "https://rapidfix.es"
+    const date = new Date().toISOString().split("T")[0]
 
-  const urls: string[] = []
+    const rawId = slug.join("/")
+    const id = rawId.endsWith(".xml") ? rawId.slice(0, -4) : rawId
 
-  if (id.endsWith("-problemas")) {
-    const profession = id.replace("-problemas", "")
-    const problems = PROBLEMS[profession] || []
-    for (const problem of problems) {
-      for (const city of citySlugs) {
-        urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
+    const urls: string[] = []
+
+    if (id.endsWith("-problemas")) {
+      const profession = id.replace("-problemas", "")
+      const problems = PROBLEMS[profession] || []
+      for (const problem of problems) {
+        for (const city of CITIES) {
+          urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
+        }
       }
-    }
-  } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
-    const prefix = id.startsWith("precio-") ? "precio-" : "presupuesto-"
-    const profession = id.replace(prefix, "")
-    for (const city of citySlugs) {
-      urls.push(`${baseUrl}/${prefix}${profession}/${city}`)
-    }
-  } else {
-    let profession = ""
-    let modifier = ""
-
-    for (const p of PROFESSION_SLUGS) {
-      if (id === p) {
-        profession = p
-        break
+    } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
+      const prefix = id.startsWith("precio-") ? "precio-" : "presupuesto-"
+      const profession = id.replace(prefix, "")
+      for (const city of CITIES) {
+        urls.push(`${baseUrl}/${prefix}${profession}/${city}`)
       }
-      for (const mod of MODIFIERS) {
-        if (mod && id === `${p}${mod}`) {
+    } else {
+      let profession = ""
+      let modifier = ""
+
+      for (const p of PROFESSION_SLUGS) {
+        if (id === p) {
           profession = p
-          modifier = mod
           break
         }
+        for (const mod of MODIFIERS) {
+          if (mod && id === `${p}${mod}`) {
+            profession = p
+            modifier = mod
+            break
+          }
+        }
+        if (profession) break
       }
-      if (profession) break
-    }
 
-    if (profession) {
-      for (const city of citySlugs) {
-        if (modifier) {
-          urls.push(`${baseUrl}/${profession}${modifier}/${city}`)
-        } else {
-          urls.push(`${baseUrl}/${profession}/${city}`)
+      if (profession) {
+        for (const city of CITIES) {
+          if (modifier) {
+            urls.push(`${baseUrl}/${profession}${modifier}/${city}`)
+          } else {
+            urls.push(`${baseUrl}/${profession}/${city}`)
+          }
         }
       }
     }
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+
+    for (const url of urls) {
+      xml += `  <url>\n`
+      xml += `    <loc>${url}</loc>\n`
+      xml += `    <lastmod>${date}</lastmod>\n`
+      xml += `    <changefreq>weekly</changefreq>\n`
+      xml += `    <priority>0.8</priority>\n`
+      xml += `  </url>\n`
+    }
+
+    xml += "</urlset>"
+
+    return new NextResponse(xml, {
+      headers: {
+        "Content-Type": "application/xml",
+        "Cache-Control": "public, max-age=86400",
+      },
+    })
+  } catch (error) {
+    // Return empty sitemap on error instead of crashing
+    const xml =
+      '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>'
+    return new NextResponse(xml, {
+      headers: {
+        "Content-Type": "application/xml",
+      },
+    })
   }
-
-  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-
-  for (const url of urls) {
-    xml += `  <url>\n`
-    xml += `    <loc>${url}</loc>\n`
-    xml += `    <lastmod>${date}</lastmod>\n`
-    xml += `    <changefreq>weekly</changefreq>\n`
-    xml += `    <priority>0.8</priority>\n`
-    xml += `  </url>\n`
-  }
-
-  xml += "</urlset>"
-
-  return new NextResponse(xml, {
-    headers: {
-      "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=86400",
-    },
-  })
 }
