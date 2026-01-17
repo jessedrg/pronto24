@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server"
 
 export const dynamic = "force-dynamic"
+export const runtime = "nodejs"
 
 const CITIES = [
-  // Catalunya - Barcelona (80+ cities)
+  // Catalunya - Barcelona
   "barcelona",
   "hospitalet-llobregat",
   "badalona",
@@ -106,7 +107,7 @@ const CITIES = [
   "cervera",
   "tremp",
   "vielha",
-  // Madrid (60+ cities)
+  // Madrid
   "madrid",
   "mostoles",
   "alcala-henares",
@@ -135,13 +136,7 @@ const CITIES = [
   "el-escorial",
   "torrelodones",
   "galapagar",
-  "guadarrama",
-  "brunete",
-  "villaviciosa-odon",
-  "navalcarnero",
-  "chinchon",
-  "san-martin-vega",
-  // Andalucia - Malaga (50+ cities)
+  // Andalucia - Malaga
   "malaga",
   "marbella",
   "mijas",
@@ -375,7 +370,7 @@ const CITIES = [
   "manacor",
   "llucmajor",
   "alcudia",
-  "pollença",
+  "pollenca",
   "soller",
   "andratx",
   "magaluf",
@@ -435,18 +430,18 @@ const CITIES = [
   "torrelavega",
   "castro-urdiales",
   "laredo",
-  "santoña",
+  "santona",
   "noja",
   "comillas",
   "san-vicente-barquera",
   // Navarra
   "pamplona",
   "tudela",
-  "barañain",
+  "baranain",
   "burlada",
   "estella-lizarra",
   // La Rioja
-  "logroño",
+  "logrono",
   "calahorra",
   "arnedo",
   "haro",
@@ -531,7 +526,7 @@ const PROBLEMS: Record<string, string[]> = {
     "limpieza-tuberias",
     "poceria",
     "fosa-septica",
-    "bañera-atascada",
+    "banera-atascada",
   ],
   calderas: [
     "sin-agua-caliente",
@@ -549,83 +544,91 @@ const PROBLEMS: Record<string, string[]> = {
 
 const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
-export async function GET(request: Request, { params }: { params: Promise<{ slug: string[] }> }) {
-  const { slug } = await params
-  const baseUrl = "https://rapidfix.es"
-  const date = new Date().toISOString().split("T")[0]
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+  try {
+    const { slug } = await params
+    const baseUrl = "https://rapidfix.es"
+    const date = new Date().toISOString().split("T")[0]
 
-  const rawId = slug.join("/")
-  const id = rawId.endsWith(".xml") ? rawId.slice(0, -4) : rawId
+    const id = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
+    const urls: string[] = []
 
-  const urls: string[] = []
-
-  if (id.endsWith("-problemas")) {
-    const profession = id.replace("-problemas", "")
-    const problems = PROBLEMS[profession] || []
-    for (const problem of problems) {
-      for (const city of CITIES) {
-        urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
+    // Problems sitemap
+    if (id.endsWith("-problemas")) {
+      const profession = id.replace("-problemas", "")
+      const problems = PROBLEMS[profession] || []
+      for (const problem of problems) {
+        for (const city of CITIES) {
+          urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}`)
+        }
       }
     }
-  } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
-    const prefix = id.startsWith("precio-") ? "precio-" : "presupuesto-"
-    const profession = id.replace(prefix, "")
-    if (PROFESSIONS.includes(profession)) {
-      for (const city of CITIES) {
-        urls.push(`${baseUrl}/${prefix}${profession}/${city}`)
+    // Prefix sitemaps (precio-, presupuesto-)
+    else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
+      const prefix = id.startsWith("precio-") ? "precio" : "presupuesto"
+      const profession = id.replace(`${prefix}-`, "")
+      if (PROFESSIONS.includes(profession)) {
+        for (const city of CITIES) {
+          urls.push(`${baseUrl}/${prefix}-${profession}/${city}`)
+        }
       }
     }
-  } else {
-    let foundProfession = ""
-    let foundModifier = ""
+    // Profession + modifier sitemaps
+    else {
+      let foundProfession = ""
+      let foundModifier = ""
 
-    // First check if it's just a profession name
-    if (PROFESSIONS.includes(id)) {
-      foundProfession = id
-      foundModifier = ""
-    } else {
-      // Check profession + modifier combinations
-      for (const prof of PROFESSIONS) {
-        for (const mod of MODIFIERS) {
-          if (mod && id === `${prof}${mod}`) {
-            foundProfession = prof
-            foundModifier = mod
-            break
+      // Check if it's just a profession
+      if (PROFESSIONS.includes(id)) {
+        foundProfession = id
+        foundModifier = ""
+      } else {
+        // Check profession + modifier
+        for (const prof of PROFESSIONS) {
+          for (const mod of MODIFIERS) {
+            if (mod && id === `${prof}${mod}`) {
+              foundProfession = prof
+              foundModifier = mod
+              break
+            }
+          }
+          if (foundProfession) break
+        }
+      }
+
+      if (foundProfession) {
+        for (const city of CITIES) {
+          if (foundModifier) {
+            urls.push(`${baseUrl}/${foundProfession}${foundModifier}/${city}`)
+          } else {
+            urls.push(`${baseUrl}/${foundProfession}/${city}`)
           }
         }
-        if (foundProfession) break
       }
     }
 
-    if (foundProfession) {
-      for (const city of CITIES) {
-        if (foundModifier) {
-          urls.push(`${baseUrl}/${foundProfession}${foundModifier}/${city}`)
-        } else {
-          urls.push(`${baseUrl}/${foundProfession}/${city}`)
-        }
-      }
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for (const url of urls) {
+      xml += `  <url>\n    <loc>${url}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`
     }
+    xml += "</urlset>"
+
+    return new NextResponse(xml, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/xml; charset=utf-8",
+        "Cache-Control": "public, max-age=86400",
+      },
+    })
+  } catch (error) {
+    console.error("Sitemap error:", error)
+    return new NextResponse(
+      '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>',
+      {
+        status: 200,
+        headers: { "Content-Type": "application/xml; charset=utf-8" },
+      },
+    )
   }
-
-  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-
-  for (const url of urls) {
-    xml += `  <url>\n`
-    xml += `    <loc>${url}</loc>\n`
-    xml += `    <lastmod>${date}</lastmod>\n`
-    xml += `    <changefreq>weekly</changefreq>\n`
-    xml += `    <priority>0.8</priority>\n`
-    xml += `  </url>\n`
-  }
-
-  xml += "</urlset>"
-
-  return new NextResponse(xml, {
-    headers: {
-      "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=86400",
-    },
-  })
 }
