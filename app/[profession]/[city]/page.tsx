@@ -79,18 +79,36 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   if (modifier) {
-    const { modifierText } = getModifierMeta(modifier)
+    const { modifierText, isUrgent } = getModifierMeta(modifier)
+
+    const urgencyText = isUrgent ? "Llegamos en 10 MIN. Disponible AHORA." : "Presupuesto SIN compromiso."
+
+    const priceText =
+      modifier === "economico" || modifier === "barato"
+        ? "Precios desde 39€. Sin sorpresas."
+        : "Precios justos y transparentes."
+
     return {
-      title: `${profession.name} ${modifierText} en ${cityName} - 24h Urgencias | Rapidfix`,
-      description: `${profession.name} ${modifierText.toLowerCase()} en ${cityName}. Llegamos en 10 minutos. Servicio 24 horas, profesionales certificados. Llama ahora al 711 267 223.`,
-      keywords: `${profession.id} ${modifier} ${cityName}, ${profession.id} ${cityName}, ${profession.id} urgente ${cityName}`,
+      title: `${profession.name} ${modifierText} en ${cityName} | 10 Min | 711 267 223`,
+      description: `${profession.name} ${modifierText.toLowerCase()} en ${cityName}. ${urgencyText} ${priceText} Profesionales certificados 24/7. Llama GRATIS: 711 267 223`,
+      keywords: `${profession.id} ${modifier} ${cityName}, ${profession.id} ${cityName}, ${profession.id} urgente ${cityName}, ${profession.id} barato ${cityName}, ${profession.id} 24 horas ${cityName}`,
+      openGraph: {
+        title: `${profession.name} ${modifierText} en ${cityName} - Llegamos en 10 min`,
+        description: `Servicio de ${profession.name.toLowerCase()} ${modifierText.toLowerCase()} en ${cityName}. Disponibles 24/7. Llama: 711 267 223`,
+        type: "website",
+      },
     }
   }
 
   return {
-    title: `${profession.name} en ${cityName} - 24h Urgencias | Rapidfix`,
-    description: `${profession.name} urgente en ${cityName}. Llegamos en 10 minutos. Servicio 24 horas, profesionales certificados. Llama ahora al 711 267 223.`,
-    keywords: `${profession.id} ${cityName}, ${profession.id} urgente ${cityName}, ${profession.id} 24 horas ${cityName}`,
+    title: `${profession.name} en ${cityName} | Urgencias 24h | 711 267 223`,
+    description: `${profession.name} profesional en ${cityName}. Llegamos en 10 MIN. Servicio 24h los 365 dias. Presupuesto GRATIS sin compromiso. Llama ahora: 711 267 223`,
+    keywords: `${profession.id} ${cityName}, ${profession.id} urgente ${cityName}, ${profession.id} 24 horas ${cityName}, ${profession.id} economico ${cityName}, ${profession.id} barato ${cityName}`,
+    openGraph: {
+      title: `${profession.name} en ${cityName} - Servicio Urgente 24h`,
+      description: `Servicio de ${profession.name.toLowerCase()} en ${cityName}. Profesionales certificados, llegamos en 10 minutos. Llama: 711 267 223`,
+      type: "website",
+    },
   }
 }
 

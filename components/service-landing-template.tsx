@@ -379,7 +379,7 @@ export function ServiceLandingTemplate({
               <div className="relative max-w-sm sm:max-w-md mx-auto lg:max-w-none">
                 <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
-                    src={`/professional-team.png?height=600&width=480&query=professional ${profession.id} worker`}
+                    src="/professional-service-technician-worker-with-tools-.jpg"
                     alt={`${profession.name} profesional en ${cityName}`}
                     fill
                     className="object-cover"
