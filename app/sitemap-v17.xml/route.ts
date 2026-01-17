@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
 export const dynamic = "force-dynamic"
-export const runtime = "nodejs"
+export const revalidate = 0
 
 const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 const MODIFIERS = [
@@ -31,7 +31,6 @@ export async function GET() {
 
   const sitemaps: string[] = []
 
-  // Sitemaps for each profession + modifier
   for (const prof of PROFESSIONS) {
     for (const mod of MODIFIERS) {
       const id = mod ? `${prof}${mod}` : prof
@@ -39,13 +38,11 @@ export async function GET() {
     }
   }
 
-  // Sitemaps for precio- and presupuesto-
   for (const prof of PROFESSIONS) {
     sitemaps.push(`${baseUrl}/sitemap-files/precio-${prof}.xml`)
     sitemaps.push(`${baseUrl}/sitemap-files/presupuesto-${prof}.xml`)
   }
 
-  // Sitemaps for problems
   for (const prof of PROFESSIONS) {
     sitemaps.push(`${baseUrl}/sitemap-files/${prof}-problemas.xml`)
   }
@@ -59,6 +56,11 @@ export async function GET() {
 
   return new NextResponse(xml, {
     status: 200,
-    headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=86400" },
+    headers: {
+      "Content-Type": "application/xml; charset=utf-8",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    },
   })
 }
