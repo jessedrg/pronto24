@@ -510,7 +510,7 @@ const PROBLEMS: Record<string, string[]> = {
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
-    const baseUrl = "https://rapidfix.es"
+    const baseUrl = "https://www.rapidfix.es"
     const date = new Date().toISOString().split("T")[0]
     const id = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
 
