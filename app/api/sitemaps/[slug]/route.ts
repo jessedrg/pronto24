@@ -6,7 +6,6 @@ export const runtime = "nodejs"
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
 const CITIES = [
-  // Catalunya - Barcelona
   "barcelona",
   "hospitalet-llobregat",
   "badalona",
@@ -71,7 +70,6 @@ const CITIES = [
   "torredembarra",
   "cunit",
   "cubelles",
-  // Catalunya - Girona
   "girona",
   "figueres",
   "olot",
@@ -89,7 +87,6 @@ const CITIES = [
   "tossa-mar",
   "begur",
   "pals",
-  // Catalunya - Tarragona
   "tarragona",
   "reus",
   "tortosa",
@@ -99,7 +96,6 @@ const CITIES = [
   "amposta",
   "vila-seca",
   "miami-platja",
-  // Catalunya - Lleida
   "lleida",
   "balaguer",
   "tarrega",
@@ -109,7 +105,6 @@ const CITIES = [
   "cervera",
   "tremp",
   "vielha",
-  // Madrid
   "madrid",
   "mostoles",
   "alcala-henares",
@@ -138,7 +133,6 @@ const CITIES = [
   "el-escorial",
   "torrelodones",
   "galapagar",
-  // Andalucia - Malaga
   "malaga",
   "marbella",
   "mijas",
@@ -168,7 +162,6 @@ const CITIES = [
   "torrox",
   "competa",
   "frigiliana",
-  // Andalucia - Sevilla
   "sevilla",
   "dos-hermanas",
   "alcala-guadaira",
@@ -186,7 +179,6 @@ const CITIES = [
   "moron-frontera",
   "osuna",
   "marchena",
-  // Andalucia - Granada
   "granada",
   "motril",
   "armilla",
@@ -202,7 +194,6 @@ const CITIES = [
   "la-herradura",
   "orgiva",
   "lanjaron",
-  // Andalucia - Cordoba
   "cordoba",
   "lucena",
   "puente-genil",
@@ -212,7 +203,6 @@ const CITIES = [
   "palma-rio",
   "baena",
   "pozoblanco",
-  // Andalucia - Cadiz
   "cadiz",
   "jerez-frontera",
   "algeciras",
@@ -226,7 +216,6 @@ const CITIES = [
   "arcos-frontera",
   "tarifa",
   "conil-frontera",
-  // Andalucia - Almeria
   "almeria",
   "el-ejido",
   "roquetas-mar",
@@ -237,7 +226,6 @@ const CITIES = [
   "mojacar",
   "garrucha",
   "carboneras",
-  // Andalucia - Huelva
   "huelva",
   "lepe",
   "almonte",
@@ -246,7 +234,6 @@ const CITIES = [
   "moguer",
   "punta-umbria",
   "matalascanas",
-  // Andalucia - Jaen
   "jaen",
   "linares",
   "andujar",
@@ -254,7 +241,6 @@ const CITIES = [
   "baeza",
   "martos",
   "alcala-real",
-  // Valencia
   "valencia",
   "torrent",
   "gandia",
@@ -275,7 +261,6 @@ const CITIES = [
   "benidorm",
   "cullera",
   "sueca",
-  // Alicante
   "alicante",
   "elche",
   "torrevieja",
@@ -291,7 +276,6 @@ const CITIES = [
   "alfaz-pi",
   "la-nucia",
   "villajoyosa",
-  // Castellon
   "castellon-plana",
   "vila-real",
   "burriana",
@@ -301,7 +285,6 @@ const CITIES = [
   "benicassim",
   "oropesa-mar",
   "peniscola",
-  // Pais Vasco
   "bilbao",
   "barakaldo",
   "getxo",
@@ -321,7 +304,6 @@ const CITIES = [
   "tolosa",
   "vitoria-gasteiz",
   "llodio",
-  // Galicia
   "a-coruna",
   "santiago-compostela",
   "ferrol",
@@ -339,7 +321,6 @@ const CITIES = [
   "ourense",
   "lugo",
   "monforte-lemos",
-  // Murcia
   "murcia",
   "cartagena",
   "lorca",
@@ -354,7 +335,6 @@ const CITIES = [
   "los-alcazares",
   "la-manga",
   "archena",
-  // Aragon
   "zaragoza",
   "calatayud",
   "utebo",
@@ -365,7 +345,6 @@ const CITIES = [
   "jaca",
   "teruel",
   "alcaniz",
-  // Baleares
   "palma-mallorca",
   "calvia",
   "inca",
@@ -383,7 +362,6 @@ const CITIES = [
   "santa-eulalia-riu",
   "mahon",
   "ciutadella",
-  // Canarias
   "las-palmas-gran-canaria",
   "telde",
   "arucas",
@@ -398,7 +376,6 @@ const CITIES = [
   "los-cristianos",
   "playa-americas",
   "costa-adeje",
-  // Castilla y Leon
   "valladolid",
   "burgos",
   "salamanca",
@@ -409,7 +386,6 @@ const CITIES = [
   "avila",
   "soria",
   "ponferrada",
-  // Castilla-La Mancha
   "toledo",
   "albacete",
   "ciudad-real",
@@ -418,7 +394,6 @@ const CITIES = [
   "talavera-reina",
   "puertollano",
   "tomelloso",
-  // Asturias
   "oviedo",
   "gijon",
   "aviles",
@@ -427,7 +402,6 @@ const CITIES = [
   "llanes",
   "ribadesella",
   "cangas-onis",
-  // Cantabria
   "santander",
   "torrelavega",
   "castro-urdiales",
@@ -436,18 +410,15 @@ const CITIES = [
   "noja",
   "comillas",
   "san-vicente-barquera",
-  // Navarra
   "pamplona",
   "tudela",
   "baranain",
   "burlada",
   "estella-lizarra",
-  // La Rioja
   "logrono",
   "calahorra",
   "arnedo",
   "haro",
-  // Extremadura
   "badajoz",
   "caceres",
   "merida",
@@ -537,12 +508,17 @@ const PROBLEMS: Record<string, string[]> = {
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+  console.log("[v0] API Sitemap route called")
+
   try {
     const { slug } = await params
+    console.log("[v0] Sitemap slug received:", slug)
+
     const baseUrl = "https://rapidfix.es"
     const date = new Date().toISOString().split("T")[0]
-
     const id = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
+    console.log("[v0] Parsed sitemap id:", id)
+
     const urls: string[] = []
 
     if (id.endsWith("-problemas")) {
@@ -592,6 +568,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       }
     }
 
+    console.log("[v0] Generated", urls.length, "URLs for sitemap", id)
+
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for (const url of urls) {
@@ -604,7 +582,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=86400" },
     })
   } catch (error) {
-    console.error("Sitemap error:", error)
+    console.error("[v0] Sitemap error:", error)
     return new NextResponse(
       '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>',
       { status: 200, headers: { "Content-Type": "application/xml; charset=utf-8" } },
