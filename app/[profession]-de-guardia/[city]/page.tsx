@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { UrgencyBanner } from "@/components/urgency-banner"
@@ -9,12 +10,15 @@ import { PROFESSIONS, getCityDisplayName } from "@/lib/seo-data"
 export const dynamicParams = true
 export const revalidate = 604800
 
+const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
+
 interface PageProps {
   params: Promise<{ profession: string; city: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { profession: professionId, city: citySlug } = await params
+  if (!VALID_PROFESSIONS.includes(professionId)) return { title: "No encontrado" }
   const profession = PROFESSIONS.find((p) => p.id === professionId)
   const cityName = getCityDisplayName(citySlug)
   if (!profession) {
@@ -32,8 +36,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Page({ params }: PageProps) {
   const { profession: professionId, city: citySlug } = await params
+  if (!VALID_PROFESSIONS.includes(professionId)) notFound()
   const profession = PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
-
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <UrgencyBanner />
