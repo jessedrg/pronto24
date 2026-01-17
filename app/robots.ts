@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/admin/"],
+      disallow: ["/api/", "/admin/", "/0x/"],
     },
-    sitemap: "https://rapidfix.es/sitemap-v10.xml",
+    sitemap: "https://rapidfix.es/sitemap-v15.xml",
   }
 }

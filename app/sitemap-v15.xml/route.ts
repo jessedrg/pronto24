@@ -35,19 +35,19 @@ export async function GET() {
   for (const prof of PROFESSIONS) {
     for (const mod of MODIFIERS) {
       const id = mod ? `${prof}${mod}` : prof
-      sitemaps.push(`${baseUrl}/sitemaps/${id}.xml`)
+      sitemaps.push(`${baseUrl}/sitemap-files/${id}.xml`)
     }
   }
 
   // Sitemaps for precio- and presupuesto-
   for (const prof of PROFESSIONS) {
-    sitemaps.push(`${baseUrl}/sitemaps/precio-${prof}.xml`)
-    sitemaps.push(`${baseUrl}/sitemaps/presupuesto-${prof}.xml`)
+    sitemaps.push(`${baseUrl}/sitemap-files/precio-${prof}.xml`)
+    sitemaps.push(`${baseUrl}/sitemap-files/presupuesto-${prof}.xml`)
   }
 
   // Sitemaps for problems
   for (const prof of PROFESSIONS) {
-    sitemaps.push(`${baseUrl}/sitemaps/${prof}-problemas.xml`)
+    sitemaps.push(`${baseUrl}/sitemap-files/${prof}-problemas.xml`)
   }
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { UrgencyBanner } from "@/components/urgency-banner"
@@ -12,7 +12,7 @@ export const revalidate = 604800
 
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
-const RESERVED_PATHS = ["sitemaps", "api", "problema", "precio", "presupuesto"]
+const RESERVED_PATHS = ["sitemap-files", "api", "problema", "precio", "presupuesto"]
 
 const KNOWN_MODIFIERS = [
   "urgente",
@@ -98,7 +98,8 @@ export default async function ProfessionCityPage({ params }: PageProps) {
   const { profession: rawProfession, city: citySlug } = await params
 
   if (RESERVED_PATHS.includes(rawProfession)) {
-    notFound()
+    // Let the actual route handler process this
+    redirect(`/${rawProfession}/${citySlug}`)
   }
 
   const { professionId, modifier } = parseProfessionAndModifier(rawProfession)
