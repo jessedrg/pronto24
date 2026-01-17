@@ -554,3 +554,5 @@ export function ServiceLandingTemplate({
     </div>
   )
 }
+
+export default ServiceLandingTemplate
