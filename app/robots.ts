@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/admin/", "/0x/"],
     },
-    sitemap: "https://www.pronto24.xyz/sitemap-v20.xml",
+    sitemap: "https://www.pronto24.xyz/sitemap-v21.xml",
   }
 }
