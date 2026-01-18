@@ -4,6 +4,9 @@ import { VALID_PROFESSIONS, CITIES, MODIFIERS, PROBLEMS, type Profession } from 
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
+// Max 50,000 URLs per sitemap (Google limit)
+const MAX_URLS_PER_SITEMAP = 45000 // Leave margin
+
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
@@ -13,10 +16,34 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
 
     const urls: string[] = []
 
-    if (id.endsWith("-problemas")) {
+    // Handle chunked problemas sitemaps: electricista-problemas-1, electricista-problemas-2, etc.
+    const problemasMatch = id.match(/^(.+)-problemas-(\d+)$/)
+    if (problemasMatch) {
+      const profession = problemasMatch[1] as Profession
+      const chunkIndex = parseInt(problemasMatch[2], 10) - 1 // 1-indexed to 0-indexed
+      const problems = PROBLEMS[profession] || []
+      
+      // Calculate which problems go in this chunk
+      const urlsPerProblem = CITIES.length
+      const problemsPerChunk = Math.floor(MAX_URLS_PER_SITEMAP / urlsPerProblem)
+      const startProblem = chunkIndex * problemsPerChunk
+      const endProblem = Math.min(startProblem + problemsPerChunk, problems.length)
+      
+      for (let i = startProblem; i < endProblem; i++) {
+        const problem = problems[i]
+        for (const city of CITIES) {
+          urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}/`)
+        }
+      }
+    } else if (id.endsWith("-problemas")) {
+      // Legacy: if no chunk number, return first chunk only
       const profession = id.replace("-problemas", "") as Profession
       const problems = PROBLEMS[profession] || []
-      for (const problem of problems) {
+      const urlsPerProblem = CITIES.length
+      const problemsPerChunk = Math.floor(MAX_URLS_PER_SITEMAP / urlsPerProblem)
+      
+      for (let i = 0; i < Math.min(problemsPerChunk, problems.length); i++) {
+        const problem = problems[i]
         for (const city of CITIES) {
           urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}/`)
         }

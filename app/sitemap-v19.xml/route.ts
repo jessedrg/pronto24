@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server"
-import { VALID_PROFESSIONS, MODIFIERS } from "@/lib/sitemap-data"
+import { VALID_PROFESSIONS, MODIFIERS, PROBLEMS, CITIES } from "@/lib/sitemap-data"
 
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
 const BASE_URL = "https://www.pronto24.xyz"
+const MAX_URLS_PER_SITEMAP = 45000
 
 export async function GET() {
   const date = new Date().toISOString().split("T")[0]
@@ -25,9 +26,17 @@ export async function GET() {
     sitemaps.push(`${BASE_URL}/sitemap-files/presupuesto-${profession}.xml`)
   }
 
-  // Sitemaps for problems
+  // Sitemaps for problems - CHUNKED to respect 50k limit
+  const urlsPerProblem = CITIES.length // 8,118
+  const problemsPerChunk = Math.floor(MAX_URLS_PER_SITEMAP / urlsPerProblem) // ~5
+
   for (const profession of VALID_PROFESSIONS) {
-    sitemaps.push(`${BASE_URL}/sitemap-files/${profession}-problemas.xml`)
+    const problems = PROBLEMS[profession] || []
+    const numChunks = Math.ceil(problems.length / problemsPerChunk)
+    
+    for (let i = 1; i <= numChunks; i++) {
+      sitemaps.push(`${BASE_URL}/sitemap-files/${profession}-problemas-${i}.xml`)
+    }
   }
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
