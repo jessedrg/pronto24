@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server"
 import { VALID_PROFESSIONS, MODIFIERS, PROBLEMS, CITIES } from "@/lib/sitemap-data"
 
-export const dynamic = "force-static"
-export const revalidate = 86400 // Cache for 24 hours
-export const runtime = "edge" // Faster cold starts
+export const dynamic = "force-dynamic"
+export const runtime = "nodejs"
 
 const BASE_URL = "https://www.pronto24.xyz"
 const MAX_URLS_PER_SITEMAP = 45000
