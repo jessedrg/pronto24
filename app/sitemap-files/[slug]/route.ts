@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server"
 import { VALID_PROFESSIONS, CITIES, MODIFIERS, PROBLEMS, type Profession } from "@/lib/sitemap-data"
 
-export const dynamic = "force-dynamic"
-export const runtime = "nodejs"
+export const dynamic = "force-static"
+export const revalidate = 86400 // Cache for 24 hours
+export const runtime = "edge" // Faster cold starts
 
 // Max 50,000 URLs per sitemap (Google limit)
 const MAX_URLS_PER_SITEMAP = 45000 // Leave margin
@@ -87,12 +88,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       }
     }
 
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    for (const url of urls) {
-      xml += `  <url>\n    <loc>${url}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`
-    }
-    xml += "</urlset>"
+    // Optimized XML generation using array join (faster than string concatenation)
+    const xmlParts = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      ...urls.map(url => `<url><loc>${url}</loc><lastmod>${date}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`),
+      '</urlset>'
+    ]
+    const xml = xmlParts.join('\n')
 
     return new NextResponse(xml, {
       status: 200,
