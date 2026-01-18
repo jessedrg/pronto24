@@ -1,32 +1,10 @@
 import { NextResponse } from "next/server"
+import { VALID_PROFESSIONS, MODIFIERS } from "@/lib/sitemap-data"
 
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
 const BASE_URL = "https://www.pronto24.xyz"
-
-const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
-
-const MODIFIERS = [
-  "",
-  "-urgente",
-  "-24-horas",
-  "-economico",
-  "-barato",
-  "-a-domicilio",
-  "-cerca-de-mi",
-  "-de-guardia",
-  "-nocturno",
-  "-festivos",
-  "-rapido",
-  "-ahora",
-  "-hoy",
-  "-profesional",
-  "-de-confianza",
-  "-con-garantia",
-  "-mismo-dia",
-  "-fin-de-semana",
-]
 
 export async function GET() {
   const date = new Date().toISOString().split("T")[0]
@@ -34,7 +12,7 @@ export async function GET() {
   const sitemaps: string[] = []
 
   // Sitemaps for each profession + modifier
-  for (const profession of PROFESSIONS) {
+  for (const profession of VALID_PROFESSIONS) {
     for (const modifier of MODIFIERS) {
       const id = modifier ? `${profession}${modifier}` : profession
       sitemaps.push(`${BASE_URL}/sitemap-files/${id}.xml`)
@@ -42,13 +20,13 @@ export async function GET() {
   }
 
   // Sitemaps for price/budget prefixes
-  for (const profession of PROFESSIONS) {
+  for (const profession of VALID_PROFESSIONS) {
     sitemaps.push(`${BASE_URL}/sitemap-files/precio-${profession}.xml`)
     sitemaps.push(`${BASE_URL}/sitemap-files/presupuesto-${profession}.xml`)
   }
 
   // Sitemaps for problems
-  for (const profession of PROFESSIONS) {
+  for (const profession of VALID_PROFESSIONS) {
     sitemaps.push(`${BASE_URL}/sitemap-files/${profession}-problemas.xml`)
   }
 

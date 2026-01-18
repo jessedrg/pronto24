@@ -1,48 +1,175 @@
-# rapidfix.es - Plataforma de Generación de Leads para Servicios Express
+# Pronto24 - Plataforma de Servicios Urgentes con SEO Programático
 
-## 🚀 Características
+## 🚀 Características Principales
 
-- ✅ Landing page optimizada para conversión
-- ✅ 6 páginas de servicios individuales (SEO optimizado)
-- ✅ Sistema automatizado de distribución de leads
-- ✅ Integración WhatsApp/Telegram para partners
-- ✅ Panel de administración completo
-- ✅ Página de partners con garantía 45 días
-- ✅ Sitemap y robots.txt para SEO
-- ✅ Diseño minimalista en blanco y negro
-- ✅ Notificaciones en tiempo real
-- ✅ Formularios de alta conversión
+- ✅ **SEO Programático Masivo**: +2 millones de URLs únicas generadas dinámicamente
+- ✅ **8,118 municipios de España**: Cobertura completa de todo el territorio nacional
+- ✅ **47 modificadores de alta intención**: Keywords que capturan búsquedas urgentes
+- ✅ **5 profesiones**: Electricista, Fontanero, Cerrajero, Desatascos, Calderas
+- ✅ **Sistema de sitemaps chunkeados**: Evita límites de Vercel (19MB)
+- ✅ **Renderizado dinámico con Next.js 14**: Páginas generadas bajo demanda
+- ✅ **Metadata SEO dinámica**: Title, description y keywords únicos por página
 
-## 📁 Estructura del Proyecto
+---
 
-\`\`\`
-rapidfix.es/
+## 🧠 Arquitectura del Sistema SEO Programático
+
+### Cómo Funciona
+
+El sistema genera **millones de páginas únicas** combinando:
+
+```
+[profesión] + [modificador] + [ciudad] = URL única con contenido personalizado
+```
+
+**Ejemplo de URLs generadas:**
+- `/electricista/madrid/` → Electricista en Madrid
+- `/electricista-urgente/barcelona/` → Electricista Urgente en Barcelona  
+- `/fontanero-24-horas/valencia/` → Fontanero 24 Horas en Valencia
+- `/problema/cerrajero/puerta-bloqueada/sevilla/` → Problema específico
+
+### Cálculo de URLs Totales
+
+```
+Profesiones:     5
+Modificadores:  47 (incluyendo base sin modificador)
+Ciudades:    8,118
+Problemas:     ~70 (14 por profesión)
+
+URLs de profesión+ciudad:     5 × 47 × 8,118 = 1,907,730
+URLs de problemas:            5 × 14 × 8,118 =   568,260
+URLs precio/presupuesto:      5 × 2 × 8,118  =    81,180
+                              ─────────────────────────────
+Total aproximado:                            ~2,557,170 URLs
+```
+
+---
+
+## 📁 Estructura del Sistema
+
+```
+pronto24/
 ├── app/
-│   ├── page.tsx                 # Landing principal
-│   ├── desatascos/page.tsx      # Página servicio desatascos
-│   ├── electricista/page.tsx    # Página servicio electricista
-│   ├── fontanero/page.tsx       # Página servicio fontanero
-│   ├── cerrajero/page.tsx       # Página servicio cerrajero
-│   ├── calderas/page.tsx        # Página servicio calderas
-│   ├── persianas/page.tsx       # Página servicio persianas
-│   ├── partners/page.tsx        # Página hazte partner
-│   ├── admin/page.tsx           # Panel administración
-│   ├── api/
-│   │   ├── leads/route.ts       # API creación leads
-│   │   └── leads/respond/route.ts # Webhook respuestas
-│   ├── sitemap.ts               # Sitemap dinámico
-│   └── robots.ts                # Robots.txt
+│   ├── [profession]/[city]/page.tsx      # Páginas dinámicas profesión+ciudad
+│   ├── problema/[profession]/[problem]/[city]/page.tsx  # Páginas de problemas
+│   ├── sitemap-v19.xml/route.ts          # Índice de sitemaps
+│   ├── sitemap-files/[slug]/route.ts     # Generador de sitemaps individuales
+│   └── robots.ts                          # Configuración robots.txt
+├── lib/
+│   └── sitemap-data.ts                   # 🔑 FUENTE ÚNICA DE DATOS
+│       ├── VALID_PROFESSIONS (5)
+│       ├── MODIFIERS (47)
+│       ├── PROBLEMS (70)
+│       └── CITIES (8,118)
 ├── components/
-│   ├── hero.tsx                 # Hero principal
-│   ├── services.tsx             # Grid de servicios
-│   ├── lead-form.tsx            # Formulario leads
-│   ├── live-activity.tsx        # Notificaciones tiempo real
-│   ├── cta-floating.tsx         # CTA flotante
-│   ├── partner-*.tsx            # Componentes partners
-│   └── service-*.tsx            # Componentes servicios
-└── SETUP_AUTOMATIZACION.md      # Guía configuración
+│   └── service-landing-template.tsx      # Template reutilizable
+└── scripts/
+    └── generate-cities.js                # Script para regenerar ciudades desde CSV
+```
 
-\`\`\`
+---
+
+## 🔄 Flujo de Renderizado de Páginas
+
+```
+1. Usuario busca "fontanero urgente valencia"
+                    ↓
+2. Google indexa /fontanero-urgente/valencia/
+                    ↓
+3. Next.js recibe la request
+                    ↓
+4. [profession]/[city]/page.tsx parsea los params:
+   - profession: "fontanero-urgente" → fontanero + modificador "-urgente"
+   - city: "valencia"
+                    ↓
+5. generateMetadata() crea SEO dinámico:
+   - Title: "Fontanero Urgente en Valencia | 10 Min | 711 267 223"
+   - Description: "Fontanero urgente en Valencia. Llegamos en 10 MIN..."
+   - Keywords: "fontanero urgente valencia, fontanero valencia..."
+                    ↓
+6. ServiceLandingTemplate renderiza contenido personalizado
+                    ↓
+7. Usuario ve página optimizada con CTA de conversión
+```
+
+---
+
+## 🗺️ Sistema de Sitemaps
+
+### Problema Resuelto
+Vercel tiene un límite de **19MB para páginas ISR**. Un sitemap con +2M URLs superaría fácilmente ese límite.
+
+### Solución: Sitemaps Chunkeados
+
+```
+robots.txt → sitemap-v19.xml (índice)
+                    ↓
+            ┌───────┴───────┐
+            ↓               ↓
+    sitemap-files/     sitemap-files/
+    electricista.xml   electricista-urgente.xml
+    (8,118 URLs)       (8,118 URLs)
+            ↓               ↓
+    ... (47 × 5 = 235 sitemaps de profesiones)
+    ... (5 sitemaps de problemas)
+    ... (10 sitemaps de precio/presupuesto)
+```
+
+**Total: ~250 sitemaps individuales**, cada uno con ~8,118 URLs máximo.
+
+---
+
+## 🎯 Modificadores de Alta Intención
+
+Los modificadores capturan diferentes intenciones de búsqueda:
+
+| Categoría | Ejemplos | Intención |
+|-----------|----------|-----------|
+| **Urgencia** | -urgente, -24-horas, -ahora, -emergencia | 🔴 Máxima conversión |
+| **Precio** | -economico, -barato, -mejor-precio | 💰 Sensible al precio |
+| **Disponibilidad** | -nocturno, -festivos, -fin-de-semana | ⏰ Fuera de horario |
+| **Confianza** | -profesional, -certificado, -con-garantia | ✅ Busca calidad |
+| **Combos** | -urgente-24h, -barato-urgente | 🎯 Alta conversión |
+
+---
+
+## 🏙️ Cobertura Geográfica
+
+**8,118 municipios de España** importados desde el registro oficial del INE:
+
+- Todas las capitales de provincia
+- Todos los municipios >1,000 habitantes  
+- Pueblos y localidades menores
+- Cobertura 100% del territorio nacional
+
+**Fuente de datos:** `Municipis_d'Espanya_20260118.csv`
+
+---
+
+## 🛠️ Cómo Regenerar Ciudades
+
+Si necesitas actualizar la lista de municipios:
+
+```bash
+# 1. Actualiza el CSV con nuevos datos
+# 2. Ejecuta el script generador
+node scripts/generate-cities.js
+
+# Esto regenera lib/sitemap-data.ts con las nuevas ciudades
+```
+
+---
+
+## 📊 Métricas SEO
+
+| Métrica | Valor |
+|---------|-------|
+| URLs indexables | ~2,557,170 |
+| Municipios cubiertos | 8,118 |
+| Profesiones | 5 |
+| Modificadores | 47 |
+| Problemas específicos | ~70 |
+| Sitemaps generados | ~250 |
 
 ## 🛠️ Instalación
 
