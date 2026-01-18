@@ -131,7 +131,7 @@ function KPICard({
 }) {
   const colors = {
     green: "border-green-500/30 bg-green-500/5",
-    orange: "border-[#FF4D00]/30 bg-[#FF4D00]/5",
+    orange: "border-[#00B8A9]/30 bg-[#00B8A9]/5",
     zinc: "border-zinc-700 bg-zinc-800/30",
     blue: "border-blue-500/30 bg-blue-500/5",
     yellow: "border-yellow-500/30 bg-yellow-500/5",
@@ -141,7 +141,7 @@ function KPICard({
 
   const textColors = {
     green: "text-green-500",
-    orange: "text-[#FF4D00]",
+    orange: "text-[#00B8A9]",
     zinc: "text-zinc-100",
     blue: "text-blue-500",
     yellow: "text-yellow-500",
@@ -222,7 +222,7 @@ function PartnerDetailModal({
 
         <div className="p-3 sm:p-4 border-b border-zinc-800 flex items-center justify-between shrink-0">
           <div>
-            <h3 className="text-xs sm:text-sm font-bold tracking-wider text-[#FF4D00] flex items-center gap-2">
+            <h3 className="text-xs sm:text-sm font-bold tracking-wider text-[#00B8A9] flex items-center gap-2">
               <UserCheck className="w-4 h-4" />
               {partner.name}
             </h3>
@@ -292,7 +292,7 @@ function PartnerDetailModal({
                         <span>{serviceEmojis[lead.service] || "📋"}</span>
                         <span className="text-sm font-medium">{lead.name || "Sin nombre"}</span>
                         {lead.lead_price > 0 && (
-                          <span className="text-xs font-bold text-[#FF4D00]">{lead.lead_price}€</span>
+                          <span className="text-xs font-bold text-[#00B8A9]">{lead.lead_price}€</span>
                         )}
                       </div>
                       <span className="text-xs text-zinc-500">{lead.city}</span>
@@ -383,7 +383,7 @@ function PartnerModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
       <div className="w-full max-w-md border border-zinc-700 bg-zinc-900 p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-sm font-bold tracking-wider text-[#FF4D00]">
+          <h3 className="text-sm font-bold tracking-wider text-[#00B8A9]">
             {partner ? "EDITAR PARTNER" : "NUEVO PARTNER"}
           </h3>
           <button onClick={onClose} className="p-1 hover:bg-zinc-800 transition-colors">
@@ -399,7 +399,7 @@ function PartnerModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Juan García"
-              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
             />
           </div>
 
@@ -410,7 +410,7 @@ function PartnerModal({
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="612345678"
-              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
             />
           </div>
 
@@ -423,7 +423,7 @@ function PartnerModal({
                   onClick={() => toggleService(service)}
                   className={`px-3 py-1.5 text-xs font-medium border transition-colors capitalize ${
                     services.includes(service)
-                      ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                      ? "border-[#00B8A9] bg-[#00B8A9]/20 text-[#00B8A9]"
                       : "border-zinc-700 hover:border-zinc-600"
                   }`}
                 >
@@ -440,7 +440,7 @@ function PartnerModal({
               value={cities}
               onChange={(e) => setCities(e.target.value)}
               placeholder="Barcelona, Madrid, Valencia"
-              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
             />
           </div>
         </div>
@@ -448,7 +448,7 @@ function PartnerModal({
         <button
           onClick={handleSave}
           disabled={saving || !name || !phone || services.length === 0}
-          className="w-full mt-6 py-3 bg-[#FF4D00] text-black font-bold tracking-wider hover:bg-[#FF4D00]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-6 py-3 bg-[#00B8A9] text-black font-bold tracking-wider hover:bg-[#00B8A9]/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? "GUARDANDO..." : partner ? "ACTUALIZAR" : "CREAR PARTNER"}
         </button>
@@ -566,7 +566,7 @@ function LeadModal({
         <div className="w-12 h-1 bg-zinc-700 rounded-full mx-auto mb-4 sm:hidden" />
 
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-bold tracking-wider text-[#FF4D00]">NUEVO LEAD</h3>
+          <h3 className="text-sm font-bold tracking-wider text-[#00B8A9]">NUEVO LEAD</h3>
           <button onClick={onClose} className="p-1 hover:bg-zinc-800 transition-colors">
             <X className="w-5 h-5 text-zinc-400" />
           </button>
@@ -578,7 +578,7 @@ function LeadModal({
             onClick={() => setMode("manual")}
             className={`flex-1 py-2 text-xs font-medium border transition-colors flex items-center justify-center gap-2 ${
               mode === "manual"
-                ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                ? "border-[#00B8A9] bg-[#00B8A9]/20 text-[#00B8A9]"
                 : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
             }`}
           >
@@ -589,7 +589,7 @@ function LeadModal({
             onClick={() => setMode("screenshot")}
             className={`flex-1 py-2 text-xs font-medium border transition-colors flex items-center justify-center gap-2 ${
               mode === "screenshot"
-                ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                ? "border-[#00B8A9] bg-[#00B8A9]/20 text-[#00B8A9]"
                 : "border-zinc-700 hover:border-zinc-600 text-zinc-400"
             }`}
           >
@@ -608,12 +608,12 @@ function LeadModal({
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               className={`border-2 border-dashed p-4 text-center cursor-pointer transition-all ${
-                dragOver ? "border-[#FF4D00] bg-[#FF4D00]/10" : "border-zinc-700 hover:border-zinc-600"
+                dragOver ? "border-[#00B8A9] bg-[#00B8A9]/10" : "border-zinc-700 hover:border-zinc-600"
               }`}
             >
               {analyzing ? (
                 <div className="flex flex-col items-center gap-2 py-4">
-                  <Loader2 className="w-8 h-8 text-[#FF4D00] animate-spin" />
+                  <Loader2 className="w-8 h-8 text-[#00B8A9] animate-spin" />
                   <p className="text-sm text-zinc-400">Analizando con IA...</p>
                 </div>
               ) : previewUrl ? (
@@ -645,7 +645,7 @@ function LeadModal({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Juan"
-                className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
               />
             </div>
             <div>
@@ -655,7 +655,7 @@ function LeadModal({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="612345678"
-                className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
               />
             </div>
           </div>
@@ -667,7 +667,7 @@ function LeadModal({
               value={city}
               onChange={(e) => setCity(e.target.value)}
               placeholder="Barcelona"
-              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
             />
           </div>
 
@@ -680,7 +680,7 @@ function LeadModal({
                   onClick={() => setService(s)}
                   className={`px-3 py-1.5 text-xs font-medium border transition-colors capitalize ${
                     service === s
-                      ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                      ? "border-[#00B8A9] bg-[#00B8A9]/20 text-[#00B8A9]"
                       : "border-zinc-700 hover:border-zinc-600"
                   }`}
                 >
@@ -697,7 +697,7 @@ function LeadModal({
               onChange={(e) => setProblem(e.target.value)}
               placeholder="Describe el problema..."
               rows={2}
-              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none resize-none"
+              className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none resize-none"
             />
           </div>
         </div>
@@ -705,7 +705,7 @@ function LeadModal({
         <button
           onClick={handleSave}
           disabled={saving || analyzing || !name || !phone || !service}
-          className="w-full mt-6 py-3 bg-[#FF4D00] text-black font-bold tracking-wider hover:bg-[#FF4D00]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-6 py-3 bg-[#00B8A9] text-black font-bold tracking-wider hover:bg-[#00B8A9]/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? "GUARDANDO..." : "CREAR LEAD"}
         </button>
@@ -1008,7 +1008,7 @@ function LeadDetailModal({
                 className="p-1.5 sm:p-2 border border-zinc-700 hover:border-zinc-600 transition-colors"
                 title="Editar"
               >
-                <Edit2 className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF4D00]" />
+                <Edit2 className="w-3 h-3 sm:w-4 sm:h-4 text-[#00B8A9]" />
               </button>
             )}
             {!editing && (
@@ -1024,7 +1024,7 @@ function LeadDetailModal({
             onClick={() => setActiveModalTab("info")}
             className={`flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${
               activeModalTab === "info"
-                ? "text-[#FF4D00] border-b-2 border-[#FF4D00] bg-[#FF4D00]/5"
+                ? "text-[#00B8A9] border-b-2 border-[#00B8A9] bg-[#00B8A9]/5"
                 : "text-zinc-500 hover:text-zinc-300"
             }`}
           >
@@ -1035,7 +1035,7 @@ function LeadDetailModal({
             onClick={() => setActiveModalTab("sequence")}
             className={`flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${
               activeModalTab === "sequence"
-                ? "text-[#FF4D00] border-b-2 border-[#FF4D00] bg-[#FF4D00]/5"
+                ? "text-[#00B8A9] border-b-2 border-[#00B8A9] bg-[#00B8A9]/5"
                 : "text-zinc-500 hover:text-zinc-300"
             }`}
           >
@@ -1053,7 +1053,7 @@ function LeadDetailModal({
 
         {activeModalTab === "info" && (
           <div className="p-4 space-y-4 overflow-y-auto flex-1">
-            <div className="grid grid-cols-2 gap-3 p-3 border border-[#FF4D00]/30 bg-[#FF4D00]/5">
+            <div className="grid grid-cols-2 gap-3 p-3 border border-[#00B8A9]/30 bg-[#00B8A9]/5">
               <div>
                 <label className="text-[10px] text-zinc-500 block mb-1">COMISION ESTIMADA</label>
                 {editing ? (
@@ -1062,12 +1062,12 @@ function LeadDetailModal({
                       type="number"
                       value={commission}
                       onChange={(e) => setCommission(Number(e.target.value))}
-                      className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-[#FF4D00] outline-none"
+                      className="w-full bg-zinc-800 border border-zinc-700 px-2 py-1.5 text-sm focus:border-[#00B8A9] outline-none"
                     />
-                    <span className="text-[#FF4D00]">€</span>
+                    <span className="text-[#00B8A9]">€</span>
                   </div>
                 ) : (
-                  <p className="text-lg font-bold text-[#FF4D00]">{commission || 0}€</p>
+                  <p className="text-lg font-bold text-[#00B8A9]">{commission || 0}€</p>
                 )}
               </div>
               <div>
@@ -1096,7 +1096,7 @@ function LeadDetailModal({
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
                   />
                 ) : (
                   <p className="text-sm font-medium">{name || "Sin nombre"}</p>
@@ -1109,7 +1109,7 @@ function LeadDetailModal({
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm font-mono focus:border-[#FF4D00] outline-none"
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm font-mono focus:border-[#00B8A9] outline-none"
                   />
                 ) : (
                   <p className="text-sm font-mono">{phone}</p>
@@ -1125,7 +1125,7 @@ function LeadDetailModal({
                     type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
                   />
                 ) : (
                   <p className="text-sm">{city || "No especificada"}</p>
@@ -1141,7 +1141,7 @@ function LeadDetailModal({
                         onClick={() => setService(s)}
                         className={`px-2 py-1 text-xs border transition-colors capitalize ${
                           service === s
-                            ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                            ? "border-[#00B8A9] bg-[#00B8A9]/20 text-[#00B8A9]"
                             : "border-zinc-700 hover:border-zinc-600"
                         }`}
                       >
@@ -1162,7 +1162,7 @@ function LeadDetailModal({
                   value={problem}
                   onChange={(e) => setProblem(e.target.value)}
                   rows={3}
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none resize-none"
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none resize-none"
                 />
               ) : (
                 <p className="text-sm text-zinc-300 bg-zinc-800/50 p-3 border border-zinc-800">
@@ -1182,7 +1182,7 @@ function LeadDetailModal({
                   onChange={(e) => setNotes(e.target.value)}
                   rows={3}
                   placeholder="Añade notas sobre este lead..."
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none resize-none"
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none resize-none"
                 />
               ) : (
                 <p className="text-sm text-zinc-300 bg-zinc-800/50 p-3 border border-zinc-800 min-h-[60px]">
@@ -1199,10 +1199,10 @@ function LeadDetailModal({
                     type="number"
                     value={leadPrice}
                     onChange={(e) => setLeadPrice(Number(e.target.value))}
-                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
                   />
                 ) : (
-                  <p className="text-sm font-bold text-[#FF4D00]">{leadPrice ? `${leadPrice}€` : "Sin precio"}</p>
+                  <p className="text-sm font-bold text-[#00B8A9]">{leadPrice ? `${leadPrice}€` : "Sin precio"}</p>
                 )}
               </div>
               <div>
@@ -1212,7 +1212,7 @@ function LeadDetailModal({
                     type="datetime-local"
                     value={serviceTime || ""}
                     onChange={(e) => setServiceTime(e.target.value)}
-                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
                   />
                 ) : (
                   <p className="text-sm">{serviceTime ? formatDate(serviceTime) : "No programado"}</p>
@@ -1226,7 +1226,7 @@ function LeadDetailModal({
                 <select
                   value={status}
                   onChange={(e) => handleStatusChangeLocal(e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
                 >
                   <option value="pending">Pendiente</option>
                   <option value="contacted">Contactado</option>
@@ -1242,7 +1242,7 @@ function LeadDetailModal({
                 <select
                   value={partnerId || ""}
                   onChange={(e) => handlePartnerAssignLocal(e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
                 >
                   <option value="">Sin asignar</option>
                   {partners.map((p) => (
@@ -1316,7 +1316,7 @@ function LeadDetailModal({
                   key={index}
                   className={`p-3 border transition-all ${
                     isCurrentStatus
-                      ? "border-[#FF4D00] bg-[#FF4D00]/10"
+                      ? "border-[#00B8A9] bg-[#00B8A9]/10"
                       : isPastStatus
                         ? "border-zinc-700 bg-zinc-800/30 opacity-50"
                         : "border-zinc-700 bg-zinc-800/50 hover:border-zinc-600"
@@ -1327,7 +1327,7 @@ function LeadDetailModal({
                       <span
                         className={`w-5 h-5 flex items-center justify-center text-xs font-bold rounded-full ${
                           isCurrentStatus
-                            ? "bg-[#FF4D00] text-black"
+                            ? "bg-[#00B8A9] text-black"
                             : isPastStatus
                               ? "bg-zinc-600 text-zinc-400"
                               : "bg-zinc-700 text-zinc-300"
@@ -1335,12 +1335,12 @@ function LeadDetailModal({
                       >
                         {seq.step}
                       </span>
-                      <span className={`text-xs font-medium ${isCurrentStatus ? "text-[#FF4D00]" : "text-zinc-400"}`}>
+                      <span className={`text-xs font-medium ${isCurrentStatus ? "text-[#00B8A9]" : "text-zinc-400"}`}>
                         {seq.title}
                       </span>
                     </div>
                     {isCurrentStatus && (
-                      <span className="text-[10px] px-2 py-0.5 bg-[#FF4D00]/20 text-[#FF4D00] border border-[#FF4D00]/30">
+                      <span className="text-[10px] px-2 py-0.5 bg-[#00B8A9]/20 text-[#00B8A9] border border-[#00B8A9]/30">
                         ACTUAL
                       </span>
                     )}
@@ -1471,8 +1471,8 @@ function LeadCard({
         </div>
         {partner && (
           <div className="flex items-center gap-1.5 text-[10px] sm:text-xs mt-1">
-            <UserCheck className="w-3 h-3 text-[#FF4D00] shrink-0" />
-            <span className="text-[#FF4D00] truncate">{partner.name}</span>
+            <UserCheck className="w-3 h-3 text-[#00B8A9] shrink-0" />
+            <span className="text-[#00B8A9] truncate">{partner.name}</span>
           </div>
         )}
       </div>
@@ -1480,7 +1480,7 @@ function LeadCard({
       <div className="grid grid-cols-2 gap-1 mb-2 text-[9px] sm:text-[10px]">
         <div className="bg-zinc-800/50 p-1 text-center border border-zinc-700/50">
           <p className="text-zinc-500 uppercase">Comisión</p>
-          <p className={`font-bold ${commission > 0 ? "text-[#FF4D00]" : "text-zinc-600"}`}>{commission}€</p>
+          <p className={`font-bold ${commission > 0 ? "text-[#00B8A9]" : "text-zinc-600"}`}>{commission}€</p>
         </div>
         <div className="bg-zinc-800/50 p-1 text-center border border-zinc-700/50">
           <p className="text-zinc-500 uppercase">Cobrado</p>
@@ -1524,7 +1524,7 @@ function LeadCard({
             onPartnerAssign(lead.id, e.target.value)
           }}
           onClick={(e) => e.stopPropagation()}
-          className="flex-1 min-w-0 bg-zinc-800 border border-zinc-700 px-1 py-1 text-[10px] focus:border-[#FF4D00] outline-none truncate"
+          className="flex-1 min-w-0 bg-zinc-800 border border-zinc-700 px-1 py-1 text-[10px] focus:border-[#00B8A9] outline-none truncate"
         >
           <option value="">Asignar partner</option>
           {partners.map((p) => (
@@ -1663,7 +1663,7 @@ function PipelineColumn({
       {/* Scrollable content area */}
       <div
         className={`flex-1 overflow-y-auto p-2 space-y-2 min-h-0 transition-all ${
-          isDragOver ? "ring-2 ring-[#FF4D00]/50 ring-inset" : ""
+          isDragOver ? "ring-2 ring-[#00B8A9]/50 ring-inset" : ""
         }`}
       >
         {leads.map((lead) => (
@@ -1687,7 +1687,7 @@ function PipelineColumn({
           />
         ))}
         {leads.length === 0 && (
-          <p className={`text-xs text-zinc-600 text-center py-8 ${isDragOver ? "text-[#FF4D00]" : ""}`}>
+          <p className={`text-xs text-zinc-600 text-center py-8 ${isDragOver ? "text-[#00B8A9]" : ""}`}>
             {isDragOver ? "Soltar aquí" : `Sin ${label.toLowerCase()}`}
           </p>
         )}
@@ -2331,7 +2331,7 @@ ${lead.problem?.slice(0, 150)}
       <header className="border-b border-zinc-800 px-2 sm:px-4 lg:px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2 sm:gap-4">
           <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF4D00]" />
+            <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-[#00B8A9]" />
             <h1 className="text-xs sm:text-sm font-bold tracking-wider">
               <span className="hidden sm:inline">URGENCIAS</span> 24H
             </h1>
@@ -2362,7 +2362,7 @@ ${lead.problem?.slice(0, 150)}
 
           <div className="text-right hidden md:block">
             <p className="text-xs text-zinc-500">ACTIVO</p>
-            <p className="text-xs font-mono text-[#FF4D00]">
+            <p className="text-xs font-mono text-[#00B8A9]">
               {currentTime.toLocaleTimeString("es-ES", { hour12: false })}
             </p>
           </div>
@@ -2386,7 +2386,7 @@ ${lead.problem?.slice(0, 150)}
               key={key}
               onClick={() => handleDateFilter(key)}
               className={`w-full px-3 py-2 text-left text-xs hover:bg-zinc-800 ${
-                stats.dateRange === key ? "text-[#FF4D00]" : "text-zinc-300"
+                stats.dateRange === key ? "text-[#00B8A9]" : "text-zinc-300"
               }`}
             >
               {label}
@@ -2453,7 +2453,7 @@ ${lead.problem?.slice(0, 150)}
                 setShowTrashed(false)
               }}
               className={`text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
-                activeTab === "pipeline" ? "text-[#FF4D00]" : "text-zinc-500 hover:text-zinc-300"
+                activeTab === "pipeline" ? "text-[#00B8A9]" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
               Pipeline ({activeLeads.length})
@@ -2461,7 +2461,7 @@ ${lead.problem?.slice(0, 150)}
             <button
               onClick={() => setActiveTab("partners")}
               className={`text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
-                activeTab === "partners" ? "text-[#FF4D00]" : "text-zinc-500 hover:text-zinc-300"
+                activeTab === "partners" ? "text-[#00B8A9]" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
               Partners ({partnersList.length})
@@ -2470,7 +2470,7 @@ ${lead.problem?.slice(0, 150)}
             <button
               onClick={() => setActiveTab("config")}
               className={`text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
-                activeTab === "config" ? "text-[#FF4D00]" : "text-zinc-500 hover:text-zinc-300"
+                activeTab === "config" ? "text-[#00B8A9]" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
               Config
@@ -2482,7 +2482,7 @@ ${lead.problem?.slice(0, 150)}
               <select
                 value={serviceFilter}
                 onChange={(e) => setServiceFilter(e.target.value)}
-                className="bg-zinc-800 border border-zinc-700 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs focus:border-[#FF4D00] outline-none"
+                className="bg-zinc-800 border border-zinc-700 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs focus:border-[#00B8A9] outline-none"
               >
                 <option value="all">Todos</option>
                 <option value="fontanero">🔧</option>
@@ -2504,7 +2504,7 @@ ${lead.problem?.slice(0, 150)}
 
               <button
                 onClick={() => setKanbanExpanded(true)}
-                className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs border border-zinc-700 hover:border-[#FF4D00] transition-colors"
+                className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs border border-zinc-700 hover:border-[#00B8A9] transition-colors"
                 title="Maximizar kanban"
               >
                 <Maximize2 className="w-3 h-3" />
@@ -2512,7 +2512,7 @@ ${lead.problem?.slice(0, 150)}
 
               <button
                 onClick={() => setShowLeadModal(true)}
-                className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold bg-[#FF4D00] text-black"
+                className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold bg-[#00B8A9] text-black"
               >
                 <Plus className="w-3 h-3" />
                 <span className="hidden sm:inline">LEAD</span>
@@ -2538,7 +2538,7 @@ ${lead.problem?.slice(0, 150)}
                     key={s.key}
                     onClick={() => setMobileColumnIndex(i)}
                     className={`w-2 h-2 rounded-full transition-colors ${
-                      mobileColumnIndex === i ? "bg-[#FF4D00]" : "bg-zinc-700"
+                      mobileColumnIndex === i ? "bg-[#00B8A9]" : "bg-zinc-700"
                     }`}
                   />
                 ))}
@@ -2834,7 +2834,7 @@ ${lead.problem?.slice(0, 150)}
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowLeadModal(true)}
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs bg-[#FF4D00] text-white hover:bg-[#FF4D00]/90"
+                  className="flex items-center gap-1 px-3 py-1.5 text-xs bg-[#00B8A9] text-white hover:bg-[#00B8A9]/90"
                 >
                   <Plus className="w-3 h-3" />
                   Lead
@@ -3024,7 +3024,7 @@ ${lead.problem?.slice(0, 150)}
               <h3 className="text-xs font-bold text-zinc-400">PARTNERS</h3>
               <button
                 onClick={() => setShowPartnerModal(true)}
-                className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#FF4D00] text-black"
+                className="flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#00B8A9] text-black"
               >
                 <Plus className="w-3 h-3" />
                 NUEVO
@@ -3101,9 +3101,9 @@ ${lead.problem?.slice(0, 150)}
                             setEditingPartner(partner)
                             setShowPartnerModal(true)
                           }}
-                          className="p-1.5 border border-zinc-700 hover:border-[#FF4D00] transition-all"
+                          className="p-1.5 border border-zinc-700 hover:border-[#00B8A9] transition-all"
                         >
-                          <Edit2 className="w-3.5 h-3.5 text-[#FF4D00]" />
+                          <Edit2 className="w-3.5 h-3.5 text-[#00B8A9]" />
                         </button>
                         <button
                           onClick={(e) => {
@@ -3132,7 +3132,7 @@ ${lead.problem?.slice(0, 150)}
             <h3 className="text-sm font-bold text-zinc-400 mb-4">CONFIGURACIÓN TELÉFONOS</h3>
             {loadingPhoneConfig ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-6 h-6 animate-spin text-[#FF4D00]" />
+                <Loader2 className="w-6 h-6 animate-spin text-[#00B8A9]" />
                 <span className="ml-2 text-zinc-400">Cargando configuración...</span>
               </div>
             ) : (
@@ -3142,7 +3142,7 @@ ${lead.problem?.slice(0, 150)}
                   <select
                     value={activePhone}
                     onChange={(e) => setActivePhone(e.target.value)}
-                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                    className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
                   >
                     {phoneOptions.map((option) => (
                       <option key={option.id} value={option.id}>
@@ -3171,7 +3171,7 @@ ${lead.problem?.slice(0, 150)}
                           }}
                           className={`text-xs px-2 py-1 border transition-colors ${
                             option.id === activePhone
-                              ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                              ? "border-[#00B8A9] bg-[#00B8A9]/20 text-[#00B8A9]"
                               : "border-zinc-700 hover:border-zinc-600"
                           }`}
                         >
@@ -3185,7 +3185,7 @@ ${lead.problem?.slice(0, 150)}
                 <button
                   onClick={handleSavePhoneConfig}
                   disabled={savingPhone}
-                  className="w-full py-3 bg-[#FF4D00] text-black font-bold tracking-wider hover:bg-[#FF4D00]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 bg-[#00B8A9] text-black font-bold tracking-wider hover:bg-[#00B8A9]/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {savingPhone ? "GUARDANDO..." : "GUARDAR CONFIGURACIÓN"}
                 </button>

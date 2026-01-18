@@ -5,28 +5,25 @@ export const revalidate = 0
 
 const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 const MODIFIERS = [
-  "",
-  "-urgente",
-  "-24-horas",
-  "-economico",
-  "-barato",
-  "-a-domicilio",
-  "-cerca-de-mi",
-  "-de-guardia",
-  "-nocturno",
-  "-festivos",
-  "-rapido",
-  "-ahora",
-  "-hoy",
-  "-profesional",
-  "-de-confianza",
-  "-con-garantia",
-  "-mismo-dia",
-  "-fin-de-semana",
+  "", // base
+  // Alta urgencia (High Intent)
+  "-urgente", "-24-horas", "-ahora", "-hoy", "-rapido", "-inmediato", "-ya", "-emergencia", "-express", "-24h",
+  // Precio (High Commercial)
+  "-economico", "-barato", "-low-cost", "-precio", "-presupuesto", "-tarifa", "-mejor-precio",
+  // Disponibilidad
+  "-de-guardia", "-nocturno", "-festivos", "-fin-de-semana", "-mismo-dia", "-sabados", "-domingos",
+  // Ubicacion
+  "-cerca-de-mi", "-a-domicilio", "-zona", "-centro",
+  // Confianza
+  "-profesional", "-de-confianza", "-con-garantia", "-autorizados", "-certificado", "-oficial",
+  // Servicio
+  "-reparacion", "-instalacion", "-mantenimiento", "-revision", "-averias",
+  // Combinaciones alta conversion
+  "-urgente-24h", "-barato-urgente", "-rapido-economico",
 ]
 
 export async function GET() {
-  const baseUrl = "https://www.rapidfix.es"
+  const baseUrl = "https://www.pronto24.xyz"
   const date = new Date().toISOString().split("T")[0]
 
   const sitemaps: string[] = []

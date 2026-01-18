@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
-const BASE_URL = "https://www.rapidfix.es"
+const BASE_URL = "https://www.pronto24.xyz"
 
 const PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 

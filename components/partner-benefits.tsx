@@ -69,7 +69,7 @@ export function PartnerBenefits() {
                 1
               </div>
               <h4 className="font-bold">Únete al bot</h4>
-              <p className="text-sm text-foreground/60">Abre Telegram y únete a @rapidfix_leads_bot</p>
+              <p className="text-sm text-foreground/60">Abre Telegram y únete a @pronto24_leads_bot</p>
             </div>
             <div className="text-center space-y-3">
               <div className="bg-foreground text-background w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl font-bold">

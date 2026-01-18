@@ -23,7 +23,7 @@ interface PartnerNotificationData {
 export function createPartnerNotificationEmail(data: PartnerNotificationData): string {
   const { name, company, phone, email, service } = data
 
-  const whatsappUrl = `https://wa.me/34${phone.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${name}, soy de RapidFix. Vi que te interesa recibir clientes de ${service}. ¿Tienes un momento para hablar?`)}`
+  const whatsappUrl = `https://wa.me/34${phone.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${name}, soy de Pronto24. Vi que te interesa recibir clientes de ${service}. ¿Tienes un momento para hablar?`)}`
   const callUrl = `tel:+34${phone.replace(/\D/g, "")}`
 
   return `
@@ -37,7 +37,7 @@ export function createPartnerNotificationEmail(data: PartnerNotificationData): s
   <div style="max-width:500px;margin:0 auto;padding:20px;">
     
     <div style="background:#000;color:#fff;padding:20px;text-align:center;border-radius:12px 12px 0 0;">
-      <h1 style="margin:0;font-size:20px;font-weight:600;">RapidFix</h1>
+      <h1 style="margin:0;font-size:20px;font-weight:600;">Pronto24</h1>
       <p style="margin:8px 0 0;opacity:0.7;font-size:14px;">Nuevo Partner Interesado</p>
     </div>
     
@@ -80,7 +80,7 @@ export function createPartnerNotificationEmail(data: PartnerNotificationData): s
       </div>
       
       <div style="display:flex;gap:12px;">
-        <a href="${callUrl}" style="flex:1;display:block;background:#FF4D00;color:#fff;text-decoration:none;padding:14px;border-radius:8px;text-align:center;font-weight:600;font-size:15px;">
+        <a href="${callUrl}" style="flex:1;display:block;background:#00B8A9;color:#fff;text-decoration:none;padding:14px;border-radius:8px;text-align:center;font-weight:600;font-size:15px;">
           Llamar
         </a>
         <a href="${whatsappUrl}" style="flex:1;display:block;background:#25d366;color:#fff;text-decoration:none;padding:14px;border-radius:8px;text-align:center;font-weight:600;font-size:15px;">
@@ -102,7 +102,7 @@ export function createPartnerNotificationEmail(data: PartnerNotificationData): s
 export async function sendLeadEmail(data: LeadEmailData): Promise<{ success: boolean; error?: string }> {
   const { service, problem, phone, city, name, requestedDate, leadId } = data
 
-  const dashboardUrl = `https://rapidfix.es/0x/dashboard`
+  const dashboardUrl = `https://www.pronto24.xyz/0x/dashboard`
 
   const html = `
 <!DOCTYPE html>
@@ -115,7 +115,7 @@ export async function sendLeadEmail(data: LeadEmailData): Promise<{ success: boo
   <div style="max-width:400px;margin:0 auto;padding:40px 20px;">
     
     <div style="text-align:center;margin-bottom:32px;">
-      <h1 style="margin:0;font-size:24px;font-weight:700;color:#fff;letter-spacing:-0.5px;">RapidFix</h1>
+      <h1 style="margin:0;font-size:24px;font-weight:700;color:#fff;letter-spacing:-0.5px;">Pronto24</h1>
     </div>
     
     <div style="background:#111;border:1px solid #222;border-radius:16px;padding:32px;margin-bottom:24px;">
@@ -142,7 +142,7 @@ export async function sendLeadEmail(data: LeadEmailData): Promise<{ success: boo
               ? `
           <tr>
             <td style="padding:10px 0;color:#666;font-size:13px;">Cuándo</td>
-            <td style="padding:10px 0;text-align:right;font-weight:500;font-size:14px;color:#FF4D00;">${requestedDate}</td>
+            <td style="padding:10px 0;text-align:right;font-weight:500;font-size:14px;color:#00B8A9;">${requestedDate}</td>
           </tr>
           `
               : ""
@@ -172,7 +172,7 @@ export async function sendLeadEmail(data: LeadEmailData): Promise<{ success: boo
 
   try {
     const { error } = await resend.emails.send({
-      from: "RapidFix <leads@upnesttalent.com>",
+      from: "Pronto24 <leads@upnesttalent.com>",
       to: ["jesse@upnesttalent.com", "amulero11@gmail.com"],
       subject: `Nuevo Lead · ${service} · ${city}`,
       html,

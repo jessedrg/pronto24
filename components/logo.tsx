@@ -30,11 +30,11 @@ export function Logo({ variant = "default", size = "md", showText = true }: Logo
         xmlns="http://www.w3.org/2000/svg"
         className="flex-shrink-0"
       >
+        <circle cx="12" cy="12" r="10" fill="#00B8A9" />
         <path
-          d="M13 2L4 14H11L10 22L20 10H13L13 2Z"
-          fill="#FF4D00"
-          stroke="#FF4D00"
-          strokeWidth="1.5"
+          d="M12 6V12L15 15"
+          stroke="white"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -42,7 +42,7 @@ export function Logo({ variant = "default", size = "md", showText = true }: Logo
 
       {showText && (
         <span className={`font-bold ${text} ${textColor} tracking-tight`}>
-          rapid<span className="text-[#FF4D00]">fix</span>
+          pronto<span className="text-[#00B8A9]">24</span>
         </span>
       )}
     </div>

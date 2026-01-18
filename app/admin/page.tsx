@@ -2,7 +2,7 @@ import { Shield, Users, TrendingUp, DollarSign } from "lucide-react"
 import { Card } from "@/components/ui/card"
 
 export const metadata = {
-  title: "Panel Admin - rapidfix.es",
+  title: "Panel Admin - pronto24.xyz",
   description: "Panel de administración para gestionar leads y partners",
 }
 

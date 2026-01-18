@@ -15,18 +15,20 @@ const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos
 const RESERVED_PATHS = ["sitemap-files", "api", "problema", "precio", "presupuesto"]
 
 const KNOWN_MODIFIERS = [
-  "urgente",
-  "24-horas",
-  "economico",
-  "barato",
-  "a-domicilio",
-  "cerca-de-mi",
-  "de-guardia",
-  "nocturno",
-  "festivos",
-  "rapido",
-  "ahora",
-  "hoy",
+  // Alta urgencia (High Intent)
+  "urgente", "24-horas", "ahora", "hoy", "rapido", "inmediato", "ya", "emergencia", "express", "24h",
+  // Precio
+  "economico", "barato", "low-cost", "precio", "presupuesto", "tarifa", "mejor-precio", "asequible",
+  // Disponibilidad
+  "de-guardia", "nocturno", "festivos", "fin-de-semana", "mismo-dia", "sabados", "domingos", "madrugada",
+  // Ubicacion
+  "cerca-de-mi", "a-domicilio", "zona", "barrio", "centro",
+  // Confianza
+  "profesional", "de-confianza", "con-garantia", "autorizados", "certificado", "oficial", "titulado",
+  // Servicio
+  "reparacion", "instalacion", "mantenimiento", "revision", "averias",
+  // Combinaciones
+  "urgente-24h", "barato-urgente", "rapido-economico", "urgente-barato", "24h-economico",
 ] as const
 
 function parseProfessionAndModifier(rawProfession: string): {

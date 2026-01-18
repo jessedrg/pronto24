@@ -181,12 +181,12 @@ export function PartnersClient({ data }: { data: PartnersData }) {
           <div className="flex items-center gap-3 sm:gap-4">
             <button
               onClick={() => router.push("/0x/dashboard")}
-              className="p-2 border border-zinc-700 hover:border-[#FF4D00] hover:bg-[#FF4D00]/10 transition-all"
+              className="p-2 border border-zinc-700 hover:border-[#00B8A9] hover:bg-[#00B8A9]/10 transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 border border-[#FF4D00] flex items-center justify-center">
-              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF4D00]" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 border border-[#00B8A9] flex items-center justify-center">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#00B8A9]" />
             </div>
             <div>
               <h1 className="text-base sm:text-lg font-bold tracking-wider">PARTNERS</h1>
@@ -201,7 +201,7 @@ export function PartnersClient({ data }: { data: PartnersData }) {
                 <p className="text-zinc-500">activos</p>
               </div>
               <div className="text-center">
-                <p className="text-lg font-bold text-[#FF4D00]">{totalRevenue.toFixed(0)}€</p>
+                <p className="text-lg font-bold text-[#00B8A9]">{totalRevenue.toFixed(0)}€</p>
                 <p className="text-zinc-500">total</p>
               </div>
             </div>
@@ -219,14 +219,14 @@ export function PartnersClient({ data }: { data: PartnersData }) {
               placeholder="Buscar por nombre, teléfono, email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-zinc-900/50 border border-zinc-800 pl-10 pr-4 py-2 text-sm focus:border-[#FF4D00] outline-none"
+              className="w-full bg-zinc-900/50 border border-zinc-800 pl-10 pr-4 py-2 text-sm focus:border-[#00B8A9] outline-none"
             />
           </div>
           <div className="flex gap-2">
             <select
               value={filterService}
               onChange={(e) => setFilterService(e.target.value)}
-              className="bg-zinc-900/50 border border-zinc-800 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+              className="bg-zinc-900/50 border border-zinc-800 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
             >
               <option value="all">Todos los servicios</option>
               {allServices.map((s) => (
@@ -238,7 +238,7 @@ export function PartnersClient({ data }: { data: PartnersData }) {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="bg-zinc-900/50 border border-zinc-800 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+              className="bg-zinc-900/50 border border-zinc-800 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
             >
               <option value="all">Todos</option>
               <option value="active">Activos</option>
@@ -261,14 +261,14 @@ export function PartnersClient({ data }: { data: PartnersData }) {
                   key={partner.id}
                   onClick={() => setSelectedPartner(partner)}
                   className={`px-3 sm:px-4 py-3 hover:bg-zinc-800/20 transition-colors cursor-pointer ${
-                    selectedPartner?.id === partner.id ? "bg-zinc-800/30 border-l-2 border-l-[#FF4D00]" : ""
+                    selectedPartner?.id === partner.id ? "bg-zinc-800/30 border-l-2 border-l-[#00B8A9]" : ""
                   } ${!partner.active ? "opacity-60" : ""}`}
                 >
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-10 h-10 flex items-center justify-center text-lg font-bold ${
                         partner.isOwner
-                          ? "bg-[#FF4D00]/20 border border-[#FF4D00]/50 text-[#FF4D00]"
+                          ? "bg-[#00B8A9]/20 border border-[#00B8A9]/50 text-[#00B8A9]"
                           : "bg-zinc-800 border border-zinc-700"
                       }`}
                     >
@@ -278,7 +278,7 @@ export function PartnersClient({ data }: { data: PartnersData }) {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium text-sm truncate">{partner.name || "Sin nombre"}</span>
                         {partner.isOwner && (
-                          <span className="text-[10px] px-2 py-0.5 border border-[#FF4D00]/50 text-[#FF4D00] bg-[#FF4D00]/10">
+                          <span className="text-[10px] px-2 py-0.5 border border-[#00B8A9]/50 text-[#00B8A9] bg-[#00B8A9]/10">
                             OWNER
                           </span>
                         )}
@@ -297,7 +297,7 @@ export function PartnersClient({ data }: { data: PartnersData }) {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-[#FF4D00]">{Number(partner.total_spent || 0).toFixed(0)}€</p>
+                      <p className="text-sm font-bold text-[#00B8A9]">{Number(partner.total_spent || 0).toFixed(0)}€</p>
                       <p className="text-[10px] text-zinc-500">{partner.leads_bought || 0} leads</p>
                     </div>
                   </div>
@@ -348,7 +348,7 @@ export function PartnersClient({ data }: { data: PartnersData }) {
                     <div
                       className={`w-16 h-16 mx-auto mb-3 flex items-center justify-center text-2xl font-bold ${
                         selectedPartner.isOwner
-                          ? "bg-[#FF4D00]/20 border border-[#FF4D00]/50 text-[#FF4D00]"
+                          ? "bg-[#00B8A9]/20 border border-[#00B8A9]/50 text-[#00B8A9]"
                           : "bg-zinc-800 border border-zinc-700"
                       }`}
                     >
@@ -438,8 +438,8 @@ export function PartnersClient({ data }: { data: PartnersData }) {
                       <p className="text-[10px] text-zinc-500">LEADS COMPRADOS</p>
                     </div>
                     <div className="text-center p-3 bg-zinc-800/30 border border-zinc-800">
-                      <DollarSign className="w-5 h-5 mx-auto mb-1 text-[#FF4D00]" />
-                      <p className="text-xl font-bold text-[#FF4D00]">
+                      <DollarSign className="w-5 h-5 mx-auto mb-1 text-[#00B8A9]" />
+                      <p className="text-xl font-bold text-[#00B8A9]">
                         {Number(selectedPartner.total_spent || 0).toFixed(0)}€
                       </p>
                       <p className="text-[10px] text-zinc-500">TOTAL GASTADO</p>

@@ -375,7 +375,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
               <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
                 <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z" />
               </svg>
-              <span className="absolute -top-1 -right-1 bg-[#FF4D00] text-white text-[8px] font-bold rounded-full h-3.5 w-3.5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-[#00B8A9] text-white text-[8px] font-bold rounded-full h-3.5 w-3.5 flex items-center justify-center">
                 3
               </span>
             </div>
@@ -410,7 +410,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold text-sm">rapidfix.es</h3>
+                <h3 className="font-semibold text-sm">pronto24.xyz</h3>
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
                   <span className="text-xs text-neutral-500">Online ahora</span>

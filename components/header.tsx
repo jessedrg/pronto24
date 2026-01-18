@@ -39,16 +39,16 @@ export function Header() {
           {/* Logo + 24h badge */}
           <Link href="/" className="flex items-center gap-3">
             <Logo size="sm" />
-            <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-[#FF4D00]">
-              <span className="w-1.5 h-1.5 bg-[#FF4D00] rounded-full animate-pulse" />
+            <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-[#00B8A9]">
+              <span className="w-1.5 h-1.5 bg-[#00B8A9] rounded-full animate-pulse" />
               24h urgente
             </span>
           </Link>
 
           {/* Desktop Navigation - minimal */}
           <nav className="hidden md:flex items-center gap-8">
-            <span className="md:hidden flex items-center gap-1.5 text-xs font-medium text-[#FF4D00]">
-              <span className="w-1.5 h-1.5 bg-[#FF4D00] rounded-full animate-pulse" />
+            <span className="md:hidden flex items-center gap-1.5 text-xs font-medium text-[#00B8A9]">
+              <span className="w-1.5 h-1.5 bg-[#00B8A9] rounded-full animate-pulse" />
               24h
             </span>
             <Link href="/fontanero" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -84,8 +84,8 @@ export function Header() {
               <Phone className="w-3.5 h-3.5" />
               <span>Llamar</span>
             </a>
-            <span className="flex items-center gap-1.5 text-xs font-medium text-[#FF4D00]">
-              <span className="w-1.5 h-1.5 bg-[#FF4D00] rounded-full animate-pulse" />
+            <span className="flex items-center gap-1.5 text-xs font-medium text-[#00B8A9]">
+              <span className="w-1.5 h-1.5 bg-[#00B8A9] rounded-full animate-pulse" />
               24h
             </span>
             <button

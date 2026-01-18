@@ -84,7 +84,7 @@ export async function POST(req: Request) {
     max: pricing.estimatedJobValue.max - pricing.leadPrice,
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://rapidfix.es"
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.pronto24.xyz"
   const buyUrl = `${baseUrl}/api/stripe/buy-lead?lead_id=${leadId}&price=${pricing.leadPrice}&service=${service}`
 
   const message = `

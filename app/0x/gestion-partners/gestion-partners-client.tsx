@@ -75,7 +75,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
   const openWhatsAppPartner = (partner: Partner) => {
     const phone = partner.phone?.replace(/\D/g, "") || ""
     const phoneWithCountry = phone.startsWith("34") ? phone : `34${phone}`
-    const message = encodeURIComponent(`Hola ${partner.name || ""}! Soy de RapidFix. ¿Cómo va todo?`)
+    const message = encodeURIComponent(`Hola ${partner.name || ""}! Soy de Pronto24. ¿Cómo va todo?`)
     window.open(`https://wa.me/${phoneWithCountry}?text=${message}`, "_blank")
   }
 
@@ -230,7 +230,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
           <div className="w-full max-w-lg border border-zinc-700 bg-zinc-900 p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-sm font-bold tracking-wider text-[#FF4D00]">
+              <h3 className="text-sm font-bold tracking-wider text-[#00B8A9]">
                 {editingPartner ? "EDITAR PARTNER" : "CREAR PARTNER"}
               </h3>
               <button
@@ -254,7 +254,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                   placeholder="Juan García"
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
                 />
               </div>
 
@@ -266,7 +266,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
                   value={formData.phone}
                   onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
                   placeholder="612345678"
-                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#FF4D00] outline-none"
+                  className="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm focus:border-[#00B8A9] outline-none"
                 />
               </div>
 
@@ -281,7 +281,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
                       onClick={() => toggleService(service.id)}
                       className={`px-3 py-2 text-sm border transition-colors flex items-center gap-2 ${
                         formData.services.includes(service.id)
-                          ? "border-[#FF4D00] bg-[#FF4D00]/20 text-[#FF4D00]"
+                          ? "border-[#00B8A9] bg-[#00B8A9]/20 text-[#00B8A9]"
                           : "border-zinc-700 hover:border-zinc-600"
                       }`}
                     >
@@ -317,7 +317,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
             <button
               onClick={editingPartner ? handleUpdatePartner : handleCreatePartner}
               disabled={loading}
-              className="w-full mt-6 py-3 bg-[#FF4D00] text-black font-bold tracking-wider hover:bg-[#FF4D00]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-6 py-3 bg-[#00B8A9] text-black font-bold tracking-wider hover:bg-[#00B8A9]/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "GUARDANDO..." : editingPartner ? "ACTUALIZAR PARTNER" : "CREAR PARTNER"}
             </button>
@@ -335,8 +335,8 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 border border-[#FF4D00] flex items-center justify-center">
-              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF4D00]" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 border border-[#00B8A9] flex items-center justify-center">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#00B8A9]" />
             </div>
             <div>
               <h1 className="text-base sm:text-lg font-bold tracking-wider">GESTIÓN PARTNERS</h1>
@@ -346,7 +346,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#FF4D00] text-black font-bold text-sm hover:bg-[#FF4D00]/90 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[#00B8A9] text-black font-bold text-sm hover:bg-[#00B8A9]/90 transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">CREAR PARTNER</span>
@@ -406,7 +406,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
                       </span>
                       <span className="text-zinc-500">
                         Balance:{" "}
-                        <span className="text-[#FF4D00]">{Number(partner.balance_euros || 0).toFixed(0)}€</span>
+                        <span className="text-[#00B8A9]">{Number(partner.balance_euros || 0).toFixed(0)}€</span>
                       </span>
                     </div>
                   </div>
@@ -421,7 +421,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
                     </button>
                     <button
                       onClick={() => openEditModal(partner)}
-                      className="p-2 border border-zinc-700 hover:border-[#FF4D00] hover:bg-[#FF4D00]/10 transition-all"
+                      className="p-2 border border-zinc-700 hover:border-[#00B8A9] hover:bg-[#00B8A9]/10 transition-all"
                       title="Editar"
                     >
                       <Edit className="w-4 h-4 text-zinc-400" />
@@ -459,7 +459,7 @@ export function GestionPartnersClient({ partners: initialPartners }: { partners:
                 <p>No hay partners todavía</p>
                 <button
                   onClick={() => setShowCreateModal(true)}
-                  className="mt-4 px-4 py-2 border border-[#FF4D00] text-[#FF4D00] hover:bg-[#FF4D00]/10 transition-colors text-sm"
+                  className="mt-4 px-4 py-2 border border-[#00B8A9] text-[#00B8A9] hover:bg-[#00B8A9]/10 transition-colors text-sm"
                 >
                   Crear primer partner
                 </button>

@@ -10,13 +10,13 @@ import { UrgencyBanner } from "@/components/urgency-banner"
 import { AIChatWidget } from "@/components/ai-chat-widget"
 
 export const metadata: Metadata = {
-  title: "Fontanero Urgente 24h | rapidfix.es | Servicio en 30 Minutos",
+  title: "Fontanero Urgente 24h | pronto24.xyz | Servicio en 30 Minutos",
   description:
     "Fontanero urgente en toda España. Profesionales en 30 minutos. Fugas de agua, grifos, calderas, tuberías. Servicio 24/7. Presupuesto gratis.",
   keywords:
     "fontanero urgente, fontanero 24 horas, fuga de agua, reparación grifos, fontanero Madrid, fontanero Barcelona",
   openGraph: {
-    title: "Fontanero Urgente 24h | rapidfix.es",
+    title: "Fontanero Urgente 24h | pronto24.xyz",
     description: "Profesionales en 30 minutos. Presupuesto gratis sin compromiso.",
   },
 }

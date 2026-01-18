@@ -47,20 +47,20 @@ export function LoginForm() {
             <div className="w-3 h-3 rounded-full bg-red-500/80" />
             <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
             <div className="w-3 h-3 rounded-full bg-green-500/80" />
-            <span className="ml-4 text-xs text-zinc-500 font-mono">RAPIDFIX://CONTROL</span>
+            <span className="ml-4 text-xs text-zinc-500 font-mono">PRONTO24://CONTROL</span>
           </div>
 
           <div className="p-8">
             {/* Logo */}
             <div className="flex items-center justify-center mb-8">
               <div className="relative">
-                <div className="w-16 h-16 border-2 border-[#FF4D00] flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#FF4D00]" fill="currentColor">
+                <div className="w-16 h-16 border-2 border-[#00B8A9] flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#00B8A9]" fill="currentColor">
                     <path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" />
                   </svg>
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-[#FF4D00]" />
-                <div className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-[#FF4D00]" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-[#00B8A9]" />
+                <div className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-[#00B8A9]" />
               </div>
             </div>
 
@@ -76,7 +76,7 @@ export function LoginForm() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-700 px-4 py-3 text-zinc-100 font-mono focus:outline-none focus:border-[#FF4D00] transition-colors placeholder:text-zinc-600"
+                  className="w-full bg-zinc-900 border border-zinc-700 px-4 py-3 text-zinc-100 font-mono focus:outline-none focus:border-[#00B8A9] transition-colors placeholder:text-zinc-600"
                   placeholder="••••••••••••"
                   autoFocus
                 />
@@ -87,7 +87,7 @@ export function LoginForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#FF4D00] hover:bg-[#FF6B2C] text-black font-bold py-3 tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
+                className="w-full bg-[#00B8A9] hover:bg-[#FF6B2C] text-black font-bold py-3 tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
               >
                 <span className="relative z-10">{loading ? "VERIFICANDO..." : "ACCEDER"}</span>
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform" />

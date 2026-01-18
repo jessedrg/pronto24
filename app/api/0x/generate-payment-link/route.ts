@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL
         ? `https://${process.env.VERCEL_URL}`
-        : "https://www.rapidfix.es"
+        : "https://www.pronto24.xyz"
 
     // Create Stripe Checkout session
     const session = await stripe.checkout.sessions.create({

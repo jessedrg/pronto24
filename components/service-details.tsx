@@ -11,12 +11,12 @@ export function ServiceDetails({ features, benefits, cities }: ServiceDetailsPro
     <section className="py-16 md:py-24 px-4">
       <div className="max-w-6xl mx-auto space-y-16 md:space-y-20">
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 p-6 md:p-10 border border-zinc-700/50">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF4D00]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#FF4D00]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#00B8A9]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#00B8A9]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
 
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
-              <div className="inline-flex items-center gap-2 bg-[#FF4D00]/20 text-[#FF4D00] px-3 py-1 rounded-full text-sm font-medium mb-3">
+              <div className="inline-flex items-center gap-2 bg-[#00B8A9]/20 text-[#00B8A9] px-3 py-1 rounded-full text-sm font-medium mb-3">
                 <Zap className="h-4 w-4" />
                 Cobertura Express
               </div>
@@ -24,7 +24,7 @@ export function ServiceDetails({ features, benefits, cities }: ServiceDetailsPro
               <p className="text-zinc-400 text-base">Servicio de urgencias disponible 24 horas, 7 días a la semana</p>
             </div>
 
-            <div className="flex items-center gap-3 bg-[#FF4D00] text-white px-6 py-4 rounded-xl shadow-lg shadow-[#FF4D00]/25">
+            <div className="flex items-center gap-3 bg-[#00B8A9] text-white px-6 py-4 rounded-xl shadow-lg shadow-[#00B8A9]/25">
               <Clock className="h-8 w-8" />
               <div>
                 <p className="text-3xl md:text-4xl font-bold">10 min</p>

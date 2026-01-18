@@ -70,7 +70,7 @@ export function Footer() {
             <div className="space-y-3 text-background/80">
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span>info@rapidfix.es</span>
+                <span>info@pronto24.xyz</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
@@ -86,7 +86,7 @@ export function Footer() {
 
         <div className="border-t border-background/20 pt-8 space-y-3">
           <div className="text-center text-background/60 text-sm">
-            <p className="font-semibold">© 2025 rapidfix.es. Todos los derechos reservados.</p>
+            <p className="font-semibold">© 2025 pronto24.xyz. Todos los derechos reservados.</p>
             <p className="mt-2">
               Servicio profesional de emergencias disponible actualmente en Barcelona. Próximamente en más ciudades de
               España.
@@ -99,9 +99,9 @@ export function Footer() {
           </div>
           <div className="text-center text-background/40 text-xs pt-4 max-w-3xl mx-auto">
             <p>
-              rapidfix.es actúa como plataforma de conexión entre clientes y profesionales independientes. Toda la
+              pronto24.xyz actúa como plataforma de conexión entre clientes y profesionales independientes. Toda la
               responsabilidad sobre la calidad, garantías y ejecución de los servicios recae exclusivamente en el
-              profesional que realiza el trabajo. Los profesionales son autónomos y no empleados de rapidfix.es.
+              profesional que realiza el trabajo. Los profesionales son autónomos y no empleados de pronto24.xyz.
             </p>
           </div>
         </div>

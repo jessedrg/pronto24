@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next"
 import { PROFESSIONS, PROBLEMS, getAllCities } from "@/lib/seo-data"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://rapidfix.es"
+  const baseUrl = "https://pronto24.xyz"
   const currentDate = new Date()
   const cities = getAllCities()
 
@@ -54,7 +54,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  const modifiers = ["urgente", "24-horas", "economico", "barato"]
+  const modifiers = [
+    // Alta urgencia (most important for SEO)
+    "urgente", "24-horas", "ahora", "rapido", "emergencia",
+    // Precio (high commercial intent)
+    "economico", "barato", "precio", "presupuesto",
+    // Disponibilidad
+    "nocturno", "festivos", "fin-de-semana",
+    // Ubicacion
+    "cerca-de-mi", "a-domicilio",
+    // Confianza
+    "profesional", "con-garantia",
+  ]
 
   // Add profession + city pages
   for (const profession of PROFESSIONS) {
