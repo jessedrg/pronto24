@@ -25,6 +25,7 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import { getCityDisplayName, getCityProvince, getNearbyCities, PROBLEMS, PROFESSIONS } from "@/lib/seo-data"
+import { generateUniqueContent, generateTestimonials } from "@/lib/content-generator"
 
 const ICONS = {
   Zap,
@@ -266,26 +267,19 @@ export function ServiceLandingTemplate({
 
   const guarantees = getGuarantees()
 
-  const reviews = [
-    {
-      name: "María G.",
-      city: cityName,
-      text: `Excelente servicio. Llegaron muy rápido y solucionaron el problema enseguida. Muy profesionales.`,
-      time: "Hace 2 horas",
-    },
-    {
-      name: "Carlos P.",
-      city: nearbyCities[0] ? getCityDisplayName(nearbyCities[0]) : cityName,
-      text: `Servicio 10. Vinieron a las 11 de la noche y lo arreglaron todo. Muy recomendable.`,
-      time: "Hace 5 horas",
-    },
-    {
-      name: "Ana R.",
-      city: nearbyCities[1] ? getCityDisplayName(nearbyCities[1]) : cityName,
-      text: `Muy contentos con el servicio. Rápidos, limpios y profesionales. Volveremos a llamar seguro.`,
-      time: "Ayer",
-    },
-  ]
+  // Generar contenido único basado en hash de ciudad (determinístico)
+  const uniqueContent = actualCitySlug 
+    ? generateUniqueContent(actualCitySlug, cityName, profession.id, profession.name)
+    : null
+
+  // Reviews generados dinámicamente (únicos por ciudad)
+  const reviews = actualCitySlug 
+    ? generateTestimonials(actualCitySlug, cityName, profession.name)
+    : [
+        { name: "María G.", text: "Excelente servicio. Muy profesionales.", time: "Hace 2 horas", city: cityName },
+        { name: "Carlos P.", text: "Servicio 10. Muy recomendable.", time: "Hace 5 horas", city: cityName },
+        { name: "Ana R.", text: "Rápidos, limpios y profesionales.", time: "Ayer", city: cityName },
+      ]
 
   return (
     <div className="relative">
@@ -445,6 +439,73 @@ export function ServiceLandingTemplate({
           </div>
         </div>
       </section>
+
+      {/* Unique SEO Content Section - Generated dynamically per city */}
+      {uniqueContent && (
+        <section className="py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Left: Intro and stats */}
+              <div className="space-y-6">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                  {profession.name} en {cityName}, {uniqueContent.localInfo.region}
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  {uniqueContent.intro}
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-muted/50 border border-border">
+                    <div className="text-2xl font-bold text-[#FF6B35]">{uniqueContent.stats.servicesThisMonth}+</div>
+                    <div className="text-sm text-muted-foreground">servicios este mes</div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-muted/50 border border-border">
+                    <div className="text-2xl font-bold text-[#FF6B35]">{uniqueContent.stats.yearsExperience}</div>
+                    <div className="text-sm text-muted-foreground">años de experiencia</div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-muted/50 border border-border">
+                    <div className="text-2xl font-bold text-[#FF6B35]">{uniqueContent.stats.avgResponseTime} min</div>
+                    <div className="text-sm text-muted-foreground">tiempo respuesta</div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-muted/50 border border-border">
+                    <div className="text-2xl font-bold text-[#FF6B35]">{uniqueContent.stats.satisfactionRate}%</div>
+                    <div className="text-sm text-muted-foreground">clientes satisfechos</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right: Problems we solve */}
+              <div className="space-y-6">
+                <h3 className="text-xl font-bold text-foreground">
+                  Problemas que solucionamos en {cityName}
+                </h3>
+                <ul className="space-y-3">
+                  {uniqueContent.issues.map((issue, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
+                      <span className="text-muted-foreground capitalize">{issue}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="p-4 rounded-xl bg-[#FF6B35]/10 border border-[#FF6B35]/30">
+                  <p className="text-sm text-foreground font-medium">
+                    📍 Zona de servicio: {cityName} ({uniqueContent.localInfo.postalCodeExample}) y alrededores en {uniqueContent.localInfo.province}
+                  </p>
+                </div>
+                <p className="text-sm text-muted-foreground italic">
+                  {uniqueContent.guarantee}
+                </p>
+              </div>
+            </div>
+            
+            {/* Full SEO paragraph */}
+            <div className="mt-8 p-6 rounded-2xl bg-muted/30 border border-border">
+              <p className="text-muted-foreground leading-relaxed">
+                {uniqueContent.seoText}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Coverage - Show nearby cities */}
       {nearbyCities.length > 0 && (
