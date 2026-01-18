@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server"
 import { VALID_PROFESSIONS, CITIES, MODIFIERS, PROBLEMS, type Profession } from "@/lib/sitemap-data"
 
-export const dynamic = "force-static"
-export const revalidate = 86400 // Cache for 24 hours
-export const runtime = "edge" // Faster cold starts
+export const dynamic = "force-dynamic"
+export const runtime = "nodejs"
 
 // Max 50,000 URLs per sitemap (Google limit)
 const MAX_URLS_PER_SITEMAP = 45000 // Leave margin
