@@ -29,6 +29,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${problem.name} en ${cityName} - ${profession.name} Urgente | Rapidfix`,
     description: `${problem.description} en ${cityName}? Solucionamos ${problem.name.toLowerCase()} en 10 minutos. ${profession.namePlural} 24h. Llama: 711 267 223.`,
     keywords: `${problem.name.toLowerCase()} ${cityName}, ${profession.id} ${problem.id} ${cityName}, ${problem.id} urgente ${cityName}`,
+    alternates: {
+      canonical: `https://www.pronto24.xyz/problema/${professionId}/${problemId}/${citySlug}/`,
+    },
   }
 }
 
