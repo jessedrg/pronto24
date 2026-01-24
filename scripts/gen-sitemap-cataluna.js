@@ -9,7 +9,7 @@ const path = require('path');
 // =============================================================================
 
 const BASE_URL = 'https://www.pronto24.xyz';
-const MAX_URLS_PER_SITEMAP = 10000;
+const MAX_URLS_PER_SITEMAP = 45000;
 const PROFESSIONS = ['electricista', 'fontanero', 'cerrajero', 'desatascos', 'calderas'];
 
 // =============================================================================
