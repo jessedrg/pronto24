@@ -17,18 +17,25 @@ const RESERVED_PATHS = ["sitemap-files", "api", "problema", "precio", "presupues
 const KNOWN_MODIFIERS = [
   // Alta urgencia (High Intent)
   "urgente", "24-horas", "ahora", "hoy", "rapido", "inmediato", "ya", "emergencia", "express", "24h",
+  "urgencias", "ahora-mismo", "necesito",
   // Precio
   "economico", "barato", "low-cost", "precio", "presupuesto", "tarifa", "mejor-precio", "asequible",
+  "presupuesto-gratis", "precio-justo", "cuanto-cuesta", "precios",
   // Disponibilidad
   "de-guardia", "nocturno", "festivos", "fin-de-semana", "mismo-dia", "sabados", "domingos", "madrugada",
+  "abierto-hoy",
   // Ubicacion
   "cerca-de-mi", "a-domicilio", "zona", "barrio", "centro",
   // Confianza
   "profesional", "de-confianza", "con-garantia", "autorizados", "certificado", "oficial", "titulado",
+  "recomendado", "mejor", "fiable",
   // Servicio
   "reparacion", "instalacion", "mantenimiento", "revision", "averias",
   // Combinaciones
   "urgente-24h", "barato-urgente", "rapido-economico", "urgente-barato", "24h-economico",
+  "urgente-economico", "urgente-hoy", "rapido-barato", "profesional-barato",
+  // Búsquedas naturales
+  "busco", "contratar", "encontrar", "servicio",
 ] as const
 
 function parseProfessionAndModifier(rawProfession: string): {
