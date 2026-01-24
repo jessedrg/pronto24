@@ -175,7 +175,7 @@ for (const f of sitemapFiles) {
   indexXml += `<sitemap><loc>${BASE_URL}/sitemaps/${f}</loc><lastmod>${date}</lastmod></sitemap>\n`;
 }
 indexXml += '</sitemapindex>';
-fs.writeFileSync(path.join(outputDir, 'sitemap-cataluna.xml'), indexXml);
+fs.writeFileSync(path.join(outputDir, 'sitemap-cat-index.xml'), indexXml);
 
 // =============================================================================
 // RESUMEN
@@ -192,5 +192,5 @@ console.log(`🔥 Problemas:               ${Object.values(PROBLEMS).flat().leng
 console.log('='.repeat(65));
 console.log(`\n📂 Output: ${outputDir}/`);
 console.log(`\n📌 SITEMAP INDEX para Google Search Console:`);
-console.log(`   ${BASE_URL}/sitemaps/sitemap-cataluna.xml`);
+console.log(`   ${BASE_URL}/sitemaps/sitemap-cat-index.xml`);
 console.log('\n🚀 ¡Listo para indexar!\n');

@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
     },
     sitemap: [
       "https://www.pronto24.xyz/sitemap-v21.xml",
-      "https://www.pronto24.xyz/sitemaps/sitemap-cataluna.xml",
+      "https://www.pronto24.xyz/sitemaps/sitemap-cat-index.xml",
     ],
   }
 }
