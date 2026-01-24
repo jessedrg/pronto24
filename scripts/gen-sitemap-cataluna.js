@@ -8,7 +8,8 @@ const path = require('path');
 // Profesiones + Modificadores alta intención + 948 municipios Cataluña
 // =============================================================================
 
-const BASE_URL = 'https://www.pronto24.es';
+const BASE_URL = 'https://www.pronto24.xyz';
+const MAX_URLS_PER_SITEMAP = 10000;
 const PROFESSIONS = ['electricista', 'fontanero', 'cerrajero', 'desatascos', 'calderas'];
 
 // =============================================================================
@@ -107,7 +108,7 @@ function generateXml(urls) {
   return xml;
 }
 
-// 1. Profesión + Modificador + Ciudad (CORE)
+// 1. Profesión + Modificador + Ciudad (CORE) - dividido en chunks de 10k
 console.log('🔧 Generando sitemaps por profesión...');
 for (const prof of PROFESSIONS) {
   const urls = [];
@@ -116,11 +117,17 @@ for (const prof of PROFESSIONS) {
       urls.push(`${BASE_URL}/${prof}${mod}/${city}/`);
     }
   }
-  const filename = `sitemap-cat-${prof}.xml`;
-  fs.writeFileSync(path.join(outputDir, filename), generateXml(urls));
-  sitemapFiles.push(filename);
-  totalUrls += urls.length;
-  console.log(`   ✅ ${filename}: ${urls.length.toLocaleString()} URLs`);
+  
+  // Dividir en chunks de MAX_URLS_PER_SITEMAP
+  const chunks = Math.ceil(urls.length / MAX_URLS_PER_SITEMAP);
+  for (let i = 0; i < chunks; i++) {
+    const chunk = urls.slice(i * MAX_URLS_PER_SITEMAP, (i + 1) * MAX_URLS_PER_SITEMAP);
+    const filename = `sitemap-cat-${prof}-${i + 1}.xml`;
+    fs.writeFileSync(path.join(outputDir, filename), generateXml(chunk));
+    sitemapFiles.push(filename);
+    totalUrls += chunk.length;
+    console.log(`   ✅ ${filename}: ${chunk.length.toLocaleString()} URLs`);
+  }
 }
 
 // 2. Prefijos (precio-X, presupuesto-X)
@@ -139,8 +146,8 @@ for (const prefix of PREFIXES) {
   console.log(`   ✅ ${filename}: ${urls.length.toLocaleString()} URLs`);
 }
 
-// 3. Problemas específicos
-console.log('\n🔥 Generando sitemap de problemas...');
+// 3. Problemas específicos - dividido en chunks de 10k
+console.log('\n🔥 Generando sitemaps de problemas...');
 const problemUrls = [];
 for (const prof of PROFESSIONS) {
   const problems = PROBLEMS[prof] || [];
@@ -150,11 +157,16 @@ for (const prof of PROFESSIONS) {
     }
   }
 }
-const problemFilename = 'sitemap-cat-problemas.xml';
-fs.writeFileSync(path.join(outputDir, problemFilename), generateXml(problemUrls));
-sitemapFiles.push(problemFilename);
-totalUrls += problemUrls.length;
-console.log(`   ✅ ${problemFilename}: ${problemUrls.length.toLocaleString()} URLs`);
+
+const problemChunks = Math.ceil(problemUrls.length / MAX_URLS_PER_SITEMAP);
+for (let i = 0; i < problemChunks; i++) {
+  const chunk = problemUrls.slice(i * MAX_URLS_PER_SITEMAP, (i + 1) * MAX_URLS_PER_SITEMAP);
+  const filename = `sitemap-cat-problemas-${i + 1}.xml`;
+  fs.writeFileSync(path.join(outputDir, filename), generateXml(chunk));
+  sitemapFiles.push(filename);
+  totalUrls += chunk.length;
+  console.log(`   ✅ ${filename}: ${chunk.length.toLocaleString()} URLs`);
+}
 
 // 4. Sitemap Index
 let indexXml = '<?xml version="1.0" encoding="UTF-8"?>\n';
