@@ -8,8 +8,8 @@ import { usePathname } from "next/navigation"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [phoneNumber, setPhoneNumber] = useState("711267223")
-  const [phoneFormatted, setPhoneFormatted] = useState("711 267 223")
+  const [phoneNumber, setPhoneNumber] = useState("931501817")
+  const [phoneFormatted, setPhoneFormatted] = useState("931 501 817")
   const pathname = usePathname()
 
   useEffect(() => {
