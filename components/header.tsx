@@ -2,31 +2,15 @@
 
 import { Logo } from "./logo"
 import { Menu, X, Phone } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [phoneNumber, setPhoneNumber] = useState("931501817")
-  const [phoneFormatted, setPhoneFormatted] = useState("931 501 817")
+  const phoneNumber = "931501817"
+  const phoneFormatted = "931 501 817"
   const pathname = usePathname()
-
-  useEffect(() => {
-    const fetchPhoneConfig = async () => {
-      try {
-        const res = await fetch("/api/config/phone")
-        const data = await res.json()
-        if (data.phoneNumber) {
-          setPhoneNumber(data.phoneNumber)
-          setPhoneFormatted(data.formatted || data.phoneNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3"))
-        }
-      } catch (error) {
-        console.error("Error fetching phone config:", error)
-      }
-    }
-    fetchPhoneConfig()
-  }, [])
 
   if (pathname?.startsWith("/0x")) {
     return null
