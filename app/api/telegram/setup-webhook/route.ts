@@ -1,6 +1,6 @@
 export async function GET() {
   const botToken = process.env.TELEGRAM_BOT_TOKEN
-  const webhookUrl = `https://www.pronto24.xyz/api/telegram/webhook`
+  const webhookUrl = `https://www.pronto-24.com/api/telegram/webhook`
 
   if (!botToken) {
     return Response.json({ error: "TELEGRAM_BOT_TOKEN not configured" }, { status: 500 })

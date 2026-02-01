@@ -1,6 +1,6 @@
 export async function GET() {
   const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
-  const webhookUrl = "https://www.pronto24.xyz/api/stripe/webhook"
+  const webhookUrl = "https://www.pronto-24.com/api/stripe/webhook"
 
   try {
     // List existing webhooks

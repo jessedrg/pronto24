@@ -1,7 +1,7 @@
 import { TELEGRAM_BOTS, AVAILABLE_SERVICES } from "@/lib/telegram-bots"
 
 export async function GET(req: Request) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.pronto24.xyz"
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.pronto-24.com"
   const results: Record<string, any> = {}
 
   for (const service of AVAILABLE_SERVICES) {

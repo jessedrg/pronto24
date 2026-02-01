@@ -66,7 +66,7 @@ export async function GET(req: Request) {
       )
     }
 
-    const baseUrl = "https://www.pronto24.xyz"
+    const baseUrl = "https://www.pronto-24.com"
 
     // Crear sesión de Stripe Checkout
     const session = await stripe.checkout.sessions.create({

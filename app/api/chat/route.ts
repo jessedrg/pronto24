@@ -527,7 +527,7 @@ export async function POST(req: Request) {
       })
     }
 
-    const systemPrompt = `Eres un asistente de pronto24.xyz. Conectas clientes con profesionales urgentes en toda España.
+    const systemPrompt = `Eres un asistente de pronto-24.com. Conectas clientes con profesionales urgentes en toda España.
 
 SERVICIOS: fontanero, electricista, cerrajero, desatascos, calderas
 

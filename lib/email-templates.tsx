@@ -102,7 +102,7 @@ export function createPartnerNotificationEmail(data: PartnerNotificationData): s
 export async function sendLeadEmail(data: LeadEmailData): Promise<{ success: boolean; error?: string }> {
   const { service, problem, phone, city, name, requestedDate, leadId } = data
 
-  const dashboardUrl = `https://www.pronto24.xyz/0x/dashboard`
+  const dashboardUrl = `https://www.pronto-24.com/0x/dashboard`
 
   const html = `
 <!DOCTYPE html>

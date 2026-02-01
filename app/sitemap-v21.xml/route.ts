@@ -4,7 +4,7 @@ import { VALID_PROFESSIONS, MODIFIERS, PROBLEMS, CITIES } from "@/lib/sitemap-da
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
-const BASE_URL = "https://www.pronto24.xyz"
+const BASE_URL = "https://www.pronto-24.com"
 const MAX_URLS_PER_SITEMAP = 45000
 
 export async function GET() {

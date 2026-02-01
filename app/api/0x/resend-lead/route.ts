@@ -49,7 +49,7 @@ export async function POST(req: Request) {
   const originalPrice = Number(lead.lead_price) || 35
   const discount = Math.round(((originalPrice - offerPrice) / originalPrice) * 100)
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.pronto24.xyz"
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.pronto-24.com"
   const buyUrl = `${baseUrl}/api/stripe/buy-lead?lead_id=${leadId}&price=${offerPrice}&service=${service}`
 
   const message = `

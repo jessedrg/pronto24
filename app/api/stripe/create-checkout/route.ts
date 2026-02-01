@@ -48,8 +48,8 @@ export async function GET(req: Request) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://www.pronto24.xyz"}/partners?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://www.pronto24.xyz"}/partners?canceled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://www.pronto-24.com"}/partners?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://www.pronto-24.com"}/partners?canceled=true`,
       metadata: {
         chat_id: chatId,
         credits: totalCredits.toString(),

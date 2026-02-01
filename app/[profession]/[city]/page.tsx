@@ -102,7 +102,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: `${profession.name} ${modifierText.toLowerCase()} en ${cityName}. ${urgencyText} ${priceText} Profesionales certificados 24/7. Llama GRATIS: 711 267 223`,
       keywords: `${profession.id} ${modifier} ${cityName}, ${profession.id} ${cityName}, ${profession.id} urgente ${cityName}, ${profession.id} barato ${cityName}, ${profession.id} 24 horas ${cityName}`,
       alternates: {
-        canonical: `https://www.pronto24.xyz/${rawProfession}/${citySlug}/`,
+        canonical: `https://www.pronto-24.com/${rawProfession}/${citySlug}/`,
       },
       openGraph: {
         title: `${profession.name} ${modifierText} en ${cityName} - Llegamos en 10 min`,
@@ -117,7 +117,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: `${profession.name} profesional en ${cityName}. Llegamos en 10 MIN. Servicio 24h los 365 dias. Presupuesto GRATIS sin compromiso. Llama ahora: 711 267 223`,
     keywords: `${profession.id} ${cityName}, ${profession.id} urgente ${cityName}, ${profession.id} 24 horas ${cityName}, ${profession.id} economico ${cityName}, ${profession.id} barato ${cityName}`,
     alternates: {
-      canonical: `https://www.pronto24.xyz/${rawProfession}/${citySlug}/`,
+      canonical: `https://www.pronto-24.com/${rawProfession}/${citySlug}/`,
     },
     openGraph: {
       title: `${profession.name} en ${cityName} - Servicio Urgente 24h`,

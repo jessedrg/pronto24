@@ -44,7 +44,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { profession, postalcode } = await params
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pronto24.xyz"
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pronto-24.com"
 
   if (!VALID_PROFESSIONS.includes(profession)) {
     return { title: "No encontrado" }

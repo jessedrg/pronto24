@@ -23,7 +23,7 @@ const MODIFIERS = [
 ]
 
 export async function GET() {
-  const baseUrl = "https://www.pronto24.xyz"
+  const baseUrl = "https://www.pronto-24.com"
   const date = new Date().toISOString().split("T")[0]
 
   const sitemaps: string[] = []

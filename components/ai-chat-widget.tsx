@@ -394,7 +394,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold text-sm">pronto24.xyz</h3>
+                <h3 className="font-semibold text-sm">pronto-24.com</h3>
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
                   <span className="text-xs text-neutral-500">Online ahora</span>

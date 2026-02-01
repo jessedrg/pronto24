@@ -10,13 +10,13 @@ import { UrgencyBanner } from "@/components/urgency-banner"
 import { AIChatWidget } from "@/components/ai-chat-widget"
 
 export const metadata: Metadata = {
-  title: "Desatascos Urgentes 24h en Toda España | pronto24.xyz | Respuesta en 30min",
+  title: "Desatascos Urgentes 24h en Toda España | pronto-24.com | Respuesta en 30min",
   description:
     "Desatascos urgentes 24 horas en toda España. Desatasco de tuberías, fregaderos, inodoros, bajantes. Profesionales en 30 minutos. Presupuesto gratis sin compromiso. Servicio garantizado.",
   keywords:
     "desatascos urgentes 24 horas, desatascar tuberías urgente, desatasco inodoro atascado, desatascos madrid baratos, desatascos barcelona urgente, fontanero desatascos, desatasco fregadero, desatasco bajantes, servicio desatascos cerca de mi",
   openGraph: {
-    title: "Desatascos Urgentes 24h | pronto24.xyz",
+    title: "Desatascos Urgentes 24h | pronto-24.com",
     description: "Profesionales en 30 minutos. Presupuesto gratis sin compromiso.",
   },
 }

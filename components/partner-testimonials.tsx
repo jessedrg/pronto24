@@ -6,7 +6,7 @@ export function PartnerTestimonials() {
       name: "Carlos Martínez",
       role: "Electricista - Madrid",
       content:
-        "Desde que me uní a pronto24.xyz, mi agenda está siempre llena. Los leads son de calidad y los clientes realmente necesitan el servicio. Muy recomendable.",
+        "Desde que me uní a pronto-24.com, mi agenda está siempre llena. Los leads son de calidad y los clientes realmente necesitan el servicio. Muy recomendable.",
       rating: 5,
     },
     {
@@ -30,7 +30,7 @@ export function PartnerTestimonials() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold">Lo que dicen nuestros partners</h2>
-          <p className="text-xl text-foreground/60">Profesionales que ya están creciendo con pronto24.xyz</p>
+          <p className="text-xl text-foreground/60">Profesionales que ya están creciendo con pronto-24.com</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">

@@ -8,9 +8,9 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/api/", "/admin/", "/0x/"],
     },
     sitemap: [
-      "https://www.pronto24.xyz/sitemap-v21.xml",
-      "https://www.pronto24.xyz/sitemap-cp-index.xml",
-      "https://www.pronto24.xyz/sitemaps/sitemap-cat-index.xml",
+      "https://www.pronto-24.com/sitemap-v21.xml",
+      "https://www.pronto-24.com/sitemap-cp-index.xml",
+      "https://www.pronto-24.com/sitemaps/sitemap-cat-index.xml",
     ],
   }
 }

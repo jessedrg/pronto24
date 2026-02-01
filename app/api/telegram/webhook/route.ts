@@ -444,7 +444,7 @@ async function sendTelegramMessage(chatId: string, text: string) {
 }
 
 async function handleBuyPackage(chatId: string, credits: string, sql: any) {
-  const checkoutUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://www.pronto24.xyz"}/api/stripe/create-checkout?chat_id=${chatId}&credits=${credits}`
+  const checkoutUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://www.pronto-24.com"}/api/stripe/create-checkout?chat_id=${chatId}&credits=${credits}`
 
   const packages: Record<string, { amount: number; price: string; bonus: number }> = {
     "1": { amount: 1, price: "30€", bonus: 0 },

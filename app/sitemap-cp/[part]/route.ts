@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { POSTAL_CODE_NAMES } from "@/lib/postal-code-names"
 
 const PROFESSIONS = ["fontanero", "electricista", "cerrajero", "desatascos", "calderas"]
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pronto24.xyz"
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pronto-24.com"
 const URLS_PER_SITEMAP = 10000
 
 function getAllPostalCodes(): string[] {

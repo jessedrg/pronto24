@@ -10,9 +10,9 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "pronto24.xyz | Servicios Urgentes 24h - Desatascos, Electricistas, Fontaneros",
+  title: "pronto-24.com | Servicios Urgentes 24h - Desatascos, Electricistas, Fontaneros",
   description:
-    "pronto24.xyz - Servicios de emergencia 24/7 en toda España. Desatascos urgentes, electricista 24h, fontanero express, cerrajero urgente. Respuesta en 30 minutos. Presupuesto gratis sin compromiso.",
+    "pronto-24.com - Servicios de emergencia 24/7 en toda España. Desatascos urgentes, electricista 24h, fontanero express, cerrajero urgente. Respuesta en 30 minutos. Presupuesto gratis sin compromiso.",
   keywords:
     "desatasco urgente 24 horas, electricista urgente cerca de mi, fontanero urgente barato, cerrajero 24 horas, reparación calderas urgente, servicio desatascos madrid, electricista barcelona 24h, fontanero valencia urgente, cerrajero sevilla, desatascador profesional",
   icons: {
@@ -21,11 +21,11 @@ export const metadata: Metadata = {
     apple: "/favicon.svg",
   },
   openGraph: {
-    title: "pronto24.xyz - Servicios Urgentes 24/7 en Toda España",
+    title: "pronto-24.com - Servicios Urgentes 24/7 en Toda España",
     description: "Profesionales verificados en menos de 30 minutos. Presupuesto gratis sin compromiso.",
     type: "website",
     locale: "es_ES",
-    siteName: "pronto24.xyz",
+    siteName: "pronto-24.com",
   },
   robots: {
     index: true,
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://pronto24.xyz",
+    canonical: "https://pronto-24.com",
   },
     generator: 'v0.app'
 }
@@ -75,7 +75,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
-              name: "pronto24.xyz",
+              name: "pronto-24.com",
               description: "Servicios de emergencia 24/7 en toda España",
               telephone: "+34-900-123-456",
               priceRange: "€€",
