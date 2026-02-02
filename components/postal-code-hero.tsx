@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Phone, MapPin, Clock, Shield, CheckCircle, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -22,7 +23,20 @@ export function PostalCodeHero({
   cityName,
   description,
 }: PostalCodeHeroProps) {
-  const phoneNumber = "931501817"
+  const [phoneNumber, setPhoneNumber] = useState("931501817")
+
+  useEffect(() => {
+    const fetchPhone = async () => {
+      try {
+        const res = await fetch("/api/config/phone")
+        const data = await res.json()
+        if (data.phoneNumber) {
+          setPhoneNumber(data.phoneNumber)
+        }
+      } catch (e) {}
+    }
+    fetchPhone()
+  }, [])
 
   return (
     <section className="relative min-h-screen flex items-center bg-background pt-20">

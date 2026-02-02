@@ -1,21 +1,9 @@
 "use client"
 
 import { XCircle } from "lucide-react"
-import { useState, useEffect } from "react"
 
 export default function PagoCancelado() {
-  const [phoneNumber, setPhoneNumber] = useState("711267223")
-
-  useEffect(() => {
-    fetch("/api/config/phone")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.phoneNumber) {
-          setPhoneNumber(data.phoneNumber)
-        }
-      })
-      .catch(console.error)
-  }, [])
+  const phoneNumber = "931501817"
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">

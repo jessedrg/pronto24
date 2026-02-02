@@ -56,8 +56,8 @@ export function ServiceLandingTemplate({
   modifier,
   modifierText,
 }: ServiceLandingTemplateProps) {
-  const [phoneNumber, setPhoneNumber] = useState("711267223")
-  const [phoneFormatted, setPhoneFormatted] = useState("711 267 223")
+  const phoneNumber = "931501817"
+  const phoneFormatted = "931 501 817"
   const [activeUsers, setActiveUsers] = useState(12)
 
   const profession = professionProp || PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
@@ -71,18 +71,6 @@ export function ServiceLandingTemplate({
   const IconComponent = profession?.icon ? ICONS[profession.icon as keyof typeof ICONS] || Zap : Zap
 
   useEffect(() => {
-    const fetchPhone = async () => {
-      try {
-        const res = await fetch("/api/config/phone")
-        const data = await res.json()
-        if (data.phoneNumber) {
-          setPhoneNumber(data.phoneNumber)
-          setPhoneFormatted(data.formatted || data.phoneNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3"))
-        }
-      } catch (e) {}
-    }
-    fetchPhone()
-
     const userInterval = setInterval(() => {
       setActiveUsers((prev) => Math.max(8, Math.min(18, prev + Math.floor(Math.random() * 3) - 1)))
     }, 8000)
@@ -285,14 +273,14 @@ export function ServiceLandingTemplate({
     <div className="relative">
       {/* Hero Section */}
       <section className="relative py-12 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FF6B35]/5 via-transparent to-[#FF6B35]/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 via-transparent to-foreground/10" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Left Content */}
             <div className="space-y-6">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-[#FF6B35] text-sm font-semibold">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/10 border border-foreground/30 text-foreground text-sm font-semibold">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
@@ -303,7 +291,7 @@ export function ServiceLandingTemplate({
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1]">
                 <span className="text-foreground">{title}</span>
-                <span className="block text-[#FF6B35] mt-2">
+                <span className="block text-foreground mt-2">
                   {modifier === "economico" || modifier === "barato" ? "Mejor Precio" : "Llegamos en 10 min"}
                 </span>
               </h1>
@@ -315,7 +303,7 @@ export function ServiceLandingTemplate({
                 <a
                   href={`tel:+34${phoneNumber}`}
                   onClick={handleCall}
-                  className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-5 bg-[#FF6B35] hover:bg-[#FF5722] text-white font-bold text-lg sm:text-xl rounded-2xl shadow-lg shadow-[#FF6B35]/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-[#FF6B35]/30"
+                  className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-5 bg-foreground hover:bg-foreground/90 text-white font-bold text-lg sm:text-xl rounded-2xl shadow-lg shadow-foreground/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-foreground/30"
                 >
                   <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
                   <span className="text-base sm:text-xl">LLAMAR - {phoneFormatted}</span>
@@ -384,7 +372,7 @@ export function ServiceLandingTemplate({
                   {/* Floating Badge */}
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex items-center gap-3 p-4 rounded-2xl bg-background/95 backdrop-blur-sm border border-border">
-                      <div className="w-12 h-12 rounded-xl bg-[#FF6B35] flex items-center justify-center shrink-0">
+                      <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center shrink-0">
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1">
@@ -403,16 +391,16 @@ export function ServiceLandingTemplate({
 
                 {/* Stats Badge */}
                 <div className="absolute -top-3 -right-3 sm:top-4 sm:right-4 z-10">
-                  <div className="px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-background border border-[#FF6B35]/30 shadow-xl">
+                  <div className="px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-background border border-foreground/30 shadow-xl">
                     <div className="text-center">
                       {modifier === "economico" || modifier === "barato" ? (
                         <>
-                          <div className="text-2xl sm:text-3xl font-black text-[#FF6B35]">-20%</div>
+                          <div className="text-2xl sm:text-3xl font-black text-foreground">-20%</div>
                           <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">vs competencia</div>
                         </>
                       ) : (
                         <>
-                          <div className="text-2xl sm:text-3xl font-black text-[#FF6B35]">10</div>
+                          <div className="text-2xl sm:text-3xl font-black text-foreground">10</div>
                           <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">min llegada</div>
                         </>
                       )}
@@ -431,7 +419,7 @@ export function ServiceLandingTemplate({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {guarantees.map((item, i) => (
               <div key={i} className="p-6 rounded-2xl bg-background border border-border text-center">
-                <item.icon className="w-8 h-8 mx-auto mb-3 text-[#FF6B35]" />
+                <item.icon className="w-8 h-8 mx-auto mb-3 text-foreground" />
                 <div className="font-bold text-foreground text-xl">{item.title}</div>
                 <div className="text-sm text-muted-foreground">{item.subtitle}</div>
               </div>
@@ -455,19 +443,19 @@ export function ServiceLandingTemplate({
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 rounded-xl bg-muted/50 border border-border">
-                    <div className="text-2xl font-bold text-[#FF6B35]">{uniqueContent.stats.servicesThisMonth}+</div>
+                    <div className="text-2xl font-bold text-foreground">{uniqueContent.stats.servicesThisMonth}+</div>
                     <div className="text-sm text-muted-foreground">servicios este mes</div>
                   </div>
                   <div className="p-4 rounded-xl bg-muted/50 border border-border">
-                    <div className="text-2xl font-bold text-[#FF6B35]">{uniqueContent.stats.yearsExperience}</div>
+                    <div className="text-2xl font-bold text-foreground">{uniqueContent.stats.yearsExperience}</div>
                     <div className="text-sm text-muted-foreground">años de experiencia</div>
                   </div>
                   <div className="p-4 rounded-xl bg-muted/50 border border-border">
-                    <div className="text-2xl font-bold text-[#FF6B35]">{uniqueContent.stats.avgResponseTime} min</div>
+                    <div className="text-2xl font-bold text-foreground">{uniqueContent.stats.avgResponseTime} min</div>
                     <div className="text-sm text-muted-foreground">tiempo respuesta</div>
                   </div>
                   <div className="p-4 rounded-xl bg-muted/50 border border-border">
-                    <div className="text-2xl font-bold text-[#FF6B35]">{uniqueContent.stats.satisfactionRate}%</div>
+                    <div className="text-2xl font-bold text-foreground">{uniqueContent.stats.satisfactionRate}%</div>
                     <div className="text-sm text-muted-foreground">clientes satisfechos</div>
                   </div>
                 </div>
@@ -486,7 +474,7 @@ export function ServiceLandingTemplate({
                     </li>
                   ))}
                 </ul>
-                <div className="p-4 rounded-xl bg-[#FF6B35]/10 border border-[#FF6B35]/30">
+                <div className="p-4 rounded-xl bg-foreground/10 border border-foreground/30">
                   <p className="text-sm text-foreground font-medium">
                     📍 Zona de servicio: {cityName} ({uniqueContent.localInfo.postalCodeExample}) y alrededores en {uniqueContent.localInfo.province}
                   </p>
@@ -511,11 +499,11 @@ export function ServiceLandingTemplate({
       {nearbyCities.length > 0 && (
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="relative p-8 rounded-3xl border border-[#FF6B35]/30 bg-[#FF6B35]/5 overflow-hidden">
+            <div className="relative p-8 rounded-3xl border border-foreground/30 bg-foreground/5 overflow-hidden">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-4 rounded-2xl bg-[#FF6B35]/20">
-                    <MapPin className="w-8 h-8 text-[#FF6B35]" />
+                  <div className="p-4 rounded-2xl bg-foreground/20">
+                    <MapPin className="w-8 h-8 text-foreground" />
                   </div>
                   <div>
                     <h2 className="text-2xl md:text-3xl font-black text-foreground">{cityName} y alrededores</h2>
@@ -527,7 +515,7 @@ export function ServiceLandingTemplate({
                     <a
                       key={city}
                       href={`/${profession.id}/${city}`}
-                      className="px-4 py-2 rounded-full bg-background text-foreground text-sm font-medium border border-border hover:border-[#FF6B35]/50 transition-colors"
+                      className="px-4 py-2 rounded-full bg-background text-foreground text-sm font-medium border border-border hover:border-foreground/50 transition-colors"
                     >
                       {getCityDisplayName(city)}
                     </a>
@@ -545,7 +533,7 @@ export function ServiceLandingTemplate({
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-1 mb-2">
               {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="w-6 h-6 text-[#FF6B35] fill-[#FF6B35]" />
+                <Star key={s} className="w-6 h-6 text-foreground fill-foreground" />
               ))}
             </div>
             <p className="text-foreground font-bold text-lg">4.9 de 5 - +2,800 valoraciones verificadas</p>
@@ -555,7 +543,7 @@ export function ServiceLandingTemplate({
             {reviews.map((review, i) => (
               <div key={i} className="p-6 rounded-2xl bg-background border border-border">
                 <div className="flex items-start gap-3 mb-4">
-                  <div className="w-11 h-11 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-bold text-lg shrink-0">
+                  <div className="w-11 h-11 rounded-full bg-foreground flex items-center justify-center text-white font-bold text-lg shrink-0">
                     {review.name[0]}
                   </div>
                   <div className="flex-1">
@@ -569,7 +557,7 @@ export function ServiceLandingTemplate({
                   </div>
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="w-3.5 h-3.5 text-[#FF6B35] fill-[#FF6B35]" />
+                      <Star key={s} className="w-3.5 h-3.5 text-foreground fill-foreground" />
                     ))}
                   </div>
                 </div>
@@ -583,7 +571,7 @@ export function ServiceLandingTemplate({
       {/* Final CTA */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF6B35]/10 text-[#FF6B35] text-sm font-medium mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/10 text-foreground text-sm font-medium mb-6">
             <Clock className="w-4 h-4" />
             <span>
               {profession.namePlural} {modifierText ? modifierText.toLowerCase() : ""} listos 24/7 en {cityName}
@@ -592,7 +580,7 @@ export function ServiceLandingTemplate({
 
           <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
             ¿Necesitas un {profession.name.toLowerCase()} {modifierText ? modifierText.toLowerCase() : ""}?
-            <span className="block text-[#FF6B35]">Llámanos ahora</span>
+            <span className="block text-foreground">Llámanos ahora</span>
           </h2>
 
           <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
@@ -603,7 +591,7 @@ export function ServiceLandingTemplate({
           <a
             href={`tel:+34${phoneNumber}`}
             onClick={handleCall}
-            className="inline-flex items-center gap-4 px-10 py-5 bg-[#FF6B35] hover:bg-[#FF5722] text-white font-bold text-xl rounded-2xl shadow-lg transition-all hover:scale-105"
+            className="inline-flex items-center gap-4 px-10 py-5 bg-foreground hover:bg-foreground/90 text-white font-bold text-xl rounded-2xl shadow-lg transition-all hover:scale-105"
           >
             <Phone className="w-7 h-7" />
             <span>{phoneFormatted}</span>

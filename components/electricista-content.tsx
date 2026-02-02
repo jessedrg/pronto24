@@ -5,23 +5,11 @@ import { Phone, Zap, Shield, CheckCircle2, MapPin, Star, BadgeCheck, Timer, Awar
 import Image from "next/image"
 
 export function ElectricistaContent() {
-  const [phoneNumber, setPhoneNumber] = useState("711267223")
-  const [phoneFormatted, setPhoneFormatted] = useState("711 267 223")
+  const phoneNumber = "931501817"
+  const phoneFormatted = "931 501 817"
   const [activeUsers, setActiveUsers] = useState(12)
 
   useEffect(() => {
-    const fetchPhone = async () => {
-      try {
-        const res = await fetch("/api/config/phone")
-        const data = await res.json()
-        if (data.phoneNumber) {
-          setPhoneNumber(data.phoneNumber)
-          setPhoneFormatted(data.formatted || data.phoneNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3"))
-        }
-      } catch (e) {}
-    }
-    fetchPhone()
-
     const userInterval = setInterval(() => {
       setActiveUsers((prev) => Math.max(8, Math.min(18, prev + Math.floor(Math.random() * 3) - 1)))
     }, 8000)

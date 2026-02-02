@@ -66,10 +66,24 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
   const [availabilityTime, setAvailabilityTime] = useState(15)
   const [currentActivity, setCurrentActivity] = useState(recentActivity[0])
   const [sessionId] = useState(() => generateSessionId())
-  const phoneNumber = "931501817"
-  const phoneFormatted = "931 501 817"
+  const [phoneNumber, setPhoneNumber] = useState("931501817")
+  const [phoneFormatted, setPhoneFormatted] = useState("931 501 817")
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const fetchPhone = async () => {
+      try {
+        const res = await fetch("/api/config/phone")
+        const data = await res.json()
+        if (data.phoneNumber) {
+          setPhoneNumber(data.phoneNumber)
+          setPhoneFormatted(data.formatted || data.phoneNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3"))
+        }
+      } catch (e) {}
+    }
+    fetchPhone()
+  }, [])
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
