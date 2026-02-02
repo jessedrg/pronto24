@@ -23,7 +23,8 @@ export function PostalCodeHero({
   cityName,
   description,
 }: PostalCodeHeroProps) {
-  const [phoneNumber, setPhoneNumber] = useState("931501817")
+  const phoneNumberStatic = "931501817"
+  const [whatsappPhone, setWhatsappPhone] = useState("931501817")
 
   useEffect(() => {
     const fetchPhone = async () => {
@@ -31,7 +32,7 @@ export function PostalCodeHero({
         const res = await fetch("/api/config/phone")
         const data = await res.json()
         if (data.phoneNumber) {
-          setPhoneNumber(data.phoneNumber)
+          setWhatsappPhone(data.phoneNumber)
         }
       } catch (e) {}
     }
@@ -82,7 +83,7 @@ export function PostalCodeHero({
                 size="lg"
                 className="bg-foreground hover:bg-foreground/90 text-background font-semibold text-lg px-8 py-6"
               >
-                <a href={`tel:${phoneNumber}`}>
+                <a href={`tel:${phoneNumberStatic}`}>
                   <Phone className="h-5 w-5 mr-2" />
                   Llamar Ahora
                 </a>
@@ -92,7 +93,7 @@ export function PostalCodeHero({
                 size="lg"
                 className="bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold text-lg px-8 py-6"
               >
-                <a href={`https://wa.me/34${phoneNumber}`} target="_blank" rel="noopener noreferrer">
+                <a href={`https://wa.me/34${whatsappPhone}`} target="_blank" rel="noopener noreferrer">
                   WhatsApp Urgente
                 </a>
               </Button>

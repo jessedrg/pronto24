@@ -66,8 +66,9 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
   const [availabilityTime, setAvailabilityTime] = useState(15)
   const [currentActivity, setCurrentActivity] = useState(recentActivity[0])
   const [sessionId] = useState(() => generateSessionId())
-  const [phoneNumber, setPhoneNumber] = useState("931501817")
-  const [phoneFormatted, setPhoneFormatted] = useState("931 501 817")
+  const phoneNumberStatic = "931501817"
+  const phoneFormattedStatic = "931 501 817"
+  const [whatsappPhone, setWhatsappPhone] = useState("931501817")
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -77,8 +78,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
         const res = await fetch("/api/config/phone")
         const data = await res.json()
         if (data.phoneNumber) {
-          setPhoneNumber(data.phoneNumber)
-          setPhoneFormatted(data.formatted || data.phoneNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3"))
+          setWhatsappPhone(data.phoneNumber)
         }
       } catch (e) {}
     }
@@ -348,7 +348,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
         }`}
       >
         <a
-          href={`tel:+34${phoneNumber}`}
+          href={`tel:+34${phoneNumberStatic}`}
           className="group flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white pl-3 pr-4 py-2.5 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
           onClick={handleCallClick}
         >
@@ -358,7 +358,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-bold text-sm">Llamar</span>
-            <span className="text-[10px] text-green-100">{phoneFormatted}</span>
+            <span className="text-[10px] text-green-100">{phoneFormattedStatic}</span>
           </div>
         </a>
 
@@ -465,7 +465,7 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
             }}
           >
             <a
-              href={`https://wa.me/34${phoneNumber}?text=${encodeURIComponent(`Hola! Necesito ayuda con un servicio ${getServiceFromMessages()}`)}`}
+              href={`https://wa.me/34${whatsappPhone}?text=${encodeURIComponent(`Hola! Necesito ayuda con un servicio ${getServiceFromMessages()}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleWhatsAppClick}
