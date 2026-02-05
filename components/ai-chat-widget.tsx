@@ -66,9 +66,9 @@ export function AIChatWidget({ service }: AIChatWidgetProps = {}) {
   const [availabilityTime, setAvailabilityTime] = useState(15)
   const [currentActivity, setCurrentActivity] = useState(recentActivity[0])
   const [sessionId] = useState(() => generateSessionId())
-  const phoneNumberStatic = "931501817"
-  const phoneFormattedStatic = "931 501 817"
-  const [whatsappPhone, setWhatsappPhone] = useState("931501817")
+  const phoneNumberStatic = "936946639"
+  const phoneFormattedStatic = "936 946 639"
+  const [whatsappPhone, setWhatsappPhone] = useState("936946639")
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 

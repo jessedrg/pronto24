@@ -22,6 +22,11 @@ import {
   Navigation,
   Home,
   Euro,
+  HelpCircle,
+  Lightbulb,
+  ArrowRight,
+  Users,
+  FileCheck,
 } from "lucide-react"
 import Image from "next/image"
 import { getCityDisplayName, getCityProvince, getNearbyCities, PROBLEMS, PROFESSIONS } from "@/lib/seo-data"
@@ -56,8 +61,8 @@ export function ServiceLandingTemplate({
   modifier,
   modifierText,
 }: ServiceLandingTemplateProps) {
-  const phoneNumber = "931501817"
-  const phoneFormatted = "931 501 817"
+  const phoneNumber = "936946639"
+  const phoneFormatted = "936 946 639"
   const [activeUsers, setActiveUsers] = useState(12)
 
   const profession = professionProp || PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
@@ -495,6 +500,184 @@ export function ServiceLandingTemplate({
         </section>
       )}
 
+      {/* NUEVA SECCIÓN: Por qué elegirnos */}
+      {uniqueContent && uniqueContent.whyChooseUs && (
+        <section className="py-16 bg-muted/20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/10 text-foreground text-sm font-medium mb-4">
+                <Users className="w-4 h-4" />
+                <span>Más de {uniqueContent.stats.servicesThisMonth} clientes este mes</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                ¿Por qué elegir nuestro servicio de {profession.name.toLowerCase()} en {cityName}?
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Somos el servicio de {profession.name.toLowerCase()} más valorado en {cityName} y alrededores. Descubre por qué miles de clientes confían en nosotros.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {uniqueContent.whyChooseUs.map((reason, i) => (
+                <div key={i} className="p-6 rounded-2xl bg-background border border-border hover:border-foreground/30 transition-colors">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center shrink-0">
+                      <CheckCircle2 className="w-5 h-5 text-foreground" />
+                    </div>
+                    <p className="text-foreground font-medium">{reason}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* NUEVA SECCIÓN: Cómo trabajamos - Proceso de servicio */}
+      {uniqueContent && uniqueContent.serviceProcess && (
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                ¿Cómo funciona nuestro servicio de {profession.name.toLowerCase()}?
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Un proceso simple y transparente para que tengas a un profesional en tu casa de {cityName} en cuestión de minutos.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {uniqueContent.serviceProcess.slice(0, 4).map((step, i) => (
+                <div key={i} className="relative">
+                  <div className="p-6 rounded-2xl bg-muted/30 border border-border h-full">
+                    <div className="w-10 h-10 rounded-full bg-foreground text-white flex items-center justify-center font-bold text-lg mb-4">
+                      {i + 1}
+                    </div>
+                    <p className="text-foreground">{step}</p>
+                  </div>
+                  {i < 3 && (
+                    <div className="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2">
+                      <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {uniqueContent.serviceProcess.length > 4 && (
+              <div className="mt-8 grid md:grid-cols-3 gap-6">
+                {uniqueContent.serviceProcess.slice(4).map((step, i) => (
+                  <div key={i + 4} className="p-6 rounded-2xl bg-muted/30 border border-border">
+                    <div className="w-10 h-10 rounded-full bg-foreground text-white flex items-center justify-center font-bold text-lg mb-4">
+                      {i + 5}
+                    </div>
+                    <p className="text-foreground">{step}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* NUEVA SECCIÓN: Descripción extendida SEO */}
+      {uniqueContent && uniqueContent.extendedDescription && (
+        <section className="py-12 bg-muted/10">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <div className="prose prose-lg max-w-none">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
+                Tu {profession.name.toLowerCase()} de confianza en {cityName}
+              </h2>
+              <p className="text-muted-foreground leading-relaxed text-lg">
+                {uniqueContent.extendedDescription}
+              </p>
+              <p className="text-muted-foreground leading-relaxed mt-4">
+                {uniqueContent.cta}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* NUEVA SECCIÓN: Preguntas Frecuentes (FAQs) */}
+      {uniqueContent && uniqueContent.faqs && uniqueContent.faqs.length > 0 && (
+        <section className="py-16">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/10 text-foreground text-sm font-medium mb-4">
+                <HelpCircle className="w-4 h-4" />
+                <span>Resolvemos tus dudas</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Preguntas frecuentes sobre {profession.name.toLowerCase()} en {cityName}
+              </h2>
+              <p className="text-muted-foreground">
+                Las dudas más comunes que nos hacen nuestros clientes de {cityName} y alrededores.
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              {uniqueContent.faqs.map((faq, i) => (
+                <details key={i} className="group rounded-2xl border border-border bg-background overflow-hidden">
+                  <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-muted/30 transition-colors">
+                    <h3 className="text-lg font-semibold text-foreground pr-4">{faq.q}</h3>
+                    <span className="text-foreground shrink-0 transition-transform group-open:rotate-180">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-6 pb-6">
+                    <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* NUEVA SECCIÓN: Consejos de prevención */}
+      {uniqueContent && uniqueContent.preventionTips && uniqueContent.preventionTips.length > 0 && (
+        <section className="py-16 bg-muted/20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/10 text-foreground text-sm font-medium mb-4">
+                  <Lightbulb className="w-4 h-4" />
+                  <span>Consejos de expertos</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                  Consejos para prevenir problemas de {profession.name.toLowerCase()}
+                </h2>
+                <p className="text-muted-foreground mb-6">
+                  Nuestros {profession.namePlural.toLowerCase()} en {cityName} comparten estos consejos prácticos para evitar averías y mantener tus instalaciones en perfecto estado.
+                </p>
+                <a
+                  href={`tel:+34${phoneNumber}`}
+                  onClick={handleCall}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-foreground hover:bg-foreground/90 text-white font-bold rounded-xl transition-all"
+                >
+                  <Phone className="w-5 h-5" />
+                  <span>Consulta gratuita</span>
+                </a>
+              </div>
+              
+              <div className="space-y-4">
+                {uniqueContent.preventionTips.map((tip, i) => (
+                  <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-background border border-border">
+                    <div className="w-8 h-8 rounded-lg bg-foreground/10 flex items-center justify-center shrink-0">
+                      <Lightbulb className="w-4 h-4 text-foreground" />
+                    </div>
+                    <p className="text-muted-foreground">{tip}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Coverage - Show nearby cities */}
       {nearbyCities.length > 0 && (
         <section className="py-12">
@@ -568,8 +751,8 @@ export function ServiceLandingTemplate({
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-16">
+      {/* Final CTA - Mejorado con más contenido */}
+      <section className="py-16 bg-gradient-to-b from-background to-muted/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/10 text-foreground text-sm font-medium mb-6">
             <Clock className="w-4 h-4" />
@@ -579,13 +762,18 @@ export function ServiceLandingTemplate({
           </div>
 
           <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
-            ¿Necesitas un {profession.name.toLowerCase()} {modifierText ? modifierText.toLowerCase() : ""}?
-            <span className="block text-foreground">Llámanos ahora</span>
+            ¿Necesitas un {profession.name.toLowerCase()} {modifierText ? modifierText.toLowerCase() : ""} en {cityName}?
+            <span className="block text-foreground">Llámanos ahora mismo</span>
           </h2>
 
-          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+          <p className="text-muted-foreground mb-4 max-w-2xl mx-auto">
             Un {profession.name.toLowerCase()} {modifierText ? modifierText.toLowerCase() : "certificado"} puede estar
-            en tu casa en {cityName} en menos de 10 minutos.
+            en tu casa en {cityName} en menos de {uniqueContent?.stats.avgResponseTime || 10} minutos. Sin compromiso, sin esperas, sin sorpresas.
+          </p>
+          
+          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto text-sm">
+            Llevamos {uniqueContent?.stats.yearsExperience || 10} años atendiendo a los vecinos de {cityName} y {uniqueContent?.localInfo.region || "alrededores"}. 
+            Más de {uniqueContent?.stats.servicesThisMonth || 200} servicios realizados este mes con un {uniqueContent?.stats.satisfactionRate || 97}% de clientes satisfechos.
           </p>
 
           <a
@@ -597,7 +785,29 @@ export function ServiceLandingTemplate({
             <span>{phoneFormatted}</span>
           </a>
 
-          <p className="mt-6 text-muted-foreground text-sm">Servicio 24h - 7 días - Festivos incluidos</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+            <span className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              Servicio 24h
+            </span>
+            <span className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              7 días a la semana
+            </span>
+            <span className="flex items-center gap-2">
+              <Shield className="w-4 h-4" />
+              Garantía incluida
+            </span>
+            <span className="flex items-center gap-2">
+              <FileCheck className="w-4 h-4" />
+              Presupuesto gratis
+            </span>
+          </div>
+          
+          <p className="mt-6 text-muted-foreground text-xs">
+            Servicio de {profession.name.toLowerCase()} urgente en {cityName}, {uniqueContent?.localInfo.province || ""}, {uniqueContent?.localInfo.region || ""}. 
+            Atendemos urgencias las 24 horas del día, los 365 días del año, incluidos festivos y fines de semana.
+          </p>
         </div>
       </section>
     </div>

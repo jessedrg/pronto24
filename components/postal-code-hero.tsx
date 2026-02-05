@@ -23,8 +23,8 @@ export function PostalCodeHero({
   cityName,
   description,
 }: PostalCodeHeroProps) {
-  const phoneNumberStatic = "931501817"
-  const [whatsappPhone, setWhatsappPhone] = useState("931501817")
+  const phoneNumberStatic = "936946639"
+  const [whatsappPhone, setWhatsappPhone] = useState("936946639")
 
   useEffect(() => {
     const fetchPhone = async () => {

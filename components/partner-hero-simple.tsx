@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 
 export function PartnerHeroSimple() {
-  const phoneNumber = "931501817"
+  const phoneNumber = "936946639"
 
   const whatsappMessage = encodeURIComponent("Hola! Quiero trabajar con vosotros y recibir clientes urgentes.")
   const whatsappLink = `https://wa.me/34${phoneNumber}?text=${whatsappMessage}`

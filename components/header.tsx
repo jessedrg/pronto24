@@ -8,8 +8,8 @@ import { usePathname } from "next/navigation"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const phoneNumber = "931501817"
-  const phoneFormatted = "931 501 817"
+  const phoneNumber = "936946639"
+  const phoneFormatted = "936 946 639"
   const pathname = usePathname()
 
   if (pathname?.startsWith("/0x")) {

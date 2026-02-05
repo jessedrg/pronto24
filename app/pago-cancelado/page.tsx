@@ -3,7 +3,7 @@
 import { XCircle } from "lucide-react"
 
 export default function PagoCancelado() {
-  const phoneNumber = "931501817"
+  const phoneNumber = "936946639"
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
