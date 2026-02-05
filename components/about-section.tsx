@@ -8,7 +8,7 @@ export function AboutSection() {
           {/* Left: About text */}
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-              Más de 10 años solucionando emergencias del hogar en Catalunya
+              Más de 10 años solucionando emergencias del hogar en España
             </h2>
             
             <div className="space-y-4 text-muted-foreground leading-relaxed">
@@ -25,8 +25,7 @@ export function AboutSection() {
               </p>
               
               <p>
-                Operamos principalmente en <strong className="text-foreground">Catalunya</strong> (Barcelona, Girona, Tarragona y Lleida) 
-                y <strong className="text-foreground">Málaga</strong>, con planes de expansión a más ciudades de España. 
+                Operamos en <strong className="text-foreground">toda España</strong>, con cobertura en Madrid, Barcelona, Valencia, Sevilla, Zaragoza, Málaga, Murcia, Bilbao, Alicante, Córdoba y todas las principales ciudades. 
                 Conocemos las particularidades de cada zona, desde los edificios históricos del Eixample hasta 
                 las urbanizaciones más modernas del Maresme.
               </p>

@@ -99,7 +99,7 @@ export function ServicesOverview() {
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Profesionales certificados disponibles 24 horas al día, 7 días a la semana. 
-            Llegamos en menos de 30 minutos a cualquier punto de Catalunya.
+            Llegamos en menos de 10 minutos a cualquier punto de España.
           </p>
         </div>
 

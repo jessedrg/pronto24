@@ -66,7 +66,7 @@ export function ServiceLandingTemplate({
   const [activeUsers, setActiveUsers] = useState(12)
 
   const profession = professionProp || PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
-  const cityName = cityProp?.name || (citySlug ? getCityDisplayName(citySlug) : "Catalunya")
+  const cityName = cityProp?.name || (citySlug ? getCityDisplayName(citySlug) : "España")
   const actualCitySlug = cityProp?.slug || citySlug
   const provinceName = cityProp?.province || (actualCitySlug ? getCityProvince(actualCitySlug) : "")
   const nearbyCities = actualCitySlug ? getNearbyCities(actualCitySlug) : []

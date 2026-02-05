@@ -91,7 +91,7 @@ export function ElectricistaContent() {
 
               <p className="text-base sm:text-lg text-muted-foreground max-w-xl">
                 Electricistas certificados disponibles{" "}
-                <strong className="text-foreground">24/7 en toda Catalunya</strong>. Solucionamos cualquier avería
+                <strong className="text-foreground">24/7 en toda España</strong>. Solucionamos cualquier avería
                 eléctrica de urgencia.
               </p>
 
@@ -219,7 +219,7 @@ export function ElectricistaContent() {
                   <MapPin className="w-8 h-8 text-[#FF6B35]" />
                 </div>
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-black text-foreground">Toda Catalunya</h2>
+                  <h2 className="text-2xl md:text-3xl font-black text-foreground">Toda España</h2>
                   <p className="text-muted-foreground">Llegamos en 10 minutos a cualquier punto</p>
                 </div>
               </div>

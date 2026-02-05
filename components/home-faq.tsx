@@ -3,7 +3,7 @@ import { HelpCircle } from "lucide-react"
 const faqs = [
   {
     question: "¿Cuánto tarda en llegar un profesional a mi casa?",
-    answer: "Nuestro tiempo medio de llegada es de 10 a 30 minutos, dependiendo de tu ubicación y la disponibilidad de técnicos en tu zona. Mantenemos profesionales distribuidos estratégicamente por toda Catalunya para garantizar la respuesta más rápida posible. En casos de emergencia extrema, priorizamos tu llamada."
+    answer: "Nuestro tiempo medio de llegada es de 10 a 30 minutos, dependiendo de tu ubicación y la disponibilidad de técnicos en tu zona. Mantenemos profesionales distribuidos estratégicamente por toda España para garantizar la respuesta más rápida posible. En casos de emergencia extrema, priorizamos tu llamada."
   },
   {
     question: "¿Cuánto cuesta el servicio de urgencias?",
@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     question: "¿Qué zonas cubren?",
-    answer: "Actualmente damos servicio en toda Catalunya, con especial cobertura en Barcelona y área metropolitana, Girona, Tarragona y Lleida. También operamos en Málaga y estamos expandiéndonos a más ciudades de España. Consulta disponibilidad para tu zona llamando a nuestro teléfono de atención."
+    answer: "Damos servicio en toda España, con cobertura en todas las principales ciudades: Madrid, Barcelona, Valencia, Sevilla, Zaragoza, Málaga, Murcia, Bilbao, Alicante, Córdoba y muchas más. Consulta disponibilidad para tu zona llamando a nuestro teléfono de atención."
   },
   {
     question: "¿Qué hago en caso de emergencia mientras espero al técnico?",

@@ -20,7 +20,7 @@ export function ServiceDetails({ features, benefits, cities }: ServiceDetailsPro
                 <Zap className="h-4 w-4" />
                 Cobertura Express
               </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Toda Catalunya y Málaga</h3>
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Toda España</h3>
               <p className="text-zinc-400 text-base">Servicio de urgencias disponible 24 horas, 7 días a la semana</p>
             </div>
 
@@ -72,7 +72,7 @@ export function ServiceDetails({ features, benefits, cities }: ServiceDetailsPro
         <div className="space-y-8 pt-8 border-t">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-3">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Cobertura en Catalunya y Málaga</h2>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Cobertura en toda España</h2>
               <p className="text-base text-muted-foreground">Técnicos disponibles 24/7 en todas las zonas</p>
             </div>
             <div className="flex items-center gap-2 bg-green-500/10 text-green-500 px-4 py-2 rounded-full text-sm font-semibold">
