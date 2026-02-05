@@ -9,6 +9,7 @@ import { Coverage } from "@/components/coverage"
 import { ServicesOverview } from "@/components/services-overview"
 import { HomeFAQ } from "@/components/home-faq"
 import { AboutSection } from "@/components/about-section"
+import { HomeServiceArticles } from "@/components/home-service-articles"
 
 // Schema.org JSON-LD para la página principal
 const homeSchema = {
@@ -138,6 +139,7 @@ export default function Home() {
       <SocialProof />
       <GuaranteeSection />
       <AboutSection />
+      <HomeServiceArticles />
       <HomeFAQ />
       <Coverage />
       <Footer />
