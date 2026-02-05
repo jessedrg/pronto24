@@ -31,6 +31,9 @@ import {
 import Image from "next/image"
 import { getCityDisplayName, getCityProvince, getNearbyCities, PROBLEMS, PROFESSIONS } from "@/lib/seo-data"
 import { generateUniqueContent, generateTestimonials } from "@/lib/content-generator"
+import { ExpertGuideSection } from "@/components/expert-guide-section"
+import { ServiceDeepDive } from "@/components/service-deep-dive"
+import { PricingGuideSection } from "@/components/pricing-guide-section"
 
 const ICONS = {
   Zap,
@@ -598,6 +601,29 @@ export function ServiceLandingTemplate({
           </div>
         </section>
       )}
+
+      {/* NUEVA SECCIÓN: Guía del Experto - Contenido Educativo Profundo */}
+      <ExpertGuideSection 
+        professionId={profession.id}
+        cityName={cityName}
+        professionName={profession.name}
+      />
+
+      {/* NUEVA SECCIÓN: Servicio en Profundidad */}
+      <ServiceDeepDive
+        professionId={profession.id}
+        professionName={profession.name}
+        cityName={cityName}
+        provinceName={uniqueContent?.localInfo.province || provinceName}
+        regionName={uniqueContent?.localInfo.region || "España"}
+      />
+
+      {/* NUEVA SECCIÓN: Guía de Precios */}
+      <PricingGuideSection
+        professionId={profession.id}
+        professionName={profession.name}
+        cityName={cityName}
+      />
 
       {/* NUEVA SECCIÓN: Preguntas Frecuentes (FAQs) */}
       {uniqueContent && uniqueContent.faqs && uniqueContent.faqs.length > 0 && (
