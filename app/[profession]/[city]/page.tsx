@@ -280,7 +280,7 @@ export default async function ProfessionCityPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background pt-14">
       {/* Schema.org JSON-LD para SEO */}
       <script
         type="application/ld+json"

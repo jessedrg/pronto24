@@ -177,7 +177,7 @@ export default async function PostalCodePage({ params }: PageProps) {
         zoneName={zoneName}
         cityName={cityName}
       />
-      <div className="min-h-screen flex flex-col bg-background">
+      <div className="min-h-screen flex flex-col bg-background pt-14">
         <Breadcrumbs
           items={[
             { label: professionData.name, href: `/${profession}/` },
