@@ -2,10 +2,7 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { MapPin, Wrench, ArrowRight, Navigation } from "lucide-react"
-import { Header } from "@/components/header"
-import { UrgencyBanner } from "@/components/urgency-banner"
 import { Footer } from "@/components/footer"
-import { AIChatWidget } from "@/components/ai-chat-widget"
 import { PostalCodeHero } from "@/components/postal-code-hero"
 import { PostalCodeStats } from "@/components/postal-code-stats"
 import { PostalCodeFAQ } from "@/components/postal-code-faq"
@@ -181,8 +178,6 @@ export default async function PostalCodePage({ params }: PageProps) {
         cityName={cityName}
       />
       <div className="min-h-screen flex flex-col bg-background">
-        <UrgencyBanner />
-        <Header />
         <Breadcrumbs
           items={[
             { label: professionData.name, href: `/${profession}/` },
@@ -293,7 +288,6 @@ export default async function PostalCodePage({ params }: PageProps) {
           )}
         </main>
         <Footer />
-        <AIChatWidget service={profession} />
       </div>
     </>
   )

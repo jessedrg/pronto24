@@ -1,13 +1,11 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Link from "next/link"
-import { MapPin, ArrowRight, Wrench, AlertTriangle } from "lucide-react"
-import { Header } from "@/components/header"
-import { UrgencyBanner } from "@/components/urgency-banner"
+import { MapPin, ArrowRight, Wrench, AlertTriangle, Clock, Euro, Phone, Shield, CheckCircle2 } from "lucide-react"
 import { Footer } from "@/components/footer"
-import { AIChatWidget } from "@/components/ai-chat-widget"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { Breadcrumbs } from "@/components/breadcrumbs"
+import { CallButton } from "@/components/hero-client-parts"
 import { PROFESSIONS, PROBLEMS, getCityDisplayName, getNearbyCities } from "@/lib/seo-data"
 
 export const dynamicParams = true
@@ -16,7 +14,7 @@ export const revalidate = 604800
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
 // Detailed problem descriptions for unique SEO content
-const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; causes: string[]; solutions: string[]; urgencyLevel: string; estimatedTime: string; priceRange: string }>> = {
+const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; causes: string[]; solutions: string[]; urgencyLevel: string; estimatedTime: string; priceRange: string; whileYouWait: string[]; faqs: { q: string; a: string }[] }>> = {
   electricista: {
     "apagon": {
       longDescription: "Un apagon total o parcial puede deberse a multiples causas, desde un simple salto del magnetotermico hasta un fallo grave en la instalacion electrica. Es fundamental actuar con rapidez ya que quedarse sin electricidad afecta a la seguridad del hogar, la conservacion de alimentos en el frigorifico y el funcionamiento de sistemas esenciales como alarmas o equipos medicos.",
@@ -24,7 +22,13 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Diagnostico completo del cuadro electrico", "Localizacion del punto de fallo", "Reparacion o sustitucion de elementos danados", "Verificacion de toda la instalacion"],
       urgencyLevel: "Alta - Servicio prioritario",
       estimatedTime: "30-90 minutos",
-      priceRange: "60-200"
+      priceRange: "60-200",
+      whileYouWait: ["Comprueba si tus vecinos tambien estan sin luz (descartaria un corte general)", "Intenta subir los magnetotermicos del cuadro electrico uno por uno", "Si salta al subir uno concreto, deja ese bajado y sube el resto", "No manipules cables sueltos ni intentes reparaciones por tu cuenta"],
+      faqs: [
+        { q: "Cuanto cuesta reparar un apagon en casa?", a: "El precio medio de reparar un apagon oscila entre 60 y 200 euros, dependiendo de la causa. Un simple salto de magnetotermico puede costar unos 60 euros, mientras que una averia mas compleja puede llegar a los 200 euros. Siempre damos presupuesto cerrado antes de empezar." },
+        { q: "Cuanto tarda un electricista en solucionar un apagon?", a: "Normalmente entre 30 y 90 minutos desde que llega el tecnico. El diagnostico suele ser rapido (10-15 min), y la reparacion depende de la complejidad del problema." },
+        { q: "Puede un apagon danar mis electrodomesticos?", a: "Si, los cortes de luz bruscos pueden danar electrodomesticos sensibles como ordenadores, televisores o frigorificos. Recomendamos usar regletas con proteccion contra sobretensiones." }
+      ]
     },
     "cortocircuito": {
       longDescription: "Un cortocircuito ocurre cuando la corriente electrica toma un camino no previsto, generalmente por un cable danado o una conexion defectuosa. Es una situacion potencialmente peligrosa que puede provocar incendios si no se soluciona rapidamente.",
@@ -32,7 +36,12 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Localizacion exacta del cortocircuito", "Reparacion del cableado danado", "Sustitucion de elementos defectuosos", "Revision preventiva de la instalacion"],
       urgencyLevel: "Muy alta - Riesgo de incendio",
       estimatedTime: "45-120 minutos",
-      priceRange: "80-250"
+      priceRange: "80-250",
+      whileYouWait: ["Baja inmediatamente el interruptor general del cuadro electrico", "No toques ningun cable ni enchufe que presente signos de quemado", "Si hay olor a quemado, ventila la zona afectada", "No intentes reconectar la luz hasta que llegue el electricista"],
+      faqs: [
+        { q: "Es peligroso un cortocircuito?", a: "Si, un cortocircuito puede provocar incendios electricos si no se soluciona rapidamente. Es importante desconectar el circuito afectado y llamar a un electricista profesional inmediatamente." },
+        { q: "Como se que tengo un cortocircuito?", a: "Las senales mas comunes son: salto repetido de los automaticos, olor a quemado, chispas en enchufes, marcas oscuras en paredes cerca de puntos electricos, o calentamiento excesivo de cables." }
+      ]
     },
     "olor-quemado": {
       longDescription: "El olor a quemado en la instalacion electrica es una senal de alerta grave que indica sobrecalentamiento. Puede provenir de cables, enchufes, interruptores o el cuadro electrico. Nunca debe ignorarse ya que es precursor habitual de incendios electricos.",
@@ -40,7 +49,12 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Desconexion inmediata de la zona afectada", "Localizacion del punto de sobrecalentamiento", "Sustitucion de cables y conexiones", "Revision integral de la instalacion"],
       urgencyLevel: "Critica - Emergencia",
       estimatedTime: "60-180 minutos",
-      priceRange: "100-350"
+      priceRange: "100-350",
+      whileYouWait: ["Corta la electricidad desde el interruptor general inmediatamente", "Ventila bien toda la vivienda abriendo ventanas", "Si ves humo o llamas, llama al 112 antes que al electricista", "No uses agua para apagar fuego electrico, usa un extintor de CO2"],
+      faqs: [
+        { q: "Que hago si huelo a quemado electrico en casa?", a: "Lo primero es cortar la electricidad desde el cuadro general. Ventila la zona y no intentes localizar el origen manipulando cables. Llama a un electricista de urgencia inmediatamente." },
+        { q: "Puede arder mi casa por un problema electrico?", a: "Si, las averias electricas son una de las principales causas de incendios domesticos. Un cable sobrecalentado puede alcanzar temperaturas superiores a 300 grados, suficiente para incendiar materiales cercanos." }
+      ]
     },
     "diferencial-salta": {
       longDescription: "Cuando el diferencial salta repetidamente, indica que existe una fuga de corriente en algun punto de la instalacion. El diferencial es un dispositivo de seguridad vital que te protege de electrocuciones, por lo que su salto frecuente no debe ignorarse.",
@@ -48,17 +62,27 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Identificacion del circuito con fuga", "Pruebas de aislamiento por circuito", "Reparacion del punto de fuga", "Sustitucion del diferencial si esta defectuoso"],
       urgencyLevel: "Alta - Riesgo electrico",
       estimatedTime: "30-120 minutos",
-      priceRange: "60-200"
+      priceRange: "60-200",
+      whileYouWait: ["Desenchufa todos los electrodomesticos e intenta subir el diferencial", "Si se mantiene, el problema esta en la instalacion fija", "Si salta al enchufar uno concreto, ese electrodomestico tiene fuga", "No puentees nunca el diferencial: es tu proteccion contra electrocucion"],
+      faqs: [
+        { q: "Por que salta el diferencial de mi casa?", a: "El diferencial salta cuando detecta una fuga de corriente. Las causas mas comunes son: un electrodomestico con derivacion, humedad en la instalacion, o un cable con el aislamiento deteriorado." },
+        { q: "Puedo puentear el diferencial?", a: "Nunca se debe puentear el diferencial. Es el dispositivo que te protege de electrocuciones. Si salta frecuentemente, hay un problema real que debe ser diagnosticado y reparado por un profesional." }
+      ]
     },
   },
   fontanero: {
     "fuga-agua": {
-      longDescription: "Una fuga de agua, visible u oculta, puede causar danos estructurales importantes si no se soluciona a tiempo. El agua filtrándose puede danar paredes, suelos, techos del vecino de abajo, y provocar la aparicion de moho perjudicial para la salud.",
+      longDescription: "Una fuga de agua, visible u oculta, puede causar danos estructurales importantes si no se soluciona a tiempo. El agua filtrandose puede danar paredes, suelos, techos del vecino de abajo, y provocar la aparicion de moho perjudicial para la salud.",
       causes: ["Tuberias corroidas o deterioradas por antiguedad", "Juntas y conexiones desgastadas", "Congelacion de tuberias en invierno", "Presion excesiva del agua", "Movimientos estructurales del edificio"],
       solutions: ["Deteccion exacta con equipos de ultrasonidos", "Reparacion o sustitucion del tramo afectado", "Sellado profesional de juntas", "Prueba de presion posterior"],
       urgencyLevel: "Muy alta - Danos progresivos",
       estimatedTime: "30-120 minutos",
-      priceRange: "60-250"
+      priceRange: "60-250",
+      whileYouWait: ["Cierra la llave de paso general del agua inmediatamente", "Si la fuga es en un punto concreto, cierra solo la llave de esa zona", "Pon cubos o toallas para recoger el agua y minimizar danos", "Haz fotos de los danos para el seguro"],
+      faqs: [
+        { q: "Cuanto cuesta reparar una fuga de agua?", a: "El precio varia entre 60 y 250 euros dependiendo de la ubicacion y gravedad de la fuga. Una fuga visible en un grifo es mas economica que una fuga oculta en pared que requiere deteccion por ultrasonidos." },
+        { q: "Cubre el seguro una fuga de agua?", a: "La mayoria de seguros del hogar cubren los danos causados por fugas de agua. Recomendamos documentar todo con fotos y guardar la factura del fontanero para presentar al seguro." }
+      ]
     },
     "tuberia-rota": {
       longDescription: "Una tuberia rota es una emergencia que requiere atencion inmediata. La cantidad de agua que puede escapar de una rotura es enorme y los danos se multiplican con cada minuto que pasa. Es fundamental cerrar la llave de paso inmediatamente.",
@@ -66,7 +90,12 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Corte de agua inmediato", "Sustitucion del tramo roto", "Verificacion de toda la linea", "Restablecimiento del servicio"],
       urgencyLevel: "Critica - Emergencia",
       estimatedTime: "60-180 minutos",
-      priceRange: "100-400"
+      priceRange: "100-400",
+      whileYouWait: ["Cierra la llave de paso general lo antes posible", "Recoge el agua con cubos y fregonas", "Desconecta aparatos electricos de la zona afectada", "Avisa a vecinos si el agua puede filtrarse a pisos inferiores"],
+      faqs: [
+        { q: "Cuanto tiempo se tarda en reparar una tuberia rota?", a: "Depende de la ubicacion. Si la tuberia esta accesible, entre 1-2 horas. Si esta empotrada en pared o suelo, puede llevar 3-4 horas incluyendo la obra necesaria." },
+        { q: "Hay que romper la pared para reparar una tuberia?", a: "No siempre. Los fontaneros modernos usan tecnicas de reparacion minimamente invasivas. Solo se rompe la zona estrictamente necesaria para acceder a la tuberia danada." }
+      ]
     },
     "inundacion": {
       longDescription: "Una inundacion domestica puede tener consecuencias devastadoras: danos en suelos, muebles, electrodomesticos, y afectar a viviendas vecinas. La actuacion rapida es clave para minimizar los danos materiales y facilitar la reclamacion al seguro.",
@@ -74,7 +103,11 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Corte de suministro de agua", "Extraccion del agua acumulada", "Reparacion de la causa", "Documentacion para el seguro"],
       urgencyLevel: "Critica - Emergencia maxima",
       estimatedTime: "60-240 minutos",
-      priceRange: "150-500"
+      priceRange: "150-500",
+      whileYouWait: ["Corta el agua y la electricidad inmediatamente", "Retira objetos de valor del suelo", "Empieza a sacar agua con cubos y fregonas", "Documenta todo con fotos y video para el seguro"],
+      faqs: [
+        { q: "Que hago si mi casa se esta inundando?", a: "Lo primero: cierra la llave de paso del agua y el cuadro electrico. Retira objetos de valor y empieza a achicas agua. Llama inmediatamente a un fontanero de urgencia." }
+      ]
     },
   },
   cerrajero: {
@@ -84,7 +117,12 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Apertura no destructiva con tecnicas profesionales", "Lubricacion y ajuste del mecanismo", "Cambio de bombin si es necesario", "Ajuste de puerta y marco"],
       urgencyLevel: "Alta - No puedes acceder a tu hogar",
       estimatedTime: "10-45 minutos",
-      priceRange: "60-150"
+      priceRange: "60-150",
+      whileYouWait: ["No fuerces la llave ni la cerradura, podrias empeorar el problema", "Comprueba si hay alguna ventana o puerta trasera abierta", "No intentes abrir la puerta con tarjetas o herramientas caseras", "Espera al cerrajero en un lugar seguro cerca de tu puerta"],
+      faqs: [
+        { q: "Cuanto cuesta abrir una puerta bloqueada?", a: "El precio de apertura oscila entre 60 y 150 euros. La variacion depende del tipo de cerradura, si se puede abrir sin danos o si requiere cambio de bombin. Siempre informamos del precio antes de empezar." },
+        { q: "El cerrajero puede abrir sin romper la cerradura?", a: "En la mayoria de los casos si. Nuestros cerrajeros dominan tecnicas de apertura no destructiva que permiten abrir la puerta sin causar ningun dano a la cerradura ni a la puerta." }
+      ]
     },
     "cerradura-rota": {
       longDescription: "Una cerradura rota compromete la seguridad de tu hogar. Ya sea por un intento de robo, desgaste natural o un fallo mecanico, es imprescindible repararla o sustituirla cuanto antes para proteger tu vivienda y tus pertenencias.",
@@ -92,15 +130,23 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Evaluacion del dano", "Reparacion si es viable", "Sustitucion por cerradura de mayor seguridad", "Instalacion de escudo protector"],
       urgencyLevel: "Muy alta - Seguridad comprometida",
       estimatedTime: "20-60 minutos",
-      priceRange: "80-250"
+      priceRange: "80-250",
+      whileYouWait: ["Si fue un intento de robo, llama primero a la policia (091 o 112)", "No toques la cerradura para no alterar posibles pruebas", "Si puedes cerrar la puerta temporalmente, hazlo con algun objeto pesado", "Avisa a un vecino de confianza por seguridad"],
+      faqs: [
+        { q: "Que cerradura debo poner si me han intentado robar?", a: "Recomendamos cerraduras de seguridad antibumping y antitaladro, con escudo protector BKS o similar. Un bombin de seguridad de calidad cuesta entre 80-150 euros y ofrece una proteccion muy superior." }
+      ]
     },
     "llave-dentro": {
       longDescription: "Dejarse las llaves dentro de casa es mas comun de lo que parece. Es una situacion que genera ansiedad pero que tiene solucion rapida con un cerrajero profesional que pueda abrir la puerta sin causar ningun dano.",
       causes: ["Despiste al salir con prisa", "Puerta que se cierra con corriente de aire", "Ninos que cierran desde dentro", "Olvido al sacar la basura o ir al buzon"],
-      solutions: ["Apertura sin danos de la cerradura", "Recuperacion de las llaves", "Recomendacion de cerradura antipánico", "Copia de llaves preventiva"],
+      solutions: ["Apertura sin danos de la cerradura", "Recuperacion de las llaves", "Recomendacion de cerradura antipanico", "Copia de llaves preventiva"],
       urgencyLevel: "Alta - Acceso inmediato necesario",
       estimatedTime: "10-30 minutos",
-      priceRange: "50-120"
+      priceRange: "50-120",
+      whileYouWait: ["Comprueba si dejaste alguna ventana abierta (no trepes, pide al cerrajero)", "Busca si algun familiar o vecino tiene copia de la llave", "No intentes forzar la puerta, causaras danos innecesarios", "Espera tranquilamente, el cerrajero llegara enseguida"],
+      faqs: [
+        { q: "Se puede abrir una puerta sin llave y sin danos?", a: "Si, en la gran mayoria de casos nuestros cerrajeros pueden abrir la puerta sin causar ningun dano usando herramientas especializadas. Solo en cerraduras de muy alta seguridad puede ser necesario taladrar el bombin." }
+      ]
     },
   },
   desatascos: {
@@ -110,7 +156,12 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Desatasco mecanico profesional", "Hidrolimpieza si es necesario", "Inspeccion con camara", "Limpieza preventiva del tramo"],
       urgencyLevel: "Muy alta - Afecta habitabilidad",
       estimatedTime: "30-90 minutos",
-      priceRange: "60-150"
+      priceRange: "60-150",
+      whileYouWait: ["No tires mas de la cadena, podrias provocar un desbordamiento", "No eches productos quimicos, pueden danar las tuberias", "Si se desborda, corta la llave de paso del WC", "Pon toallas viejas alrededor del inodoro por precaucion"],
+      faqs: [
+        { q: "Puedo desatascar el WC yo mismo?", a: "Puedes intentar con un desatascador de ventosa. Si no funciona tras 2-3 intentos, no insistas. Los productos quimicos pueden danar las tuberias y los metodos caseros con alambre pueden rayar la ceramica." },
+        { q: "Cuanto cuesta desatascar un inodoro?", a: "El desatasco basico de WC cuesta entre 60 y 100 euros. Si requiere hidrolimpieza o el problema esta en el bajante, puede llegar a 150 euros. Siempre informamos del precio antes de actuar." }
+      ]
     },
     "fregadero-atascado": {
       longDescription: "Un fregadero atascado impide el uso normal de la cocina y puede generar malos olores y problemas de higiene. La causa mas comun es la acumulacion de grasa que solidifica dentro de las tuberias y atrapa otros residuos.",
@@ -118,7 +169,11 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Limpieza del sifon", "Desatasco mecanico", "Hidrolimpieza de tuberias", "Tratamiento antigrasas"],
       urgencyLevel: "Media-Alta",
       estimatedTime: "20-60 minutos",
-      priceRange: "50-100"
+      priceRange: "50-100",
+      whileYouWait: ["No eches mas agua al fregadero", "Prueba a verter agua muy caliente con un chorro de lavavajillas", "Si tienes acceso al sifon (debajo), puedes intentar desmontarlo", "Coloca un cubo debajo si desmontas el sifon"],
+      faqs: [
+        { q: "Como evitar que el fregadero se atasque?", a: "Nunca viertas grasa liquida por el fregadero (dejala solidificar y tirala a la basura). Usa un filtro en el desague, y una vez al mes echa agua hirviendo con un chorro de vinagre." }
+      ]
     },
   },
   calderas: {
@@ -128,7 +183,11 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Diagnostico completo de la caldera", "Reparacion del componente averiado", "Ajuste de presion y temperatura", "Descalcificacion si es necesario"],
       urgencyLevel: "Alta - Especialmente en invierno",
       estimatedTime: "30-120 minutos",
-      priceRange: "80-300"
+      priceRange: "80-300",
+      whileYouWait: ["Comprueba que la caldera esta encendida y no muestra codigos de error", "Verifica que la presion del manometro esta entre 1 y 1.5 bar", "Si la presion es baja, busca la llave de llenado y sube la presion lentamente", "Comprueba que la llave del gas no esta cerrada"],
+      faqs: [
+        { q: "Por que mi caldera no da agua caliente?", a: "Las causas mas frecuentes son: presion baja en el circuito, fallo del sensor de temperatura, vaso de expansion roto, o acumulacion de cal. Un tecnico puede diagnosticarlo en minutos." }
+      ]
     },
     "caldera-no-enciende": {
       longDescription: "Cuando la caldera no enciende, el diagnostico correcto es fundamental. Puede ser algo tan simple como un fallo del piloto o tan complejo como una placa electronica averiada. Un tecnico cualificado puede determinar la causa rapidamente.",
@@ -136,7 +195,11 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Revision completa del sistema", "Limpieza de sensores y quemadores", "Sustitucion de piezas defectuosas", "Verificacion de seguridades"],
       urgencyLevel: "Alta",
       estimatedTime: "30-90 minutos",
-      priceRange: "80-300"
+      priceRange: "80-300",
+      whileYouWait: ["Comprueba que hay suministro de gas (enciende un fuego de cocina)", "Verifica que el enchufe de la caldera tiene corriente", "Mira si la pantalla muestra algun codigo de error", "Intenta reiniciar la caldera apagandola y encendiendola"],
+      faqs: [
+        { q: "Cuanto cuesta reparar una caldera que no enciende?", a: "Depende de la averia. Una limpieza de sensores puede costar 80 euros, mientras que cambiar la placa electronica puede llegar a 300 euros. Siempre damos presupuesto cerrado antes de reparar." }
+      ]
     },
     "fuga-gas": {
       longDescription: "Una posible fuga de gas es la emergencia mas seria que puede ocurrir con una caldera. Requiere actuacion inmediata siguiendo un protocolo de seguridad estricto. Nunca intentes localizar la fuga tu mismo.",
@@ -144,7 +207,12 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       solutions: ["Ventilacion inmediata del espacio", "Cierre de llave de gas", "Deteccion profesional de la fuga", "Reparacion con materiales homologados"],
       urgencyLevel: "Critica - Emergencia de seguridad",
       estimatedTime: "30-90 minutos",
-      priceRange: "80-200"
+      priceRange: "80-200",
+      whileYouWait: ["Cierra la llave de paso del gas inmediatamente", "Abre todas las ventanas de la vivienda para ventilar", "NO enciendas ni apagues ninguna luz ni aparato electrico", "Sal de la vivienda y llama desde fuera al 112 y despues a nosotros"],
+      faqs: [
+        { q: "Que hago si huelo a gas en casa?", a: "Es una emergencia. Cierra la llave del gas, abre ventanas, NO toques interruptores electricos (ni para encender ni apagar), sal de casa y llama al 112 desde fuera. Despues llama a un tecnico de calderas." },
+        { q: "Es peligrosa una fuga de gas?", a: "Si, una fuga de gas es potencialmente mortal. El gas natural puede provocar explosiones si se acumula en un espacio cerrado y hay una chispa. Tambien puede causar asfixia. Actua siempre con maxima urgencia." }
+      ]
     },
   },
 }
@@ -163,7 +231,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!problem) return {}
   const cityName = getCityDisplayName(citySlug)
 
-  // Get detailed info if available
   const details = PROBLEM_DETAILS[professionId]?.[problemId]
 
   const title = `${problem.name} en ${cityName} - ${profession.name} Urgente 24h | 936 946 639`
@@ -201,19 +268,28 @@ export default async function ProblemCityPage({ params }: PageProps) {
   const otherProfessions = PROFESSIONS.filter(p => p.id !== professionId)
   const details = PROBLEM_DETAILS[professionId]?.[problemId]
 
-  // Schema.org for this specific problem page
+  // Schema.org
   const problemSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": `${problem.name} en ${cityName} - ${profession.name}`,
     "description": details?.longDescription || `Servicio de ${profession.name.toLowerCase()} para ${problem.name.toLowerCase()} en ${cityName}. Disponible 24/7.`,
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "pronto-24.com",
-      "telephone": "+34936946639"
-    },
+    "provider": { "@type": "LocalBusiness", "name": "pronto-24.com", "telephone": "+34936946639" },
     "areaServed": { "@type": "City", "name": cityName },
     "serviceType": `${profession.name} - ${problem.name}`,
+    ...(details && {
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "EUR",
+        "price": details.priceRange.split("-")[0],
+        "priceSpecification": {
+          "@type": "PriceSpecification",
+          "minPrice": details.priceRange.split("-")[0],
+          "maxPrice": details.priceRange.split("-")[1],
+          "priceCurrency": "EUR"
+        }
+      }
+    })
   }
 
   const breadcrumbSchema = {
@@ -223,17 +299,44 @@ export default async function ProblemCityPage({ params }: PageProps) {
       { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.pronto-24.com/" },
       { "@type": "ListItem", "position": 2, "name": profession.name, "item": `https://www.pronto-24.com/${profession.id}/` },
       { "@type": "ListItem", "position": 3, "name": `${profession.name} en ${cityName}`, "item": `https://www.pronto-24.com/${profession.id}/${citySlug}/` },
-      { "@type": "ListItem", "position": 4, "name": `${problem.name} en ${cityName}`, "item": `https://www.pronto-24.com/problema/${professionId}/${problemId}/${citySlug}/` },
+      { "@type": "ListItem", "position": 4, "name": `${problem.name} en ${cityName}` },
     ]
   }
+
+  // HowTo Schema for solutions
+  const howToSchema = details ? {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": `Como solucionamos ${problem.name.toLowerCase()} en ${cityName}`,
+    "description": details.longDescription,
+    "totalTime": `PT${details.estimatedTime.split("-")[1]?.replace(" minutos", "") || "90"}M`,
+    "estimatedCost": { "@type": "MonetaryAmount", "currency": "EUR", "value": details.priceRange.split("-")[0] },
+    "step": details.solutions.map((sol, i) => ({
+      "@type": "HowToStep",
+      "position": i + 1,
+      "name": `Paso ${i + 1}`,
+      "text": sol
+    }))
+  } : null
+
+  // FAQPage Schema
+  const faqSchema = details?.faqs ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": details.faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": { "@type": "Answer", "text": faq.a }
+    }))
+  } : null
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(problemSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {howToSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />}
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
 
-      <UrgencyBanner />
-      <Header />
       <Breadcrumbs
         items={[
           { label: profession.name, href: `/${profession.id}/` },
@@ -246,9 +349,9 @@ export default async function ProblemCityPage({ params }: PageProps) {
 
         {/* Problem-Specific Deep Content */}
         {details && (
-          <section className="py-12 bg-muted/10">
+          <article className="py-12 bg-muted/10">
             <div className="max-w-4xl mx-auto px-4 sm:px-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 text-balance">
                 {problem.name} en {cityName}: Informacion completa
               </h2>
               <p className="text-muted-foreground leading-relaxed text-lg mb-8">
@@ -256,7 +359,6 @@ export default async function ProblemCityPage({ params }: PageProps) {
               </p>
 
               <div className="grid md:grid-cols-2 gap-6 mb-8">
-                {/* Causes */}
                 <div className="p-6 rounded-2xl border border-border bg-background">
                   <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                     <AlertTriangle className="w-5 h-5 text-destructive" />
@@ -272,46 +374,101 @@ export default async function ProblemCityPage({ params }: PageProps) {
                   </ul>
                 </div>
 
-                {/* Solutions */}
                 <div className="p-6 rounded-2xl border border-border bg-background">
                   <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                     <Wrench className="w-5 h-5 text-accent" />
                     Como lo solucionamos
                   </h3>
-                  <ul className="space-y-2">
+                  <ol className="space-y-2">
                     {details.solutions.map((sol, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
+                        <span className="w-5 h-5 rounded-full bg-accent/10 text-accent flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{i + 1}</span>
                         {sol}
                       </li>
                     ))}
-                  </ul>
+                  </ol>
                 </div>
               </div>
 
-              {/* Quick info */}
-              <div className="grid grid-cols-3 gap-4">
+              {/* Quick info cards */}
+              <div className="grid grid-cols-3 gap-4 mb-8">
                 <div className="p-4 rounded-xl bg-muted/50 border border-border text-center">
-                  <div className="text-sm text-muted-foreground">Urgencia</div>
+                  <Clock className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
+                  <div className="text-xs text-muted-foreground">Urgencia</div>
                   <div className="font-bold text-foreground text-sm mt-1">{details.urgencyLevel}</div>
                 </div>
                 <div className="p-4 rounded-xl bg-muted/50 border border-border text-center">
-                  <div className="text-sm text-muted-foreground">Tiempo estimado</div>
+                  <Shield className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
+                  <div className="text-xs text-muted-foreground">Tiempo estimado</div>
                   <div className="font-bold text-foreground text-sm mt-1">{details.estimatedTime}</div>
                 </div>
                 <div className="p-4 rounded-xl bg-muted/50 border border-border text-center">
-                  <div className="text-sm text-muted-foreground">Precio orientativo</div>
-                  <div className="font-bold text-foreground text-sm mt-1">{details.priceRange}EUR</div>
+                  <Euro className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
+                  <div className="text-xs text-muted-foreground">Precio orientativo</div>
+                  <div className="font-bold text-foreground text-sm mt-1">{details.priceRange} EUR</div>
                 </div>
+              </div>
+
+              {/* What to do while you wait - UNIQUE CONTENT */}
+              {details.whileYouWait && (
+                <div className="p-6 rounded-2xl border-2 border-foreground/10 bg-foreground/5 mb-8">
+                  <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-foreground" />
+                    Que hacer mientras llega el {profession.name.toLowerCase()}
+                  </h3>
+                  <ol className="space-y-3">
+                    {details.whileYouWait.map((tip, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
+                        <span className="w-6 h-6 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
+                        {tip}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              {/* Inline CTA */}
+              <div className="p-6 rounded-2xl bg-foreground text-background text-center">
+                <p className="text-lg font-bold mb-2">Solucionamos {problem.name.toLowerCase()} en {cityName} en {details.estimatedTime}</p>
+                <p className="text-background/70 text-sm mb-4">Precio orientativo: {details.priceRange} EUR. Presupuesto cerrado antes de empezar.</p>
+                <CallButton phoneNumber="936946639" phoneFormatted="936 946 639" className="bg-background text-foreground hover:bg-background/90" />
+              </div>
+            </div>
+          </article>
+        )}
+
+        {/* Problem-Specific FAQs */}
+        {details?.faqs && details.faqs.length > 0 && (
+          <section className="py-12" aria-labelledby="problem-faq-heading">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6">
+              <h2 id="problem-faq-heading" className="text-2xl font-bold text-foreground mb-6 text-balance">
+                Preguntas frecuentes sobre {problem.name.toLowerCase()} en {cityName}
+              </h2>
+              <div className="space-y-4">
+                {details.faqs.map((faq, i) => (
+                  <details key={i} className="group rounded-2xl border border-border bg-background overflow-hidden">
+                    <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-muted/30 transition-colors">
+                      <h3 className="text-lg font-semibold text-foreground pr-4">{faq.q}</h3>
+                      <span className="text-foreground shrink-0 transition-transform group-open:rotate-180">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </span>
+                    </summary>
+                    <div className="px-6 pb-6">
+                      <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
+                    </div>
+                  </details>
+                ))}
               </div>
             </div>
           </section>
         )}
 
         {/* Interlinking: Other problems of the same profession */}
-        <section className="py-12 bg-muted/20">
+        <section className="py-12 bg-muted/20" aria-labelledby="other-problems-heading">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl font-bold text-foreground mb-6">
+            <h2 id="other-problems-heading" className="text-2xl font-bold text-foreground mb-6 text-balance">
               Otros problemas de {profession.name.toLowerCase()} en {cityName}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -337,11 +494,11 @@ export default async function ProblemCityPage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Interlinking: Same problem in nearby cities */}
+        {/* Same problem in nearby cities */}
         {nearbyCities.length > 0 && (
-          <section className="py-12">
+          <section className="py-12" aria-labelledby="nearby-problem-heading">
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
-              <h2 className="text-2xl font-bold text-foreground mb-2">
+              <h2 id="nearby-problem-heading" className="text-2xl font-bold text-foreground mb-2 text-balance">
                 {problem.name} en ciudades cercanas a {cityName}
               </h2>
               <p className="text-sm text-muted-foreground mb-6">
@@ -363,10 +520,10 @@ export default async function ProblemCityPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Interlinking: Other services in this city */}
-        <section className="py-12 bg-muted/20">
+        {/* Other services in this city */}
+        <section className="py-12 bg-muted/20" aria-labelledby="other-services-heading">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl font-bold text-foreground mb-6">
+            <h2 id="other-services-heading" className="text-2xl font-bold text-foreground mb-6">
               Otros servicios urgentes en {cityName}
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -385,7 +542,6 @@ export default async function ProblemCityPage({ params }: PageProps) {
               ))}
             </div>
 
-            {/* Link back to main city page */}
             <div className="mt-8 pt-6 border-t border-border">
               <Link
                 href={`/${professionId}/${citySlug}/`}
@@ -400,7 +556,6 @@ export default async function ProblemCityPage({ params }: PageProps) {
         </section>
       </main>
       <Footer />
-      <AIChatWidget />
     </div>
   )
 }

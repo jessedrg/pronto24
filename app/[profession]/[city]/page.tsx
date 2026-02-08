@@ -1,13 +1,10 @@
 import { notFound, redirect } from "next/navigation"
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
-import { UrgencyBanner } from "@/components/urgency-banner"
 import { Footer } from "@/components/footer"
-import { AIChatWidget } from "@/components/ai-chat-widget"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { PROFESSIONS, getCityDisplayName, getKeywordModifier } from "@/lib/seo-data"
-import { generateUniqueContent } from "@/lib/content-generator"
+import { generateUniqueContent, generateTestimonials } from "@/lib/content-generator"
 
 export const dynamicParams = true
 export const revalidate = 604800
@@ -235,6 +232,40 @@ export default async function ProfessionCityPage({ params }: PageProps) {
     }
   }
   
+  // Schema.org JSON-LD para HowTo (how we work steps)
+  const howToSchema = uniqueContent.serviceProcess ? {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": `Como contratar un ${profession.name.toLowerCase()} urgente en ${cityName}`,
+    "description": `Proceso paso a paso para tener un ${profession.name.toLowerCase()} profesional en tu casa de ${cityName} en cuestion de minutos.`,
+    "totalTime": "PT15M",
+    "step": uniqueContent.serviceProcess.slice(0, 4).map((step, i) => ({
+      "@type": "HowToStep",
+      "position": i + 1,
+      "name": `Paso ${i + 1}`,
+      "text": step
+    }))
+  } : null
+
+  // Schema.org JSON-LD para Review snippets
+  const reviews = generateTestimonials(citySlug, cityName, profession.name)
+  const reviewSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": `${profession.name} en ${cityName} - pronto-24.com`,
+    "review": reviews.map((r, i) => ({
+      "@type": "Review",
+      "author": { "@type": "Person", "name": r.name },
+      "reviewBody": r.text,
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "datePublished": new Date(Date.now() - (i + 1) * 86400000 * (i + 1)).toISOString().split("T")[0]
+    }))
+  }
+
   // Schema.org JSON-LD para BreadcrumbList
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -280,9 +311,17 @@ export default async function ProfessionCityPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
+      {howToSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
+      />
       
-      <UrgencyBanner />
-      <Header />
       <Breadcrumbs
         items={[
           { label: profession.name, href: `/${profession.id}/` },
@@ -302,7 +341,6 @@ export default async function ProfessionCityPage({ params }: PageProps) {
         />
       </main>
       <Footer />
-      <AIChatWidget />
     </div>
   )
 }
