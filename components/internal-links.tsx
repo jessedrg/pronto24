@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { MapPin, Wrench, AlertTriangle, ArrowRight, Building2, Navigation } from "lucide-react"
+import { MapPin, Wrench, AlertTriangle, ArrowRight, Building2, Navigation, Hash } from "lucide-react"
 import { PROFESSIONS, PROBLEMS, getCityDisplayName, getNearbyCities } from "@/lib/seo-data"
 
 interface InternalLinksProps {
@@ -9,6 +9,8 @@ interface InternalLinksProps {
   showProblems?: boolean
   showOtherServices?: boolean
   showNearbyCities?: boolean
+  showPostalCodes?: boolean
+  postalCodePrefix?: string
   showAllCities?: boolean
   maxCities?: number
 }
@@ -20,6 +22,8 @@ export function InternalLinks({
   showProblems = true,
   showOtherServices = true,
   showNearbyCities = true,
+  showPostalCodes = false,
+  postalCodePrefix,
   maxCities = 12,
 }: InternalLinksProps) {
   const currentProfession = PROFESSIONS.find(p => p.id === currentProfessionId)
@@ -181,6 +185,40 @@ export function InternalLinks({
                   ))
                 )}
               </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Postal Codes for this city */}
+      {showPostalCodes && postalCodePrefix && currentCitySlug && (
+        <section className="py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center">
+                <Hash className="w-5 h-5 text-foreground" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">
+                  {currentProfession?.name} por codigo postal en {cityName}
+                </h2>
+                <p className="text-sm text-muted-foreground">Encuentra el profesional mas cercano a tu zona.</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-6">
+              {Array.from({ length: 15 }, (_, i) => {
+                const cp = String(parseInt(postalCodePrefix) * 100 + 1 + i).padStart(5, '0')
+                return (
+                  <Link
+                    key={cp}
+                    href={`/${currentProfessionId}/cp/${cp}/`}
+                    className="group flex items-center gap-2 px-3.5 py-2 rounded-xl bg-muted/40 border border-border text-sm font-medium text-foreground hover:border-foreground/30 hover:bg-background transition-all"
+                  >
+                    <MapPin className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                    <span>CP {cp}</span>
+                  </Link>
+                )
+              })}
             </div>
           </div>
         </section>
