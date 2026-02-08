@@ -18,13 +18,13 @@ export function TrustBadges() {
       icon: Star,
       stat: "4.9/5",
       title: "Valoracion media",
-      description: "Mas de 2.800 opiniones verificadas de clientes",
+      description: "Valoracion media de nuestros clientes en toda Espana",
     },
     {
       icon: Award,
-      stat: "15k+",
-      title: "Servicios realizados",
-      description: "Profesionales certificados en toda Espana",
+      stat: "500+",
+      title: "Ciudades cubiertas",
+      description: "Red de profesionales certificados en toda Espana",
     },
   ]
 

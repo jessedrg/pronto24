@@ -14,8 +14,8 @@ export function AboutSection() {
             Más de 10 años siendo la referencia en servicios de urgencia 24h en España
           </h2>
           <p className="text-muted-foreground max-w-3xl mx-auto text-pretty">
-            Conoce quiénes somos, cómo trabajamos, y por qué más de 50.000 familias españolas 
-            confían en nosotros para resolver sus emergencias del hogar.
+            Conoce quienes somos, como trabajamos, y por que familias y negocios en toda Espana 
+            confian en nosotros para resolver sus emergencias del hogar.
           </p>
         </div>
 
@@ -86,14 +86,14 @@ export function AboutSection() {
               
               <div className="p-6 rounded-2xl bg-muted/30 border border-border text-center">
                 <Users className="w-8 h-8 mx-auto mb-3 text-primary" />
-                <div className="text-3xl font-bold text-foreground">50.000+</div>
-                <div className="text-sm text-muted-foreground">Clientes satisfechos</div>
+                <div className="text-3xl font-bold text-foreground">24/7</div>
+                <div className="text-sm text-muted-foreground">Servicio disponible</div>
               </div>
               
               <div className="p-6 rounded-2xl bg-muted/30 border border-border text-center">
                 <Award className="w-8 h-8 mx-auto mb-3 text-primary" />
-                <div className="text-3xl font-bold text-foreground">4.9/5</div>
-                <div className="text-sm text-muted-foreground">En Google Reviews</div>
+                <div className="text-3xl font-bold text-foreground">30 min</div>
+                <div className="text-sm text-muted-foreground">Tiempo max. de llegada</div>
               </div>
               
               <div className="p-6 rounded-2xl bg-muted/30 border border-border text-center">

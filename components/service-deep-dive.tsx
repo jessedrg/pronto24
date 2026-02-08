@@ -252,8 +252,8 @@ export function ServiceDeepDive({
             Servicio de {professionName} en {cityName}: Todo lo que Necesitas Saber
           </h2>
           <p className="text-muted-foreground max-w-3xl mx-auto">
-            Conoce en detalle como trabajamos, nuestros estandares de calidad y por que somos la opcion 
-            de confianza para miles de clientes en {provinceName}, {regionName}.
+            Conoce en detalle como trabajamos, nuestros estandares de calidad y por que somos una opcion 
+            de confianza profesional en {provinceName}, {regionName}.
           </p>
         </div>
 

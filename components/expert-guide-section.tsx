@@ -65,7 +65,7 @@ const EXPERT_GUIDES: Record<string, ExpertGuide> = {
       },
       {
         title: "Normativa y legalizacion",
-        content: "El Reglamento Electrotecnico de Baja Tension (REBT) establece los requisitos minimos de seguridad para instalaciones electricas. Cualquier instalacion nueva o reforma importante debe ser certificada por un electricista autorizado mediante el Boletin Electrico o Certificado de Instalacion Electrica (CIE). Este documento es necesario para dar de alta la luz, aumentar potencia, vender o alquilar una propiedad. Las instalaciones de mas de 20 anos pueden no cumplir la normativa actual y es recomendable una revision profesional.",
+        content: "El Reglamento Electrotecnico de Baja Tension (REBT, aprobado por Real Decreto 842/2002) establece los requisitos minimos de seguridad para instalaciones electricas en Espana. Sus Instrucciones Tecnicas Complementarias (ITC-BT) detallan los requisitos especificos: por ejemplo, la ITC-BT-25 regula las instalaciones en viviendas, y la ITC-BT-10 establece la prevision de cargas. Cualquier instalacion nueva o reforma importante debe ser certificada por un instalador autorizado mediante el Certificado de Instalacion Electrica (CIE o boletin electrico), que se tramita ante el organismo competente de la comunidad autonoma. Este documento es necesario para dar de alta el suministro, aumentar la potencia contratada, o vender/alquilar una propiedad. Las instalaciones anteriores al REBT de 2002 pueden no cumplir la normativa vigente y es muy recomendable una revision profesional.",
         tips: [
           "Guarda siempre el boletin electrico con la documentacion de tu casa",
           "Si compras una vivienda antigua, solicita una inspeccion electrica",
@@ -105,7 +105,7 @@ const EXPERT_GUIDES: Record<string, ExpertGuide> = {
     sections: [
       {
         title: "Componentes basicos de tu instalacion",
-        content: "Tu instalacion de fontaneria se divide en dos sistemas: el de suministro (agua limpia) y el de evacuacion (desagues). El suministro comienza en la llave de paso general, que debes conocer y saber operar. Desde ahi, el agua se distribuye a traves de tuberias (de cobre, PVC, polietileno o multicapa) hacia los diferentes puntos de consumo. El sistema de evacuacion recoge las aguas usadas mediante sifones (que retienen agua para evitar malos olores) y las conduce al alcantarillado. Cada sanitario tiene su llave de escuadra individual para poder aislarlo sin cortar el agua de toda la casa.",
+        content: "Tu instalacion de fontaneria se divide en dos sistemas regulados por el Codigo Tecnico de la Edificacion (CTE): el de suministro de agua (DB-HS4) y el de evacuacion de aguas (DB-HS5). El suministro comienza en la llave de paso general, que debes conocer y saber operar. Desde ahi, el agua se distribuye a traves de tuberias (de cobre, PVC, polietileno o multicapa) hacia los diferentes puntos de consumo. El sistema de evacuacion recoge las aguas usadas mediante sifones (que retienen agua para evitar malos olores) y las conduce al alcantarillado. Cada sanitario tiene su llave de escuadra individual para poder aislarlo sin cortar el agua de toda la casa.",
         tips: [
           "Localiza y senala la llave de paso general de tu vivienda",
           "Identifica las llaves de escuadra de cada sanitario",
@@ -173,7 +173,7 @@ const EXPERT_GUIDES: Record<string, ExpertGuide> = {
     sections: [
       {
         title: "Tipos de cerraduras y su seguridad",
-        content: "No todas las cerraduras ofrecen el mismo nivel de seguridad. Las cerraduras de borja (las mas basicas) solo son adecuadas para puertas interiores. Las cerraduras de cilindro con bombín son las mas comunes en viviendas; su seguridad depende enormemente de la calidad del bombin. Las cerraduras antibumping resisten el metodo de apertura mas utilizado por ladrones. Las cerraduras multipunto anclan la puerta en varios puntos del marco (3, 5 o 7 puntos), ofreciendo maxima resistencia. Las cerraduras invisibles o de seguridad extra se instalan por dentro y no tienen acceso desde el exterior.",
+        content: "No todas las cerraduras ofrecen el mismo nivel de seguridad. Las cerraduras de borja (las mas basicas) solo son adecuadas para puertas interiores. Las cerraduras de cilindro con bombin son las mas comunes en viviendas; su seguridad depende enormemente de la calidad del bombin. Al elegir un bombin, busca certificaciones como la norma UNE-EN 1303 (que clasifica cilindros por resistencia a ataques) o la clasificacion SKG de 1 a 3 estrellas. Las cerraduras antibumping resisten el metodo de apertura mas utilizado por intrusos. Las cerraduras multipunto (reguladas por la norma UNE-EN 12209) anclan la puerta en varios puntos del marco (3, 5 o 7 puntos), ofreciendo maxima resistencia. Las cerraduras invisibles o de seguridad extra se instalan por dentro y no tienen acceso desde el exterior.",
         tips: [
           "Invierte en un bombin de calidad: es mas importante que la cerradura",
           "Busca cilindros con certificacion SKG o similar",
@@ -318,7 +318,7 @@ const EXPERT_GUIDES: Record<string, ExpertGuide> = {
       },
       {
         title: "La revision obligatoria de calderas (RITE)",
-        content: "Por ley (Reglamento de Instalaciones Termicas en los Edificios - RITE), las calderas de gas domesticas de menos de 70 kW deben revisarse cada 2 anos por un tecnico autorizado (las de mayor potencia o uso colectivo, anualmente). Esta revision no es un tramite: es fundamental para tu seguridad. Incluye: verificacion de estanqueidad de circuitos de gas, analisis de combustion para comprobar eficiencia, limpieza de quemadores e intercambiador, comprobacion del tiro y evacuacion de gases, revision de presostatos y elementos de seguridad, y verificacion del correcto funcionamiento general. El tecnico emitira un certificado que debes guardar.",
+        content: "El Reglamento de Instalaciones Termicas en los Edificios (RITE, aprobado por Real Decreto 1027/2007 y actualizado por RD 178/2021) establece que las calderas de gas domesticas de menos de 70 kW deben revisarse cada 2 anos por un tecnico autorizado. Las instalaciones de mayor potencia o uso colectivo se revisan anualmente. Ademas, la inspeccion de gas obligatoria (cada 5 anos para instalaciones domesticas, segun el RD 919/2006 de distribucion de combustibles gaseosos) es un tramite independiente que realiza la distribuidora de gas. La revision del RITE incluye: verificacion de estanqueidad de circuitos de gas, analisis de combustion para comprobar eficiencia, limpieza de quemadores e intercambiador, comprobacion del tiro y evacuacion de gases, revision de presostatos y elementos de seguridad, y verificacion del correcto funcionamiento general. El tecnico emitira un certificado que debes guardar.",
         tips: [
           "Programa la revision antes de la temporada de calefaccion",
           "Guarda todos los certificados de revision",

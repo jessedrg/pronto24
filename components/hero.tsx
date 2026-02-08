@@ -88,7 +88,7 @@ export function Hero() {
                 ))}
                 <span className="ml-2 text-sm text-background/70 font-medium">4.9/5</span>
               </div>
-              <p className="text-sm text-background/60">Mas de 2.800 valoraciones verificadas</p>
+              <p className="text-sm text-background/60">Satisfaccion media de nuestros clientes</p>
             </div>
 
             <div className="grid grid-cols-2 gap-6">
@@ -98,8 +98,8 @@ export function Hero() {
               </div>
 
               <div className="bg-muted rounded-3xl p-6 lg:p-8 border border-foreground/5">
-                <div className="text-4xl sm:text-5xl font-black tracking-tighter mb-2">15k+</div>
-                <div className="text-sm text-muted-foreground font-medium">Servicios realizados</div>
+                <div className="text-4xl sm:text-5xl font-black tracking-tighter mb-2">30 min</div>
+                <div className="text-sm text-muted-foreground font-medium">Tiempo max. llegada</div>
               </div>
             </div>
 

@@ -177,7 +177,7 @@ export default async function ProfessionCityPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": `${profession.name} en ${cityName} - pronto-24.com`,
-    "description": `Servicio de ${profession.name.toLowerCase()} urgente 24 horas en ${cityName}, ${uniqueContent.localInfo.province}. Llegamos en ${uniqueContent.stats.avgResponseTime} minutos. ${uniqueContent.stats.yearsExperience} anos de experiencia.`,
+    "description": `Servicio de ${profession.name.toLowerCase()} urgente 24 horas en ${cityName}, ${uniqueContent.localInfo.province}. Llegamos en un maximo de 30 minutos. Presupuesto gratuito y garantia por escrito.`,
     "telephone": "+34936946639",
     "url": `https://www.pronto-24.com/${profession.id}/${citySlug}/`,
     "priceRange": "$$",

@@ -32,9 +32,9 @@ export function Testimonials() {
         <div className="text-center space-y-6 mb-20">
           <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-bold shadow-lg mb-4">
             <Star className="h-4 w-4 fill-background" />
-            <span>4.9/5 • 10,000+ servicios completados</span>
+            <span>Experiencias reales de nuestros clientes</span>
           </div>
-          <h2 className="text-5xl md:text-6xl font-bold text-balance leading-tight">Miles de clientes satisfechos</h2>
+          <h2 className="text-5xl md:text-6xl font-bold text-balance leading-tight">Lo que dicen nuestros clientes</h2>
           <p className="text-xl md:text-2xl text-muted-foreground text-pretty leading-relaxed">
             Lee lo que dicen nuestros clientes sobre su experiencia
           </p>

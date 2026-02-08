@@ -31,7 +31,7 @@ const PRICING_GUIDES: Record<string, {
   noHiddenCosts: string[]
 }> = {
   electricista: {
-    introduction: "Los precios de un electricista varian segun el tipo de trabajo, la complejidad, los materiales necesarios y la hora del servicio. Aqui te presentamos una guia orientativa de precios basada en miles de servicios realizados. Recuerda que siempre damos presupuesto cerrado antes de empezar cualquier trabajo.",
+    introduction: "Los precios de un electricista varian segun el tipo de trabajo, la complejidad, los materiales necesarios y la hora del servicio. Todos nuestros trabajos se realizan cumpliendo el REBT (Reglamento Electrotecnico de Baja Tension, RD 842/2002) y sus instrucciones tecnicas complementarias (ITC-BT). Aqui te presentamos una guia orientativa de precios. Recuerda que siempre damos presupuesto cerrado antes de empezar cualquier trabajo.",
     priceRanges: [
       {
         service: "Reparacion de enchufe o interruptor",
@@ -151,7 +151,7 @@ const PRICING_GUIDES: Record<string, {
       },
       {
         service: "Revision de calentador de gas",
-        description: "Mantenimiento anual obligatorio",
+        description: "Mantenimiento obligatorio segun RITE (cada 2 anos para domesticas)",
         minPrice: 70,
         maxPrice: 120,
         factors: ["Marca y modelo", "Estado general del equipo"],
