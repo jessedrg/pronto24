@@ -652,6 +652,8 @@ export function ServiceLandingTemplate({
             showProblems={true}
             showOtherServices={true}
             showNearbyCities={true}
+            showPostalCodes={true}
+            postalCodePrefix={uniqueContent?.localInfo.postalCodeExample?.substring(0, 3)}
             maxCities={12}
           />
         </div>

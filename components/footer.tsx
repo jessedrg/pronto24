@@ -11,12 +11,12 @@ const SERVICES = [
 ]
 
 const TOP_CITIES = [
-  { slug: "barcelona", name: "Barcelona" },
-  { slug: "madrid", name: "Madrid" },
-  { slug: "valencia", name: "Valencia" },
-  { slug: "sevilla", name: "Sevilla" },
-  { slug: "malaga", name: "Malaga" },
-  { slug: "zaragoza", name: "Zaragoza" },
+  { slug: "barcelona", name: "Barcelona", profession: "electricista" },
+  { slug: "madrid", name: "Madrid", profession: "fontanero" },
+  { slug: "valencia", name: "Valencia", profession: "cerrajero" },
+  { slug: "sevilla", name: "Sevilla", profession: "desatascos" },
+  { slug: "malaga", name: "Malaga", profession: "calderas" },
+  { slug: "zaragoza", name: "Zaragoza", profession: "electricista" },
 ]
 
 export function Footer() {
@@ -70,7 +70,7 @@ export function Footer() {
               {TOP_CITIES.map((c) => (
                 <li key={c.slug}>
                   <Link
-                    href={`/electricista/${c.slug}/`}
+                    href={`/${c.profession}/${c.slug}/`}
                     className="text-sm text-background/70 hover:text-background transition-colors flex items-center gap-1"
                   >
                     <MapPin className="w-3 h-3 shrink-0" />
