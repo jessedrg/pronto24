@@ -5,6 +5,7 @@ import { UrgencyBanner } from "@/components/urgency-banner"
 import { Footer } from "@/components/footer"
 import { AIChatWidget } from "@/components/ai-chat-widget"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 import { PROFESSIONS, getCityDisplayName, getKeywordModifier } from "@/lib/seo-data"
 import { generateUniqueContent } from "@/lib/content-generator"
 
@@ -282,6 +283,15 @@ export default async function ProfessionCityPage({ params }: PageProps) {
       
       <UrgencyBanner />
       <Header />
+      <Breadcrumbs
+        items={[
+          { label: profession.name, href: `/${profession.id}/` },
+          ...(modifier
+            ? [{ label: modifierMeta?.modifierText || modifier, href: `/${rawProfession}/${citySlug}/` }]
+            : []),
+          { label: `${profession.name} en ${cityName}` },
+        ]}
+      />
       <main className="flex-1">
         <ServiceLandingTemplate
           professionId={profession.id}

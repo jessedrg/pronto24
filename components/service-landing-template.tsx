@@ -29,11 +29,13 @@ import {
   FileCheck,
 } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { getCityDisplayName, getCityProvince, getNearbyCities, PROBLEMS, PROFESSIONS } from "@/lib/seo-data"
 import { generateUniqueContent, generateTestimonials } from "@/lib/content-generator"
 import { ExpertGuideSection } from "@/components/expert-guide-section"
 import { ServiceDeepDive } from "@/components/service-deep-dive"
 import { PricingGuideSection } from "@/components/pricing-guide-section"
+import { InternalLinks } from "@/components/internal-links"
 
 const ICONS = {
   Zap,
@@ -436,9 +438,40 @@ export function ServiceLandingTemplate({
         </div>
       </section>
 
+      {/* Table of Contents - SEO Anchor Navigation */}
+      {actualCitySlug && (
+        <section className="py-8 border-b border-border">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <nav aria-label="Contenido de la pagina">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">En esta pagina</h2>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: "servicio", label: `${profession.name} en ${cityName}` },
+                  { id: "problemas", label: "Problemas que solucionamos" },
+                  { id: "precios", label: "Guia de precios" },
+                  { id: "como-trabajamos", label: "Como trabajamos" },
+                  { id: "faqs", label: "Preguntas frecuentes" },
+                  { id: "opiniones", label: "Opiniones verificadas" },
+                  { id: "otros-servicios", label: `Otros servicios en ${cityName}` },
+                  { id: "ciudades-cercanas", label: "Ciudades cercanas" },
+                ].map((item) => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted border border-transparent hover:border-border transition-all"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            </nav>
+          </div>
+        </section>
+      )}
+
       {/* Unique SEO Content Section - Generated dynamically per city */}
       {uniqueContent && (
-        <section className="py-12">
+        <section id="servicio" className="py-12 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid md:grid-cols-2 gap-8">
               {/* Left: Intro and stats */}
@@ -538,7 +571,7 @@ export function ServiceLandingTemplate({
 
       {/* NUEVA SECCIÓN: Cómo trabajamos - Proceso de servicio */}
       {uniqueContent && uniqueContent.serviceProcess && (
-        <section className="py-16">
+        <section id="como-trabajamos" className="py-16 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -619,15 +652,17 @@ export function ServiceLandingTemplate({
       />
 
       {/* NUEVA SECCIÓN: Guía de Precios */}
-      <PricingGuideSection
-        professionId={profession.id}
-        professionName={profession.name}
-        cityName={cityName}
-      />
+      <div id="precios" className="scroll-mt-20">
+        <PricingGuideSection
+          professionId={profession.id}
+          professionName={profession.name}
+          cityName={cityName}
+        />
+      </div>
 
       {/* NUEVA SECCIÓN: Preguntas Frecuentes (FAQs) */}
       {uniqueContent && uniqueContent.faqs && uniqueContent.faqs.length > 0 && (
-        <section className="py-16">
+        <section id="faqs" className="py-16 scroll-mt-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/10 text-foreground text-sm font-medium mb-4">
@@ -704,40 +739,23 @@ export function ServiceLandingTemplate({
         </section>
       )}
 
-      {/* Coverage - Show nearby cities */}
-      {nearbyCities.length > 0 && (
-        <section className="py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="relative p-8 rounded-3xl border border-foreground/30 bg-foreground/5 overflow-hidden">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-4 rounded-2xl bg-foreground/20">
-                    <MapPin className="w-8 h-8 text-foreground" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl md:text-3xl font-black text-foreground">{cityName} y alrededores</h2>
-                    <p className="text-muted-foreground">También damos servicio en:</p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {nearbyCities.map((city) => (
-                    <a
-                      key={city}
-                      href={`/${profession.id}/${city}`}
-                      className="px-4 py-2 rounded-full bg-background text-foreground text-sm font-medium border border-border hover:border-foreground/50 transition-colors"
-                    >
-                      {getCityDisplayName(city)}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+      {/* Internal Links - Problems, Other Services, Nearby Cities */}
+      {actualCitySlug && (
+        <div id="problemas" className="scroll-mt-20">
+          <InternalLinks
+            currentProfessionId={profession.id}
+            currentCitySlug={actualCitySlug}
+            currentProblemId={problemId}
+            showProblems={true}
+            showOtherServices={true}
+            showNearbyCities={true}
+            maxCities={12}
+          />
+        </div>
       )}
 
       {/* Reviews */}
-      <section className="py-12 bg-muted/30">
+      <section id="opiniones" className="py-12 bg-muted/30 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-1 mb-2">
