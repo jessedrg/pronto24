@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Phone, CheckCircle2 } from "lucide-react"
 
 interface ActiveUsersProps {
@@ -10,19 +9,9 @@ interface ActiveUsersProps {
   isUrgent?: boolean
 }
 
-export function useActiveUsers() {
-  const [activeUsers, setActiveUsers] = useState(12)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveUsers((prev) => Math.max(8, Math.min(18, prev + Math.floor(Math.random() * 3) - 1)))
-    }, 8000)
-    return () => clearInterval(interval)
-  }, [])
-  return activeUsers
-}
-
 export function LiveBadge({ profession, cityName, modifier, isUrgent }: ActiveUsersProps) {
-  const activeUsers = useActiveUsers()
+  // Static number - no setInterval, no re-renders, better performance
+  const activeUsers = 12
 
   const getBadgeText = () => {
     switch (modifier) {
@@ -94,7 +83,8 @@ export function CallButton({ phoneNumber, phoneFormatted, modifier, className, s
       <a
         href={`tel:+34${phoneNumber}`}
         onClick={handleCall}
-        className={`inline-flex items-center gap-4 px-10 py-5 bg-foreground hover:bg-foreground/90 text-background font-bold text-xl rounded-2xl shadow-lg transition-all hover:scale-105 ${className || ""}`}
+        className={`inline-flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl rounded-2xl shadow-lg shadow-green-500/25 transition-all hover:scale-105 ${className || ""}`}
+        aria-label={`Llamar al ${phoneFormatted}`}
       >
         <Phone className="w-7 h-7" />
         <span>{phoneFormatted}</span>
@@ -107,7 +97,8 @@ export function CallButton({ phoneNumber, phoneFormatted, modifier, className, s
       <a
         href={`tel:+34${phoneNumber}`}
         onClick={handleCall}
-        className={`group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-5 bg-foreground hover:bg-foreground/90 text-background font-bold text-lg sm:text-xl rounded-2xl shadow-lg shadow-foreground/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-foreground/30 ${className || ""}`}
+        className={`group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-lg sm:text-xl rounded-2xl shadow-lg shadow-green-500/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-green-500/30 ${className || ""}`}
+        aria-label={`Llamar al ${phoneFormatted}`}
       >
         <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
         <span className="text-base sm:text-xl">LLAMAR - {phoneFormatted}</span>

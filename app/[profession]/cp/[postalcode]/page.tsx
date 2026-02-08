@@ -66,7 +66,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    keywords: `${profession} ${postalcode}, ${profession} urgente ${zoneName}, ${profession} 24 horas ${cityName}, ${profession} cerca de mi ${postalcode}`,
     alternates: {
       canonical: `${siteUrl}/${profession}/cp/${postalcode}/`,
     },

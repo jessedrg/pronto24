@@ -107,7 +107,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
       title: `${profession.name} ${modifierText} en ${cityName} | 10 Min | 936 946 639`,
       description: `${profession.name} ${modifierText.toLowerCase()} en ${cityName}. ${urgencyText} ${priceText} Profesionales certificados 24/7. Llama GRATIS: 936 946 639`,
-      keywords: `${profession.id} ${modifier} ${cityName}, ${profession.id} ${cityName}, ${profession.id} urgente ${cityName}, ${profession.id} barato ${cityName}, ${profession.id} 24 horas ${cityName}`,
       alternates: {
         canonical: `https://www.pronto-24.com/${rawProfession}/${citySlug}/`,
       },
@@ -123,7 +122,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${profession.name} Urgente en ${cityName} | 24h Hoy | 936 946 639`,
     description: `${profession.name} urgente en ${cityName}${provinceName ? `, ${provinceName}` : ""}. Llegamos en 10 MIN. Servicio 24h los 365 dias. Presupuesto GRATIS sin compromiso. Llama ahora: 936 946 639`,
-    keywords: `${profession.id} ${cityName}, ${profession.id} urgente ${cityName}, ${profession.id} 24 horas ${cityName}, ${profession.id} economico ${cityName}, ${profession.id} barato ${cityName}, ${profession.id} cerca de mi ${cityName}`,
     alternates: {
       canonical: `https://www.pronto-24.com/${rawProfession}/${citySlug}/`,
     },

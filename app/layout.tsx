@@ -1,21 +1,17 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import { ScrollToTop } from "@/components/scroll-to-top"
+import { Geist } from "next/font/google"
 import { Header } from "@/components/header"
 import { FloatingCallButton } from "@/components/floating-call-button"
 import Script from "next/script"
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const geistSans = Geist({ subsets: ["latin"], display: "swap" })
 
 export const metadata: Metadata = {
-  title: "pronto-24.com | Servicios Urgentes 24h - Desatascos, Electricistas, Fontaneros",
+  title: "Electricista, Fontanero y Cerrajero Urgente 24h | pronto-24.com",
   description:
-    "pronto-24.com - Servicios de emergencia 24/7 en toda Espana. Desatascos urgentes, electricista 24h, fontanero express, cerrajero urgente. Respuesta en 10 minutos. Presupuesto gratis sin compromiso. Llama: 936 946 639",
-  keywords:
-    "desatasco urgente 24 horas, electricista urgente cerca de mi, fontanero urgente barato, cerrajero 24 horas, reparacion calderas urgente, servicio desatascos madrid, electricista barcelona 24h, fontanero valencia urgente, cerrajero sevilla, desatascador profesional",
+    "Servicios de emergencia 24/7 en toda Espana. Electricistas, fontaneros, cerrajeros y desatascos urgentes. Llegamos en 30 minutos. Presupuesto gratis. Llama: 936 946 639",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     shortcut: "/favicon.svg",
@@ -42,18 +38,19 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.pronto-24.com",
+    languages: {
+      "es-ES": "https://www.pronto-24.com",
+    },
   },
-  other: {
-    "google-site-verification": "",
-  },
-  generator: 'v0.app'
 }
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: "cover" as const,
+  themeColor: "#0a0a0a",
 }
 
 export default function RootLayout({
@@ -64,14 +61,11 @@ export default function RootLayout({
   return (
     <html lang="es" className="scroll-smooth">
       <head>
-        {/* Preconnect hints for faster resource loading */}
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        {/* DNS prefetch for Google Ads - loaded lazily to avoid blocking */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        <Script src="https://www.googletagmanager.com/gtag/js?id=AW-16741652529" strategy="afterInteractive" />
-        <Script id="google-ads" strategy="afterInteractive">
+        <Script src="https://www.googletagmanager.com/gtag/js?id=AW-16741652529" strategy="lazyOnload" />
+        <Script id="google-ads" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -126,91 +120,15 @@ export default function RootLayout({
                   closes: "23:59",
                 },
               },
-              sameAs: [],
               areaServed: {
                 "@type": "Country",
                 name: "Spain",
-              },
-              serviceType: [
-                "Electricista urgente",
-                "Fontanero urgente",
-                "Cerrajero urgente",
-                "Desatascos urgentes",
-                "Reparacion de calderas",
-              ],
-            }),
-          }}
-        />
-
-        {/* LocalBusiness schema with correct phone */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              name: "pronto-24.com",
-              description: "Servicios de emergencia 24/7 en toda Espana. Electricistas, fontaneros, cerrajeros, desatascos y calderas.",
-              telephone: "+34-936-946-639",
-              url: "https://www.pronto-24.com",
-              priceRange: "$$",
-              openingHours: "Mo-Su 00:00-23:59",
-              areaServed: {
-                "@type": "Country",
-                name: "Spain",
-              },
-              hasOfferCatalog: {
-                "@type": "OfferCatalog",
-                name: "Servicios de Emergencia",
-                itemListElement: [
-                  {
-                    "@type": "Offer",
-                    itemOffered: {
-                      "@type": "Service",
-                      name: "Electricista Urgente 24h",
-                      description: "Electricistas profesionales disponibles 24/7. Apagones, cortocircuitos, cuadros electricos.",
-                    },
-                  },
-                  {
-                    "@type": "Offer",
-                    itemOffered: {
-                      "@type": "Service",
-                      name: "Fontanero Urgente 24h",
-                      description: "Fontaneros profesionales para emergencias. Fugas, tuberias rotas, inundaciones.",
-                    },
-                  },
-                  {
-                    "@type": "Offer",
-                    itemOffered: {
-                      "@type": "Service",
-                      name: "Cerrajero Urgente 24h",
-                      description: "Cerrajeros de urgencia. Aperturas sin danos, cambio de cerraduras, bombines.",
-                    },
-                  },
-                  {
-                    "@type": "Offer",
-                    itemOffered: {
-                      "@type": "Service",
-                      name: "Desatascos Urgentes 24h",
-                      description: "Servicio de desatascos con equipo profesional. WC, fregaderos, bajantes.",
-                    },
-                  },
-                  {
-                    "@type": "Offer",
-                    itemOffered: {
-                      "@type": "Service",
-                      name: "Reparacion de Calderas 24h",
-                      description: "Tecnicos de calderas certificados. Todas las marcas, revision y reparacion.",
-                    },
-                  },
-                ],
               },
             }),
           }}
         />
       </head>
-      <body className={`font-sans antialiased`} suppressHydrationWarning>
-        <ScrollToTop />
+      <body className={`${geistSans.className} antialiased`} suppressHydrationWarning>
         <Header />
         {children}
         <FloatingCallButton />
