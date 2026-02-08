@@ -30,13 +30,15 @@ export async function GET(request: NextRequest) {
 
   // Check Redis cache first
   const cacheKey = getPostalContentKey(profession, postalcode)
-  try {
-    const cached = await redis.get<string>(cacheKey)
-    if (cached) {
-      return Response.json({ content: cached, fromCache: true })
+  if (redis) {
+    try {
+      const cached = await redis.get<string>(cacheKey)
+      if (cached) {
+        return Response.json({ content: cached, fromCache: true })
+      }
+    } catch {
+      // Redis unavailable, continue to generate
     }
-  } catch {
-    // Redis unavailable, continue to generate
   }
 
   // Generate unique content with AI
@@ -64,10 +66,12 @@ Escribe SOLO el parrafo, sin introduccion ni titulo.`,
     })
 
     // Cache in Redis for 30 days (2592000 seconds)
-    try {
-      await redis.set(cacheKey, text, { ex: 2592000 })
-    } catch {
-      // Cache write failed, content still returned
+    if (redis) {
+      try {
+        await redis.set(cacheKey, text, { ex: 2592000 })
+      } catch {
+        // Cache write failed, content still returned
+      }
     }
 
     return Response.json({ content: text, fromCache: false })
