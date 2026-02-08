@@ -165,7 +165,7 @@ export const PROBLEMS = {
     },
     { id: "fuga-gas", name: "Fuga de gas", description: "Posible fuga de gas", urgent: true, emoji: "⚠️" },
     { id: "ruido-caldera", name: "Ruido caldera", description: "La caldera hace ruido", urgent: true, emoji: "🔊" },
-    { id: "revision-caldera", name: "Revisión caldera", description: "Revisión anual", urgent: false, emoji: "🔧" },
+    { id: "revision-caldera", name: "Revisión caldera", description: "Revisión obligatoria", urgent: false, emoji: "🔧" },
     { id: "cambio-caldera", name: "Cambio caldera", description: "Sustituir caldera", urgent: false, emoji: "🔄" },
     { id: "radiadores", name: "Radiadores", description: "Problemas con radiadores", urgent: false, emoji: "🌡️" },
   ],

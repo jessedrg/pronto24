@@ -247,7 +247,7 @@ export function ElectricistaContent() {
                 <Star key={s} className="w-6 h-6 text-[#FF6B35] fill-[#FF6B35]" />
               ))}
             </div>
-            <p className="text-foreground font-bold text-lg">4.9 de 5 - +2,800 valoraciones verificadas</p>
+            <p className="text-foreground font-bold text-lg">Experiencias de nuestros clientes</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">

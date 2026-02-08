@@ -10,6 +10,24 @@ const MAX_URLS_PER_SITEMAP = 45000
 export async function GET() {
   const date = new Date().toISOString().split("T")[0]
 
+  // Static pages sitemap (homepage, service pages, partners)
+  const staticUrls = [
+    { loc: `${BASE_URL}/`, priority: "1.0", changefreq: "daily" },
+    { loc: `${BASE_URL}/electricista/`, priority: "0.95", changefreq: "weekly" },
+    { loc: `${BASE_URL}/fontanero/`, priority: "0.95", changefreq: "weekly" },
+    { loc: `${BASE_URL}/cerrajero/`, priority: "0.95", changefreq: "weekly" },
+    { loc: `${BASE_URL}/desatascos/`, priority: "0.95", changefreq: "weekly" },
+    { loc: `${BASE_URL}/calderas/`, priority: "0.95", changefreq: "weekly" },
+    { loc: `${BASE_URL}/partners/`, priority: "0.6", changefreq: "monthly" },
+  ]
+
+  let staticSitemapXml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+  staticSitemapXml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+  for (const u of staticUrls) {
+    staticSitemapXml += `<url><loc>${u.loc}</loc><lastmod>${date}</lastmod><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>\n`
+  }
+  staticSitemapXml += '</urlset>'
+
   const sitemaps: string[] = []
 
   // Sitemaps for each profession + modifier

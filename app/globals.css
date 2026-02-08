@@ -130,3 +130,39 @@
     overflow-x: hidden;
   }
 }
+
+/* Safe area for floating CTA on iPhone notch */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Add padding to body bottom on mobile to account for floating CTA */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 80px;
+  }
+}
+
+/* Reduce animation for users who prefer reduced motion - accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimize image rendering */
+img {
+  content-visibility: auto;
+}
+
+/* Improve text rendering */
+body {
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

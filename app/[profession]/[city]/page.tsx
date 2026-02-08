@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { Footer } from "@/components/footer"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { Breadcrumbs } from "@/components/breadcrumbs"
-import { PROFESSIONS, getCityDisplayName, getKeywordModifier } from "@/lib/seo-data"
+import { PROFESSIONS, getCityDisplayName, getCityProvince, getKeywordModifier } from "@/lib/seo-data"
 import { generateUniqueContent, generateTestimonials } from "@/lib/content-generator"
 
 export const dynamicParams = true
@@ -78,12 +78,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const profession = PROFESSIONS.find((p) => p.id === professionId)
   const cityName = getCityDisplayName(citySlug)
+  const provinceName = getCityProvince(citySlug)
 
   if (!profession) {
     return {
-      title: `Servicio en ${cityName} | Rapidfix`,
+      title: `Servicio en ${cityName} | pronto-24.com`,
       description: `Servicio profesional en ${cityName}. Llama: 936 946 639.`,
     }
+  }
+
+  // Common geo + date meta tags
+  const geoAndDateMeta: Record<string, string> = {
+    "geo.region": "ES",
+    "geo.placename": cityName,
+    "date": new Date().toISOString().split("T")[0],
   }
 
   if (modifier) {
@@ -99,7 +107,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
       title: `${profession.name} ${modifierText} en ${cityName} | 10 Min | 936 946 639`,
       description: `${profession.name} ${modifierText.toLowerCase()} en ${cityName}. ${urgencyText} ${priceText} Profesionales certificados 24/7. Llama GRATIS: 936 946 639`,
-      keywords: `${profession.id} ${modifier} ${cityName}, ${profession.id} ${cityName}, ${profession.id} urgente ${cityName}, ${profession.id} barato ${cityName}, ${profession.id} 24 horas ${cityName}`,
       alternates: {
         canonical: `https://www.pronto-24.com/${rawProfession}/${citySlug}/`,
       },
@@ -108,21 +115,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: `Servicio de ${profession.name.toLowerCase()} ${modifierText.toLowerCase()} en ${cityName}. Disponibles 24/7. Llama: 936 946 639`,
         type: "website",
       },
+      other: geoAndDateMeta,
     }
   }
 
   return {
-    title: `${profession.name} en ${cityName} | Urgencias 24h | 936 946 639`,
-    description: `${profession.name} profesional en ${cityName}. Llegamos en 10 MIN. Servicio 24h los 365 dias. Presupuesto GRATIS sin compromiso. Llama ahora: 936 946 639`,
-    keywords: `${profession.id} ${cityName}, ${profession.id} urgente ${cityName}, ${profession.id} 24 horas ${cityName}, ${profession.id} economico ${cityName}, ${profession.id} barato ${cityName}`,
+    title: `${profession.name} Urgente en ${cityName} | 24h Hoy | 936 946 639`,
+    description: `${profession.name} urgente en ${cityName}${provinceName ? `, ${provinceName}` : ""}. Llegamos en 10 MIN. Servicio 24h los 365 dias. Presupuesto GRATIS sin compromiso. Llama ahora: 936 946 639`,
     alternates: {
       canonical: `https://www.pronto-24.com/${rawProfession}/${citySlug}/`,
     },
     openGraph: {
-      title: `${profession.name} en ${cityName} - Servicio Urgente 24h`,
-      description: `Servicio de ${profession.name.toLowerCase()} en ${cityName}. Profesionales certificados, llegamos en 10 minutos. Llama: 936 946 639`,
+      title: `${profession.name} Urgente en ${cityName} - 24h Disponible Hoy`,
+      description: `Servicio de ${profession.name.toLowerCase()} urgente en ${cityName}. Profesionales certificados, llegamos en 10 minutos. Llama: 936 946 639`,
       type: "website",
     },
+    other: geoAndDateMeta,
   }
 }
 
@@ -164,15 +172,17 @@ export default async function ProfessionCityPage({ params }: PageProps) {
   }
   
   // Schema.org JSON-LD para LocalBusiness
+  const currentDate = new Date().toISOString().split("T")[0]
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": `${profession.name} en ${cityName} - pronto-24.com`,
-    "description": `Servicio de ${profession.name.toLowerCase()} urgente 24 horas en ${cityName}, ${uniqueContent.localInfo.province}. Llegamos en ${uniqueContent.stats.avgResponseTime} minutos. ${uniqueContent.stats.yearsExperience} años de experiencia.`,
+    "description": `Servicio de ${profession.name.toLowerCase()} urgente 24 horas en ${cityName}, ${uniqueContent.localInfo.province}. Llegamos en un maximo de 30 minutos. Presupuesto gratuito y garantia por escrito.`,
     "telephone": "+34936946639",
     "url": `https://www.pronto-24.com/${profession.id}/${citySlug}/`,
-    "priceRange": "€€",
+    "priceRange": "$$",
     "openingHours": "Mo-Su 00:00-23:59",
+    "dateModified": currentDate,
     "areaServed": {
       "@type": "City",
       "name": cityName,
@@ -180,13 +190,6 @@ export default async function ProfessionCityPage({ params }: PageProps) {
         "@type": "AdministrativeArea",
         "name": uniqueContent.localInfo.province
       }
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": uniqueContent.stats.rating,
-      "reviewCount": uniqueContent.stats.servicesThisMonth * 3,
-      "bestRating": "5",
-      "worstRating": "1"
     },
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
@@ -247,24 +250,8 @@ export default async function ProfessionCityPage({ params }: PageProps) {
     }))
   } : null
 
-  // Schema.org JSON-LD para Review snippets
-  const reviews = generateTestimonials(citySlug, cityName, profession.name)
-  const reviewSchema = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": `${profession.name} en ${cityName} - pronto-24.com`,
-    "review": reviews.map((r, i) => ({
-      "@type": "Review",
-      "author": { "@type": "Person", "name": r.name },
-      "reviewBody": r.text,
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": "5",
-        "bestRating": "5"
-      },
-      "datePublished": new Date(Date.now() - (i + 1) * 86400000 * (i + 1)).toISOString().split("T")[0]
-    }))
-  }
+  // Note: Review schema removed - Google penalizes fabricated reviews in structured data.
+  // Testimonials are still shown visually but without schema markup.
 
   // Schema.org JSON-LD para BreadcrumbList
   const breadcrumbSchema = {
@@ -317,10 +304,7 @@ export default async function ProfessionCityPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
         />
       )}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
-      />
+
       
       <Breadcrumbs
         items={[

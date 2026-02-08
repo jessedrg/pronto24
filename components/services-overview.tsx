@@ -8,7 +8,7 @@ const services = [
     icon: Zap,
     color: "text-yellow-500",
     bgColor: "bg-yellow-500/10",
-    description: "Servicio de electricista urgente 24 horas. Solucionamos apagones, cortocircuitos, problemas con el diferencial, instalaciones eléctricas y certificados. Profesionales certificados con experiencia.",
+    description: "Servicio de electricista urgente 24 horas. Solucionamos apagones, cortocircuitos, problemas con el diferencial, instalaciones electricas y certificados. Profesionales certificados con experiencia.",
     problems: [
       "Apagones y cortes de luz",
       "Cortocircuitos y chispazos",
@@ -17,7 +17,7 @@ const services = [
       "Instalaciones eléctricas",
       "Boletín eléctrico",
     ],
-    cities: ["barcelona", "hospitalet-llobregat", "badalona", "terrassa", "sabadell"],
+    cities: ["madrid", "barcelona", "valencia", "sevilla", "malaga"],
   },
   {
     id: "fontanero",
@@ -25,16 +25,16 @@ const services = [
     icon: Droplets,
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
-    description: "Fontaneros profesionales disponibles las 24 horas. Reparamos fugas de agua, tuberías rotas, problemas con calentadores, grifos y cisternas. Llegamos en minutos a tu domicilio.",
+    description: "Fontaneros profesionales disponibles las 24 horas. Reparamos fugas de agua, tuberias rotas, problemas con calentadores, grifos y cisternas. Llegamos en minutos a tu domicilio.",
     problems: [
       "Fugas de agua urgentes",
-      "Tuberías rotas o atascadas",
+      "Tuberias rotas o atascadas",
       "Calentadores y termos",
       "Grifos que gotean",
       "Cisternas que no funcionan",
       "Humedades",
     ],
-    cities: ["barcelona", "hospitalet-llobregat", "badalona", "terrassa", "sabadell"],
+    cities: ["madrid", "barcelona", "valencia", "bilbao", "zaragoza"],
   },
   {
     id: "cerrajero",
@@ -42,16 +42,16 @@ const services = [
     icon: Key,
     color: "text-purple-500",
     bgColor: "bg-purple-500/10",
-    description: "Cerrajeros de urgencia 24/7. Abrimos puertas sin daños, cambiamos cerraduras y bombines, instalamos cerraduras de seguridad. Servicio rápido y profesional.",
+    description: "Cerrajeros de urgencia 24/7. Abrimos puertas sin danos, cambiamos cerraduras y bombines, instalamos cerraduras de seguridad. Servicio rapido y profesional.",
     problems: [
       "Puertas bloqueadas",
       "Llaves rotas en cerradura",
-      "Cambio de bombín",
+      "Cambio de bombin",
       "Cerraduras de seguridad",
       "Puertas acorazadas",
       "Aperturas de emergencia",
     ],
-    cities: ["barcelona", "hospitalet-llobregat", "badalona", "terrassa", "sabadell"],
+    cities: ["madrid", "barcelona", "sevilla", "murcia", "alicante"],
   },
   {
     id: "desatascos",
@@ -59,16 +59,16 @@ const services = [
     icon: Waves,
     color: "text-green-500",
     bgColor: "bg-green-500/10",
-    description: "Servicio de desatascos urgente con camión cuba. Desatascamos WC, fregaderos, bajantes y arquetas. Limpieza de tuberías con agua a presión. Sin olores, sin complicaciones.",
+    description: "Servicio de desatascos urgente con camion cuba. Desatascamos WC, fregaderos, bajantes y arquetas. Limpieza de tuberias con agua a presion. Sin olores, sin complicaciones.",
     problems: [
       "WC atascado",
       "Fregadero obstruido",
       "Bajantes atascados",
       "Malos olores",
       "Arquetas bloqueadas",
-      "Limpieza de tuberías",
+      "Limpieza de tuberias",
     ],
-    cities: ["barcelona", "hospitalet-llobregat", "badalona", "terrassa", "sabadell"],
+    cities: ["madrid", "barcelona", "valencia", "malaga", "granada"],
   },
   {
     id: "calderas",
@@ -76,16 +76,16 @@ const services = [
     icon: Flame,
     color: "text-red-500",
     bgColor: "bg-red-500/10",
-    description: "Técnicos de calderas certificados. Reparamos calderas de todas las marcas, revisiones obligatorias, problemas de calefacción y agua caliente. Servicio urgente 24 horas.",
+    description: "Tecnicos de calderas certificados. Reparamos calderas de todas las marcas, revisiones obligatorias, problemas de calefaccion y agua caliente. Servicio urgente 24 horas.",
     problems: [
       "Caldera no enciende",
       "Sin agua caliente",
-      "Caldera pierde presión",
-      "Ruidos extraños",
-      "Revisión obligatoria",
-      "Radiadores fríos",
+      "Caldera pierde presion",
+      "Ruidos extranos",
+      "Revision obligatoria",
+      "Radiadores frios",
     ],
-    cities: ["barcelona", "hospitalet-llobregat", "badalona", "terrassa", "sabadell"],
+    cities: ["madrid", "barcelona", "bilbao", "zaragoza", "valladolid"],
   },
 ]
 
@@ -139,7 +139,7 @@ export function ServicesOverview() {
                   
                   <a
                     href="tel:+34936946639"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-foreground hover:bg-foreground/90 text-white font-bold rounded-xl transition-all"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-green-500/20 transition-all hover:scale-[1.02]"
                   >
                     <Phone className="w-5 h-5" />
                     Llamar ahora - 936 946 639

@@ -102,11 +102,11 @@ const GUARANTEE_VARIANTS = [
 
 // Variantes para llamada a la acción EXTENSAS
 const CTA_VARIANTS = [
-  (city: string) => `No esperes más a que el problema empeore. Los vecinos de ${city} ya confían en nosotros para resolver sus emergencias del hogar. Únete a los miles de clientes satisfechos que nos recomiendan.`,
-  (city: string) => `Miles de clientes en ${city} y alrededores nos avalan con sus valoraciones positivas. Únete a ellos y descubre por qué somos el servicio más recomendado de la zona.`,
-  (city: string) => `En ${city} somos la opción preferida por familias y negocios. Descubre por qué nos eligen una y otra vez cuando necesitan un servicio profesional y de confianza.`,
-  (city: string) => `La solución definitiva a tu problema en ${city} está a solo una llamada de distancia. Nuestro equipo está preparado para atenderte ahora mismo.`,
-  (city: string) => `Profesionales experimentados de ${city} listos para atenderte en este momento. No dejes que un pequeño problema se convierta en uno grande.`,
+  (city: string) => `No esperes a que el problema empeore. Nuestro equipo de profesionales en ${city} esta disponible ahora mismo para ayudarte. Presupuesto gratuito y sin compromiso.`,
+  (city: string) => `La solucion a tu problema en ${city} esta a solo una llamada de distancia. Te damos presupuesto por telefono y en minutos tienes un profesional en tu casa.`,
+  (city: string) => `Profesionales con experiencia en ${city} listos para atenderte ahora. No dejes que un pequeno problema se convierta en una averia mayor y mas costosa.`,
+  (city: string) => `Atendemos emergencias en ${city} las 24 horas, todos los dias del ano. Llama ahora y recibe un presupuesto orientativo inmediato por telefono.`,
+  (city: string) => `En ${city} nuestro equipo esta preparado para resolver cualquier urgencia. Servicio rapido, transparente y con garantia por escrito en cada trabajo.`,
 ]
 
 // Problemas comunes por profesión AMPLIADOS (para generar contenido específico)
@@ -164,7 +164,7 @@ const COMMON_ISSUES: Record<string, string[]> = {
     "falta de agua caliente o temperatura insuficiente",
     "ruidos extraños: golpeteos, silbidos o burbujeos",
     "posibles fugas de gas (olor característico)",
-    "revisiones obligatorias anuales",
+    "revisiones obligatorias cada 2 anos (RITE)",
     "calderas que pierden presión constantemente",
     "termostatos que no regulan correctamente",
     "radiadores que no calientan uniformemente",
@@ -194,7 +194,7 @@ const DYNAMIC_FAQS: Record<string, Array<{q: string, a: string}>> = {
     },
     {
       q: "¿Qué es el boletín eléctrico y cuándo lo necesito?",
-      a: "El boletín eléctrico (Certificado de Instalación Eléctrica) es un documento oficial que certifica que tu instalación cumple con la normativa vigente. Lo necesitas para: dar de alta la luz en una vivienda nueva, aumentar la potencia contratada, después de una reforma importante, o para vender o alquilar una propiedad. Nuestros electricistas autorizados pueden emitirlo tras verificar o adaptar tu instalación."
+      a: "El boletin electrico (Certificado de Instalacion Electrica o CIE) es un documento oficial que certifica que tu instalacion cumple con el REBT (Reglamento Electrotecnico de Baja Tension, RD 842/2002). Lo necesitas para: dar de alta el suministro en una vivienda nueva, aumentar la potencia contratada, despues de una reforma electrica importante, o para vender o alquilar una propiedad. Solo puede emitirlo un instalador electricista autorizado e inscrito en el registro de la comunidad autonoma correspondiente."
     },
   ],
   fontanero: [
@@ -208,7 +208,7 @@ const DYNAMIC_FAQS: Record<string, Array<{q: string, a: string}>> = {
     },
     {
       q: "¿Cada cuánto tiempo debo revisar el calentador?",
-      a: "Se recomienda revisar el calentador o termo eléctrico cada 2 años, y el de gas anualmente (esta última es obligatoria por ley). La revisión incluye: limpieza de quemadores, comprobación de la llama, verificación de la evacuación de gases, y revisión del ánodo de magnesio en termos eléctricos. Un mantenimiento regular alarga la vida útil del aparato y previene averías costosas."
+      a: "Las calderas de gas domesticas (menos de 70 kW) deben revisarse cada 2 anos segun el RITE, mientras que las de uso colectivo o mas de 70 kW se revisan anualmente. Ademas, la empresa distribuidora de gas realiza una inspeccion obligatoria cada 5 anos. Los termos electricos no tienen revision obligatoria, pero se recomienda cada 2-3 anos para descalcificar y revisar el anodo de magnesio."
     },
     {
       q: "¿Qué hago si tengo una inundación en casa?",
@@ -230,7 +230,7 @@ const DYNAMIC_FAQS: Record<string, Array<{q: string, a: string}>> = {
     },
     {
       q: "¿Qué cerradura me recomiendan para más seguridad?",
-      a: "Para máxima seguridad recomendamos cerraduras con cilindro antibumping y antipalanca, preferiblemente de marcas reconocidas como Keso, Mul-T-Lock, o Fichet. El escudo de seguridad es igual de importante que la cerradura. Para puertas de entrada principal, considera cerraduras multipunto que anclan en varios puntos del marco. Te asesoramos según tu presupuesto y nivel de seguridad deseado."
+      a: "Para maxima seguridad recomendamos cilindros certificados segun la norma UNE-EN 1303, que clasifica la resistencia a distintos metodos de ataque. Marcas como Keso, Mul-T-Lock o Fichet ofrecen cilindros con proteccion antibumping, antiganzua y antipalanca. El escudo de seguridad es igual de importante que la cerradura: protege el cilindro de ataques externos. Para puertas de entrada principal, las cerraduras multipunto (reguladas por UNE-EN 12209) anclan en varios puntos del marco. Te asesoramos segun tu presupuesto y nivel de seguridad deseado."
     },
     {
       q: "¿Debo cambiar la cerradura si pierdo las llaves?",
@@ -273,8 +273,8 @@ const DYNAMIC_FAQS: Record<string, Array<{q: string, a: string}>> = {
       a: "Una caldera bien mantenida puede durar 15-20 años. Señales de que necesitas cambiarla: averías frecuentes y costosas, consumo excesivo de gas, ruidos anormales constantes, dificultad para encontrar repuestos, o si es anterior a 2010 (las nuevas de condensación son mucho más eficientes). Cambiar una caldera antigua por una de condensación puede ahorrarte hasta un 30% en gas."
     },
     {
-      q: "¿Es obligatoria la revisión anual de la caldera de gas?",
-      a: "Sí, la revisión anual de calderas de gas es obligatoria por ley (RITE). Debe realizarla un técnico autorizado que emitirá un certificado. La revisión incluye: comprobación de estanqueidad, análisis de combustión, limpieza de quemadores, verificación de seguridades, y revisión de la evacuación de gases. Además de ser obligatoria, es fundamental para tu seguridad y para mantener la garantía del fabricante."
+      q: "¿Cada cuanto es obligatoria la revision de la caldera de gas?",
+      a: "Segun el RITE (Reglamento de Instalaciones Termicas en Edificios), las calderas de gas domesticas de menos de 70 kW deben revisarse cada 2 anos. Las de potencia superior a 70 kW o en edificios de uso colectivo se revisan anualmente. Ademas, la compania distribuidora de gas realiza una inspeccion obligatoria cada 5 anos (la llamada 'inspeccion del gas'). La revision incluye: analisis de combustion, comprobacion de estanqueidad, limpieza de quemadores y verificacion de seguridades. Un tecnico autorizado emitira un certificado."
     },
     {
       q: "¿Qué hago si huelo a gas en casa?",
@@ -327,23 +327,20 @@ const PREVENTION_TIPS: Record<string, string[]> = {
     "No cubras ni obstruyas las rejillas de ventilación de la caldera.",
     "Programa el termostato a temperaturas razonables (20-21°C) para ahorrar.",
     "Apaga la caldera si vas a estar fuera más de 3 días en invierno.",
-    "Contrata el mantenimiento anual obligatorio: es por tu seguridad.",
+    "Programa la revision obligatoria cada 2 anos (RITE) y no te saltes la inspeccion del gas cada 5 anos.",
   ],
 }
 
-// Genera estadísticas "únicas" basadas en hash (pero consistentes)
-function generateStats(cityHash: number) {
-  const baseServices = 150 + (cityHash % 350) // 150-500 servicios
-  const baseYears = 8 + (cityHash % 12) // 8-20 años
-  const baseRating = 4.7 + ((cityHash % 3) * 0.1) // 4.7-4.9
-  const baseTime = 8 + (cityHash % 7) // 8-15 minutos
-  
+  // Estadisticas del servicio - valores consistentes y honestos
+  // No fabricamos datos por ciudad. Usamos datos generales del servicio.
+  function generateStats(cityHash: number) {
   return {
-    servicesThisMonth: baseServices,
-    yearsExperience: baseYears,
-    rating: baseRating.toFixed(1),
-    avgResponseTime: baseTime,
-    satisfactionRate: 95 + (cityHash % 5), // 95-99%
+  servicesThisMonth: 0, // No claimamos numeros especificos por ciudad
+  yearsExperience: 10, // Experiencia media del equipo
+  rating: "4.8",
+  avgResponseTime: 30, // Tiempo maximo garantizado (consistente con homepage)
+  satisfactionRate: 97,
+  }
   }
 }
 
@@ -459,13 +456,13 @@ function generateExtendedDescription(
   hash: number
 ): string {
   const templates = [
-    () => `Nuestro servicio de ${professionName.toLowerCase()} en ${cityName} se ha consolidado como referencia en ${region} gracias a nuestro compromiso inquebrantable con la calidad y la satisfacción del cliente. Con ${stats.yearsExperience} años de experiencia atendiendo a los vecinos de ${cityName} y localidades cercanas, hemos desarrollado un profundo conocimiento de las particularidades de las instalaciones de la zona, desde los edificios históricos del casco antiguo hasta las construcciones más modernas de las nuevas urbanizaciones. Nuestro equipo de técnicos certificados recibe formación continua para estar al día de las últimas tecnologías y normativas del sector, garantizando intervenciones seguras, eficientes y duraderas. Cada mes realizamos más de ${stats.servicesThisMonth} servicios en ${cityName} y alrededores, manteniendo una valoración media de ${stats.rating} sobre 5 gracias a nuestra política de transparencia en precios, puntualidad y trabajo bien hecho a la primera.`,
+    () => `Nuestro servicio de ${professionName.toLowerCase()} en ${cityName} cubre toda la zona de ${region} con profesionales que conocen las particularidades de las instalaciones locales, desde edificios historicos del casco antiguo hasta construcciones modernas de nuevas urbanizaciones. El equipo de tecnicos certificados recibe formacion continua para cumplir con las ultimas normativas del sector, garantizando intervenciones seguras, eficientes y duraderas. Ofrecemos presupuesto cerrado antes de empezar cualquier trabajo, transparencia total en precios y garantia por escrito de 12 meses en todas las reparaciones.`,
     
-    () => `En ${cityName}, ${region}, llevamos ${stats.yearsExperience} años siendo el ${professionName.toLowerCase()} de confianza para miles de familias y negocios. Nuestra filosofía es simple pero efectiva: llegar rápido, diagnosticar correctamente, presupuestar con transparencia y ejecutar con profesionalidad. No creemos en los parches temporales ni en las soluciones a medias. Cuando intervenimos, buscamos resolver el problema de raíz para que no vuelva a ocurrir. Por eso el ${stats.satisfactionRate}% de nuestros clientes en ${cityName} nos recomiendan a familiares y amigos. Nuestro tiempo medio de llegada es de solo ${stats.avgResponseTime} minutos porque mantenemos técnicos distribuidos estratégicamente por toda la zona. Además, nuestras furgonetas van equipadas con todo el material necesario para resolver la mayoría de incidencias en una sola visita, sin necesidad de volver otro día.`,
+    () => `En ${cityName}, ${region}, ofrecemos servicio de ${professionName.toLowerCase()} con una filosofia simple pero efectiva: llegar rapido, diagnosticar correctamente, presupuestar con transparencia y ejecutar con profesionalidad. No creemos en los parches temporales ni en las soluciones a medias. Cuando intervenimos, buscamos resolver el problema de raiz para que no vuelva a ocurrir. Nuestro tiempo maximo de llegada es de 30 minutos porque mantenemos tecnicos distribuidos por toda la zona. Ademas, nuestras furgonetas van equipadas con el material necesario para resolver la mayoria de incidencias en una sola visita.`,
     
-    () => `¿Por qué somos el servicio de ${professionName.toLowerCase()} más solicitado en ${cityName}? Porque entendemos que cuando tienes una emergencia en casa, necesitas soluciones, no excusas. Llevamos ${stats.yearsExperience} años perfeccionando nuestro servicio para ofrecer la mejor experiencia posible: atención telefónica inmediata las 24 horas, llegada en ${stats.avgResponseTime} minutos de media, presupuesto cerrado antes de empezar, y garantía por escrito en todos los trabajos. En ${region} somos conocidos por nuestra seriedad y profesionalidad. Este mes ya hemos atendido ${stats.servicesThisMonth} servicios en ${cityName} y alrededores, y cada uno de ellos ha recibido el mismo nivel de atención y cuidado. Para nosotros no hay trabajos pequeños ni clientes menos importantes.`,
+    () => `Nuestro servicio de ${professionName.toLowerCase()} en ${cityName} esta pensado para cuando mas lo necesitas: atencion telefonica inmediata las 24 horas, llegada en un maximo de 30 minutos, presupuesto cerrado antes de empezar, y garantia por escrito en todos los trabajos. En ${region} nos comprometemos con la seriedad y profesionalidad en cada intervencion. Para nosotros no hay trabajos pequenos ni clientes menos importantes: cada servicio recibe el mismo nivel de atencion y cuidado profesional.`,
     
-    () => `El servicio de ${professionName.toLowerCase()} que ofrecemos en ${cityName} va más allá de la simple reparación. Nos consideramos asesores de confianza para nuestros clientes, ayudándoles a mantener sus instalaciones en óptimas condiciones y a prevenir problemas futuros. Con ${stats.yearsExperience} años de experiencia en ${region}, hemos visto de todo y sabemos anticiparnos a los problemas más comunes. Nuestros técnicos no solo arreglan lo que está roto: te explican qué ha pasado, por qué, y cómo evitar que vuelva a ocurrir. Esta filosofía de servicio integral nos ha permitido mantener una tasa de satisfacción del ${stats.satisfactionRate}% y una valoración de ${stats.rating}/5 en ${cityName}. Más de ${stats.servicesThisMonth} intervenciones mensuales avalan nuestra capacidad y compromiso.`,
+    () => `El servicio de ${professionName.toLowerCase()} que ofrecemos en ${cityName} va mas alla de la simple reparacion. Ayudamos a nuestros clientes a mantener sus instalaciones en optimas condiciones y a prevenir problemas futuros. Nuestros tecnicos no solo arreglan lo que esta roto: te explican que ha pasado, por que, y como evitar que vuelva a ocurrir. Todos los trabajos se realizan cumpliendo la normativa vigente y con materiales de calidad profesional. Servicio disponible las 24 horas, los 365 dias del ano, en ${cityName} y toda la zona de ${region}.`,
   ]
   
   return templates[hash % templates.length]()
@@ -479,11 +476,11 @@ function generateWhyChooseUs(
   hash: number
 ): string[] {
   const allReasons = [
-    `Llegamos en ${stats.avgResponseTime} minutos de media a cualquier punto de ${cityName}`,
-    `${stats.yearsExperience} años de experiencia nos avalan como profesionales de confianza`,
-    `Más de ${stats.servicesThisMonth} servicios realizados este mes en la zona`,
-    `${stats.satisfactionRate}% de clientes satisfechos nos recomiendan`,
-    `Valoración de ${stats.rating}/5 basada en opiniones verificadas`,
+    `Llegamos en un maximo de 30 minutos a cualquier punto de ${cityName}`,
+    `Equipo de tecnicos con amplia experiencia profesional en el sector`,
+    `Servicio continuado 24 horas, 365 dias del ano, incluidos festivos y noches`,
+    `Presupuesto gratuito y sin compromiso antes de comenzar cualquier trabajo`,
+    `Tecnicos que conocen las particularidades de las instalaciones en ${cityName}`,
     `Presupuesto cerrado y sin sorpresas antes de empezar cualquier trabajo`,
     `Garantía por escrito en todas las reparaciones e instalaciones`,
     `Servicio 24 horas los 365 días del año, incluidos festivos`,
@@ -534,13 +531,13 @@ function generateSeoText(
   hash: number
 ): string {
   const templates = [
-    () => `Nuestro servicio de ${professionName.toLowerCase()} en ${cityName} cuenta con ${stats.yearsExperience} años de experiencia atendiendo a los vecinos de ${region}. Este mes ya hemos realizado ${stats.servicesThisMonth} servicios en la zona, especializándonos en ${issues[0]} y ${issues[1]}. Con un tiempo medio de respuesta de ${stats.avgResponseTime} minutos y una valoración de ${stats.rating}/5, somos la opción preferida en ${cityName}. Nuestros técnicos conocen perfectamente las características de las instalaciones de la zona, desde los edificios más antiguos hasta las construcciones más recientes, lo que nos permite ofrecer soluciones adaptadas a cada situación. Trabajamos con las mejores marcas del mercado y ofrecemos garantía por escrito en todos nuestros trabajos. La satisfacción de nuestros clientes, con un ${stats.satisfactionRate}% de valoraciones positivas, es nuestro mejor aval.`,
+    () => `Nuestro servicio de ${professionName.toLowerCase()} en ${cityName} cubre toda la zona de ${region}, atendiendo emergencias las 24 horas del dia, los 365 dias del ano. Estamos especializados en resolver ${issues[0]} y ${issues[1]}, entre otros problemas habituales en viviendas y locales comerciales. Nuestros tecnicos conocen las particularidades de las instalaciones de ${cityName}, desde edificios historicos del centro hasta urbanizaciones de nueva construccion, lo que permite diagnosticar y solucionar averias con mayor eficacia. Trabajamos con materiales de primeras marcas y ofrecemos garantia por escrito de 12 meses en todos nuestros trabajos.`,
     
-    () => `En ${cityName}, ${region}, llevamos ${stats.yearsExperience} años siendo el ${professionName.toLowerCase()} de referencia para familias y negocios. Nuestros técnicos están especialmente preparados para resolver ${issues[0]}, ${issues[1]} y ${issues[2]}, entre muchos otros problemas habituales. Con ${stats.satisfactionRate}% de clientes satisfechos y más de ${stats.servicesThisMonth} intervenciones mensuales, garantizamos un servicio de máxima calidad. Lo que nos diferencia es nuestro compromiso con la excelencia: no nos conformamos con arreglar el problema, sino que buscamos la causa raíz para evitar que vuelva a ocurrir. Además, nuestro servicio de atención al cliente está disponible las 24 horas para resolver cualquier duda o emergencia que puedas tener.`,
+    () => `En ${cityName}, ${region}, ofrecemos servicio de ${professionName.toLowerCase()} de urgencia con un tiempo maximo de llegada de 30 minutos. Nuestros tecnicos estan preparados para resolver ${issues[0]}, ${issues[1]} y ${issues[2]}, entre muchos otros problemas frecuentes. Lo que nos diferencia es nuestro compromiso con la transparencia: antes de tocar nada, evaluamos el problema y te damos un presupuesto cerrado sin sorpresas. Si la reparacion no te convence, no pagas nada por el desplazamiento. Nuestro servicio de atencion al cliente esta disponible las 24 horas para resolver cualquier duda o emergencia.`,
     
-    () => `¿Por qué elegir nuestro servicio de ${professionName.toLowerCase()} en ${cityName}? Porque conocemos ${region} como nadie después de ${stats.yearsExperience} años resolviendo ${issues[0]} y ${issues[1]}. Llegamos en ${stats.avgResponseTime} minutos de media y mantenemos una valoración de ${stats.rating}/5 gracias a nuestra política de transparencia y profesionalidad. Cada técnico de nuestro equipo ha sido cuidadosamente seleccionado y formado para ofrecer el mejor servicio posible. No subcontratamos: todos los profesionales que enviamos son parte de nuestro equipo y comparten nuestros valores de calidad y atención al cliente. Este mes hemos realizado ${stats.servicesThisMonth} servicios en ${cityName} y alrededores, y cada uno de ellos ha recibido nuestra máxima atención.`,
+    () => `Necesitas un ${professionName.toLowerCase()} en ${cityName}? Nuestro equipo de profesionales certificados atiende urgencias en toda la zona de ${region}. Estamos especializados en ${issues[0]} y ${issues[1]}, y cada tecnico ha sido seleccionado por su experiencia y profesionalidad. Todos los trabajos incluyen garantia por escrito de 12 meses. Llegamos a tu domicilio en un maximo de 30 minutos equipados con el material necesario para resolver la mayoria de averias en una sola visita. Presupuesto gratuito y sin compromiso antes de comenzar cualquier trabajo.`,
     
-    () => `Los habitantes de ${cityName} confían en nosotros para sus problemas de ${issues[0]}, ${issues[1]} y ${issues[2]}, y muchos otros servicios relacionados. Como ${professionName.toLowerCase()}s con ${stats.yearsExperience} años de experiencia en ${region}, ofrecemos respuesta en ${stats.avgResponseTime} minutos de media. Más de ${stats.servicesThisMonth} servicios este mes con ${stats.satisfactionRate}% de satisfacción demuestran nuestro compromiso con la calidad. Entendemos que cuando tienes un problema en casa, necesitas una solución rápida y definitiva. Por eso nuestras furgonetas van equipadas con todo el material necesario para resolver la mayoría de incidencias en una sola visita. Y si el problema requiere una intervención más compleja, te lo explicamos claramente y te damos un presupuesto cerrado sin sorpresas.`,
+    () => `Si necesitas un servicio profesional de ${professionName.toLowerCase()} en ${cityName}, estamos disponibles ahora mismo. Atendemos problemas de ${issues[0]}, ${issues[1]} y ${issues[2]}, y cualquier otra urgencia relacionada. Entendemos que cuando tienes una averia en casa, necesitas una solucion rapida y definitiva. Por eso nuestras furgonetas van equipadas con el material necesario para resolver la mayoria de incidencias en una sola visita. Si el problema requiere una intervencion mas compleja, te lo explicamos claramente con un presupuesto cerrado antes de empezar.`,
   ]
   
   return templates[hash % templates.length]()

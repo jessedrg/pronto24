@@ -172,32 +172,32 @@ export function ServiceLandingTemplate({
           { icon: Clock, title: "24/7", subtitle: "Siempre disponibles" },
           { icon: Moon, title: "Noches", subtitle: "Sin recargo" },
           { icon: Calendar, title: "Festivos", subtitle: "Trabajamos" },
-          { icon: ThumbsUp, title: "4.9★", subtitle: "+2.800 opiniones" },
+          { icon: ThumbsUp, title: "Garantia", subtitle: "12 meses escrito" },
         ]
       case "cerca-de-mi":
       case "a-domicilio":
         return [
           { icon: Navigation, title: "Cercano", subtitle: "En tu zona" },
           { icon: Home, title: "A domicilio", subtitle: "Vamos a tu casa" },
-          { icon: Timer, title: "10 min", subtitle: "Tiempo llegada" },
-          { icon: ThumbsUp, title: "4.9★", subtitle: "+2.800 opiniones" },
+          { icon: Timer, title: "30 min", subtitle: "Tiempo max." },
+          { icon: ThumbsUp, title: "Garantia", subtitle: "12 meses escrito" },
         ]
       case "de-guardia":
       case "rapido":
       case "ahora":
       case "hoy":
         return [
-          { icon: Zap, title: "Express", subtitle: "Super rapido" },
-          { icon: Timer, title: "10 min", subtitle: "Garantizado" },
-          { icon: Shield, title: "Garantia", subtitle: "Total" },
-          { icon: ThumbsUp, title: "4.9★", subtitle: "+2.800 opiniones" },
+          { icon: Zap, title: "Express", subtitle: "Servicio rapido" },
+          { icon: Timer, title: "30 min", subtitle: "Tiempo max." },
+          { icon: Shield, title: "Garantia", subtitle: "Por escrito" },
+          { icon: ThumbsUp, title: "Gratis", subtitle: "Presupuesto" },
         ]
       default:
         return [
-          { icon: Timer, title: "10 min", subtitle: "Tiempo llegada" },
-          { icon: Shield, title: "Garantia", subtitle: "En cada trabajo" },
+          { icon: Timer, title: "30 min", subtitle: "Tiempo max." },
+          { icon: Shield, title: "Garantia", subtitle: "12 meses" },
           { icon: Award, title: "Certificados", subtitle: "Profesionales" },
-          { icon: ThumbsUp, title: "4.9★", subtitle: "+2.800 opiniones" },
+          { icon: ThumbsUp, title: "Gratis", subtitle: "Presupuesto" },
         ]
     }
   }
@@ -365,7 +365,7 @@ export function ServiceLandingTemplate({
                 { id: "precios", label: "Guia de precios" },
                 { id: "como-trabajamos", label: "Como trabajamos" },
                 { id: "faqs", label: "Preguntas frecuentes" },
-                { id: "opiniones", label: "Opiniones verificadas" },
+                { id: "opiniones", label: "Opiniones de clientes" },
                 { id: "otros-servicios", label: `Otros servicios en ${cityName}` },
                 { id: "ciudades-cercanas", label: "Ciudades cercanas" },
               ].map((item) => (
@@ -396,20 +396,20 @@ export function ServiceLandingTemplate({
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 rounded-xl bg-muted/50 border border-border">
-                    <div className="text-2xl font-bold text-foreground">{uniqueContent.stats.servicesThisMonth}+</div>
-                    <div className="text-sm text-muted-foreground">servicios este mes</div>
+                    <div className="text-2xl font-bold text-foreground">24/7</div>
+                    <div className="text-sm text-muted-foreground">servicio disponible</div>
                   </div>
                   <div className="p-4 rounded-xl bg-muted/50 border border-border">
-                    <div className="text-2xl font-bold text-foreground">{uniqueContent.stats.yearsExperience}</div>
-                    <div className="text-sm text-muted-foreground">anos de experiencia</div>
+                    <div className="text-2xl font-bold text-foreground">30 min</div>
+                    <div className="text-sm text-muted-foreground">tiempo max. llegada</div>
                   </div>
                   <div className="p-4 rounded-xl bg-muted/50 border border-border">
-                    <div className="text-2xl font-bold text-foreground">{uniqueContent.stats.avgResponseTime} min</div>
-                    <div className="text-sm text-muted-foreground">tiempo respuesta</div>
+                    <div className="text-2xl font-bold text-foreground">12 meses</div>
+                    <div className="text-sm text-muted-foreground">garantia por escrito</div>
                   </div>
                   <div className="p-4 rounded-xl bg-muted/50 border border-border">
-                    <div className="text-2xl font-bold text-foreground">{uniqueContent.stats.satisfactionRate}%</div>
-                    <div className="text-sm text-muted-foreground">clientes satisfechos</div>
+                    <div className="text-2xl font-bold text-foreground">0 EUR</div>
+                    <div className="text-sm text-muted-foreground">presupuesto gratis</div>
                   </div>
                 </div>
               </div>
@@ -453,13 +453,13 @@ export function ServiceLandingTemplate({
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/10 text-foreground text-sm font-medium mb-4">
                 <Users className="w-4 h-4" />
-                <span>Mas de {uniqueContent.stats.servicesThisMonth} clientes este mes</span>
+                <span>Servicio profesional 24 horas</span>
               </div>
               <h2 id="why-choose-heading" className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
                 Por que elegir nuestro servicio de {profession.name.toLowerCase()} en {cityName}
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Somos el servicio de {profession.name.toLowerCase()} mas valorado en {cityName} y alrededores.
+                Profesionales certificados con garantia por escrito en {cityName} y alrededores.
               </p>
             </div>
 
@@ -668,7 +668,7 @@ export function ServiceLandingTemplate({
                 <Star key={s} className="w-6 h-6 text-foreground fill-foreground" />
               ))}
             </div>
-            <h2 id="reviews-heading" className="text-foreground font-bold text-lg">4.9 de 5 - +2.800 valoraciones verificadas</h2>
+                <h2 id="reviews-heading" className="text-foreground font-bold text-lg">Experiencias de nuestros clientes</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -717,12 +717,12 @@ export function ServiceLandingTemplate({
 
           <p className="text-muted-foreground mb-4 max-w-2xl mx-auto">
             Un {profession.name.toLowerCase()} {modifierText ? modifierText.toLowerCase() : "certificado"} puede estar
-            en tu casa en {cityName} en menos de {uniqueContent?.stats.avgResponseTime || 10} minutos. Sin compromiso, sin esperas, sin sorpresas.
+            en tu casa en {cityName} en un maximo de 30 minutos. Presupuesto gratuito y sin compromiso.
           </p>
 
           <p className="text-muted-foreground mb-8 max-w-2xl mx-auto text-sm">
-            Llevamos {uniqueContent?.stats.yearsExperience || 10} anos atendiendo a los vecinos de {cityName} y {uniqueContent?.localInfo.region || "alrededores"}.
-            Mas de {uniqueContent?.stats.servicesThisMonth || 200} servicios realizados este mes con un {uniqueContent?.stats.satisfactionRate || 97}% de clientes satisfechos.
+            Servicio profesional en {cityName} y {uniqueContent?.localInfo.region || "alrededores"}.
+            Garantia por escrito de 12 meses en todos los trabajos. Disponible las 24 horas, todos los dias del ano.
           </p>
 
           <CallButton phoneNumber={phoneNumber} phoneFormatted={phoneFormatted} size="large" />

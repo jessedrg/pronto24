@@ -7,6 +7,31 @@ export const runtime = "nodejs"
 // Max 50,000 URLs per sitemap (Google limit)
 const MAX_URLS_PER_SITEMAP = 45000 // Leave margin
 
+// High-population cities get higher priority
+const TOP_CITIES = new Set([
+  "madrid", "barcelona", "valencia", "sevilla", "zaragoza", "malaga", "murcia",
+  "palma-de-mallorca", "las-palmas-de-gran-canaria", "bilbao", "alicante",
+  "cordoba", "valladolid", "vigo", "gijon", "hospitalet-de-llobregat",
+  "vitoria-gasteiz", "la-coruna", "granada", "elche", "oviedo", "badalona",
+  "cartagena", "terrassa", "jerez-de-la-frontera", "sabadell", "mostoles",
+  "alcala-de-henares", "pamplona", "fuenlabrada", "almeria", "leganes",
+  "san-sebastian", "santander", "burgos", "castellon-de-la-plana", "albacete",
+  "getafe", "alcorcon", "logrono", "badajoz", "salamanca", "huelva",
+  "marbella", "lleida", "tarragona", "leon", "cadiz", "jaen", "ourense",
+  "lugo", "santiago-de-compostela", "caceres", "melilla", "guadalajara",
+  "toledo", "pontevedra", "palencia", "ciudad-real", "zamora", "avila",
+  "cuenca", "huesca", "segovia", "soria", "teruel"
+])
+
+function getCityPriority(city: string, isModifier: boolean): string {
+  if (TOP_CITIES.has(city)) return isModifier ? "0.7" : "0.9"
+  return isModifier ? "0.5" : "0.7"
+}
+
+function getProblemPriority(city: string): string {
+  return TOP_CITIES.has(city) ? "0.8" : "0.6"
+}
+
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
@@ -14,7 +39,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     const date = new Date().toISOString().split("T")[0]
     const id = slug.endsWith(".xml") ? slug.slice(0, -4) : slug
 
-    const urls: string[] = []
+    const urlEntries: { url: string; priority: string; changefreq: string }[] = []
 
     // Handle chunked problemas sitemaps: electricista-problemas-1, electricista-problemas-2, etc.
     const problemasMatch = id.match(/^(.+)-problemas-(\d+)$/)
@@ -32,7 +57,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       for (let i = startProblem; i < endProblem; i++) {
         const problem = problems[i]
         for (const city of CITIES) {
-          urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}/`)
+          urlEntries.push({
+            url: `${baseUrl}/problema/${profession}/${problem}/${city}/`,
+            priority: getProblemPriority(city),
+            changefreq: "weekly",
+          })
         }
       }
     } else if (id.endsWith("-problemas")) {
@@ -45,7 +74,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       for (let i = 0; i < Math.min(problemsPerChunk, problems.length); i++) {
         const problem = problems[i]
         for (const city of CITIES) {
-          urls.push(`${baseUrl}/problema/${profession}/${problem}/${city}/`)
+          urlEntries.push({
+            url: `${baseUrl}/problema/${profession}/${problem}/${city}/`,
+            priority: getProblemPriority(city),
+            changefreq: "weekly",
+          })
         }
       }
     } else if (id.startsWith("precio-") || id.startsWith("presupuesto-")) {
@@ -53,7 +86,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       const profession = id.replace(`${prefix}-`, "")
       if (VALID_PROFESSIONS.includes(profession as Profession)) {
         for (const city of CITIES) {
-          urls.push(`${baseUrl}/${prefix}-${profession}/${city}/`)
+          urlEntries.push({
+            url: `${baseUrl}/${prefix}-${profession}/${city}/`,
+            priority: getCityPriority(city, true),
+            changefreq: "weekly",
+          })
         }
       }
     } else {
@@ -77,21 +114,25 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       }
 
       if (foundProfession) {
+        const isModifier = foundModifier !== ""
         for (const city of CITIES) {
-          if (foundModifier) {
-            urls.push(`${baseUrl}/${foundProfession}${foundModifier}/${city}/`)
-          } else {
-            urls.push(`${baseUrl}/${foundProfession}/${city}/`)
-          }
+          const url = foundModifier
+            ? `${baseUrl}/${foundProfession}${foundModifier}/${city}/`
+            : `${baseUrl}/${foundProfession}/${city}/`
+          urlEntries.push({
+            url,
+            priority: getCityPriority(city, isModifier),
+            changefreq: "weekly",
+          })
         }
       }
     }
 
-    // Optimized XML generation using array join (faster than string concatenation)
+    // Optimized XML generation with differentiated priorities
     const xmlParts = [
       '<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-      ...urls.map(url => `<url><loc>${url}</loc><lastmod>${date}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`),
+      ...urlEntries.map(e => `<url><loc>${e.url}</loc><lastmod>${date}</lastmod><changefreq>${e.changefreq}</changefreq><priority>${e.priority}</priority></url>`),
       '</urlset>'
     ]
     const xml = xmlParts.join('\n')

@@ -24,13 +24,6 @@ const homeSchema = {
     "@type": "Country",
     "name": "España"
   },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "2847",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "Servicios de Emergencia para el Hogar",

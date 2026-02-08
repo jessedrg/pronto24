@@ -31,8 +31,8 @@ export function ServiceReviews({ service, reviews }: ServiceReviewsProps) {
             </div>
             <span className="text-2xl font-bold">4.9/5</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">Más de 15.000 clientes satisfechos</h2>
-          <p className="text-lg text-neutral-600">Opiniones verificadas de clientes reales en toda España</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-2">Experiencias de nuestros clientes</h2>
+          <p className="text-lg text-neutral-600">Lo que dicen quienes han confiado en nuestro servicio</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
@@ -42,7 +42,6 @@ export function ServiceReviews({ service, reviews }: ServiceReviewsProps) {
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-bold">{review.name}</h3>
-                    {review.verified && <CheckCircle2 className="w-4 h-4 text-green-600" />}
                   </div>
                   <p className="text-sm text-neutral-600">{review.location}</p>
                 </div>
@@ -69,18 +68,18 @@ export function ServiceReviews({ service, reviews }: ServiceReviewsProps) {
         <div className="mt-12 text-center">
           <div className="inline-flex items-center gap-8 bg-white px-8 py-4 rounded-lg shadow-sm">
             <div>
-              <div className="text-3xl font-bold">15.247</div>
-              <div className="text-sm text-neutral-600">Servicios realizados</div>
+              <div className="text-3xl font-bold">24h</div>
+              <div className="text-sm text-neutral-600">Disponibilidad</div>
             </div>
             <div className="w-px h-12 bg-neutral-200" />
             <div>
-              <div className="text-3xl font-bold">98%</div>
-              <div className="text-sm text-neutral-600">Satisfacción</div>
+              <div className="text-3xl font-bold">365</div>
+              <div className="text-sm text-neutral-600">Dias al ano</div>
             </div>
             <div className="w-px h-12 bg-neutral-200" />
             <div>
-              <div className="text-3xl font-bold">24min</div>
-              <div className="text-sm text-neutral-600">Tiempo medio</div>
+              <div className="text-3xl font-bold">30min</div>
+              <div className="text-sm text-neutral-600">Llegada maxima</div>
             </div>
           </div>
         </div>

@@ -199,12 +199,12 @@ const serviceArticles: ServiceArticle[] = [
     icon: Flame,
     color: "text-red-500",
     bgColor: "bg-red-500/10",
-    introduction: "El servicio de reparacion de calderas de pronto-24.com mantiene tu hogar con agua caliente y calefaccion durante todo el año. Nuestros tecnicos estan certificados para trabajar con todas las marcas del mercado: Vaillant, Junkers, Saunier Duval, Baxi, Ferroli y muchas mas. Realizamos la revision anual obligatoria, reparaciones de todo tipo y sustitucion de calderas antiguas por modernas calderas de condensacion mas eficientes.",
+    introduction: "El servicio de reparacion de calderas de pronto-24.com mantiene tu hogar con agua caliente y calefaccion durante todo el año. Nuestros tecnicos estan certificados para trabajar con todas las marcas del mercado: Vaillant, Junkers, Saunier Duval, Baxi, Ferroli y muchas mas. Realizamos la revision obligatoria segun RITE (cada 2 anos para domesticas), reparaciones de todo tipo y sustitucion de calderas antiguas por modernas calderas de condensacion mas eficientes.",
     whyChooseUs: [
       "Tecnicos con carnet de instalador de gas (categorias A y B)",
       "Formacion especifica de los principales fabricantes",
       "Stock de repuestos originales para las marcas mas comunes",
-      "Emitimos el certificado oficial de la revision anual",
+      "Emitimos el certificado oficial de la revision obligatoria",
       "Asesoramiento honesto sobre reparar vs sustituir",
       "Servicio prioritario para hogares sin calefaccion en invierno"
     ],
@@ -217,7 +217,7 @@ const serviceArticles: ServiceArticle[] = [
       { name: "Radiadores que no calientan", description: "Uno o varios radiadores no alcanzan la temperatura adecuada.", urgent: false }
     ],
     expertTips: [
-      "Programa la revision anual obligatoria ANTES de que llegue el frio",
+      "Programa la revision obligatoria (cada 2 anos segun RITE) ANTES de que llegue el frio",
       "Purga los radiadores al inicio de cada temporada de calefaccion",
       "Mantén la presion del circuito entre 1 y 1.5 bares",
       "Si hueles a gas, ventila, sal de casa y llama desde fuera"
@@ -230,8 +230,8 @@ const serviceArticles: ServiceArticle[] = [
       "Procedemos con la reparacion usando repuestos de calidad",
       "Verificamos el funcionamiento y seguridad antes de irnos"
     ],
-    coverage: "Servicio en toda España. Revision anual y reparaciones en todas las provincias.",
-    priceRange: "Revision anual desde 80€. Reparaciones desde 80€ segun pieza. Instalacion de caldera nueva desde 1.800€."
+    coverage: "Servicio en toda España. Revision obligatoria y reparaciones en todas las provincias.",
+    priceRange: "Revision obligatoria desde 80€. Reparaciones desde 80€ segun pieza. Instalacion de caldera nueva desde 1.800€."
   }
 ]
 

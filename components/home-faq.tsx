@@ -105,11 +105,11 @@ const faqCategories = [
       },
       {
         question: "¿Qué opinan otros clientes sobre su servicio?",
-        answer: "Estamos orgullosos de la confianza que depositan en nosotros más de 50.000 clientes cada año. Nuestras valoraciones: Google Business: 4.9 estrellas sobre 5 (más de 2.800 opiniones). Índice de satisfacción interno: 96% de clientes satisfechos o muy satisfectos. Tasa de recomendación: El 89% de nuestros clientes nos recomendaría a familiares y amigos. Resolución en primera visita: 92% de las averías se resuelven en la primera intervención. Puedes consultar opiniones reales en Google Maps buscando 'pronto-24.com'. También publicamos regularmente testimonios verificados en nuestra web y redes sociales."
+        answer: "Trabajamos cada dia para ofrecer el mejor servicio posible a nuestros clientes. Nuestro compromiso incluye: Presupuesto cerrado antes de empezar cualquier trabajo, sin sorpresas ni costes ocultos. Garantia por escrito de 12 meses en todas las reparaciones. Servicio 24 horas, los 365 dias del ano, incluidos festivos y noches. Tecnicos certificados que cumplen la normativa vigente (REBT para electricidad, RITE para instalaciones termicas, CTE para fontaneria). Puedes contactarnos en cualquier momento en el 936 946 639 para consultar cualquier duda sobre nuestros servicios."
       },
       {
         question: "¿Pertenecen a alguna asociación o tienen certificaciones de calidad?",
-        answer: "Sí, como parte de nuestro compromiso con la calidad y la profesionalidad: Asociaciones: Miembros de las principales asociaciones profesionales del sector en cada especialidad. Certificaciones: Empresa certificada según estándares de calidad en servicios. Formación homologada: Centro colaborador de formación profesional continua. Compromisos: Adheridos al Sistema Arbitral de Consumo para resolución de conflictos. Cumplimiento normativo: Todos nuestros técnicos y procedimientos cumplen con la normativa vigente (REBT para electricidad, RITE para instalaciones térmicas, etc.)."
+        answer: "Nuestros tecnicos cumplen con toda la normativa vigente aplicable a cada especialidad: Electricistas: Instaladores autorizados segun el REBT (Reglamento Electrotecnico de Baja Tension, RD 842/2002), habilitados para emitir Certificados de Instalacion Electrica (CIE/boletin electrico). Calderas: Tecnicos con carnet de instalador autorizado para instalaciones termicas segun el RITE (RD 1027/2007). Cerrajeros: Profesionales formados en sistemas de seguridad certificados segun normas UNE-EN 1303 y UNE-EN 12209. Fontaneros: Instaladores que cumplen con el Codigo Tecnico de la Edificacion (CTE), documentos basicos DB-HS4 y DB-HS5. Ademas, estamos adheridos al Sistema Arbitral de Consumo para la resolucion de conflictos."
       }
     ]
   }
@@ -135,7 +135,7 @@ const additionalFaqs = [
   },
   {
     question: "¿Ofrecen servicios de mantenimiento preventivo?",
-    answer: "Sí, además de urgencias, ofrecemos contratos de mantenimiento preventivo que pueden ahorrarte mucho dinero y disgustos a largo plazo: Mantenimiento de calderas: Revisión anual obligatoria por normativa, limpieza, ajustes y verificación de seguridad. Revisión eléctrica: Comprobación de cuadros, conexiones, y estado de la instalación. Mantenimiento de fontanería: Revisión de llaves, grifos, y detección temprana de fugas. Limpieza preventiva de desagües: Evita atascos graves con limpiezas periódicas. Los clientes con contrato de mantenimiento tienen: descuentos del 15-20% en reparaciones, prioridad de atención, y línea directa de contacto. Consulta nuestros planes de mantenimiento llamando al 936 946 639."
+    answer: "Sí, además de urgencias, ofrecemos contratos de mantenimiento preventivo que pueden ahorrarte mucho dinero y disgustos a largo plazo: Mantenimiento de calderas: Revisión obligatoria cada 2 años según RITE para domésticas, limpieza, ajustes y verificación de seguridad. Revisión eléctrica: Comprobación de cuadros, conexiones, y estado de la instalación. Mantenimiento de fontanería: Revisión de llaves, grifos, y detección temprana de fugas. Limpieza preventiva de desagües: Evita atascos graves con limpiezas periódicas. Los clientes con contrato de mantenimiento tienen: descuentos del 15-20% en reparaciones, prioridad de atención, y línea directa de contacto. Consulta nuestros planes de mantenimiento llamando al 936 946 639."
   },
   {
     question: "¿Cómo gestionan las reclamaciones si no estoy satisfecho?",
@@ -231,7 +231,7 @@ export function HomeFAQ() {
         <div className="mt-16 text-center p-8 rounded-3xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Users className="w-6 h-6 text-primary" />
-            <span className="text-sm font-medium text-primary">Más de 50.000 clientes satisfechos</span>
+            <span className="text-sm font-medium text-primary">Atencion al cliente 24 horas</span>
           </div>
           <h3 className="text-2xl font-bold text-foreground mb-3">
             ¿No has encontrado respuesta a tu pregunta?

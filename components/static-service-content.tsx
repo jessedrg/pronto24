@@ -273,7 +273,7 @@ export function StaticServiceContent({
               ¿Por qué elegir nuestro servicio de {serviceName.toLowerCase()}?
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Somos el servicio de {serviceName.toLowerCase()} más valorado en España. Descubre por qué miles de clientes confían en nosotros.
+              Profesionales certificados con servicio 24 horas y garantia por escrito en cada trabajo.
             </p>
           </div>
           
@@ -416,7 +416,7 @@ export function StaticServiceContent({
                 <Star key={s} className="w-6 h-6 text-[#00B8A9] fill-[#00B8A9]" />
               ))}
             </div>
-            <p className="text-foreground font-bold text-lg">4.9 de 5 - +2,800 valoraciones verificadas</p>
+                <p className="text-foreground font-bold text-lg">Experiencias de nuestros clientes</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
