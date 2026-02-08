@@ -33,8 +33,8 @@ export function Hero() {
               Profesionales certificados en tu casa en menos de 30 minutos. Presupuesto gratis, sin compromiso. Servicio 24 horas, 365 dias.
             </p>
 
-            {/* Primary CTA - Phone Call */}
-            <div className="space-y-4">
+            {/* Primary CTA - Phone Call (hidden on mobile, floating button handles it) */}
+            <div className="hidden sm:block space-y-4">
               <a
                 href="tel:+34936946639"
                 className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl rounded-2xl shadow-lg shadow-green-500/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-green-500/30"
