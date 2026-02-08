@@ -164,7 +164,7 @@ const COMMON_ISSUES: Record<string, string[]> = {
     "falta de agua caliente o temperatura insuficiente",
     "ruidos extraños: golpeteos, silbidos o burbujeos",
     "posibles fugas de gas (olor característico)",
-    "revisiones obligatorias anuales",
+    "revisiones obligatorias cada 2 anos (RITE)",
     "calderas que pierden presión constantemente",
     "termostatos que no regulan correctamente",
     "radiadores que no calientan uniformemente",
@@ -208,7 +208,7 @@ const DYNAMIC_FAQS: Record<string, Array<{q: string, a: string}>> = {
     },
     {
       q: "¿Cada cuánto tiempo debo revisar el calentador?",
-      a: "Se recomienda revisar el calentador o termo eléctrico cada 2 años, y el de gas anualmente (esta última es obligatoria por ley). La revisión incluye: limpieza de quemadores, comprobación de la llama, verificación de la evacuación de gases, y revisión del ánodo de magnesio en termos eléctricos. Un mantenimiento regular alarga la vida útil del aparato y previene averías costosas."
+      a: "Las calderas de gas domesticas (menos de 70 kW) deben revisarse cada 2 anos segun el RITE, mientras que las de uso colectivo o mas de 70 kW se revisan anualmente. Ademas, la empresa distribuidora de gas realiza una inspeccion obligatoria cada 5 anos. Los termos electricos no tienen revision obligatoria, pero se recomienda cada 2-3 anos para descalcificar y revisar el anodo de magnesio."
     },
     {
       q: "¿Qué hago si tengo una inundación en casa?",
@@ -273,8 +273,8 @@ const DYNAMIC_FAQS: Record<string, Array<{q: string, a: string}>> = {
       a: "Una caldera bien mantenida puede durar 15-20 años. Señales de que necesitas cambiarla: averías frecuentes y costosas, consumo excesivo de gas, ruidos anormales constantes, dificultad para encontrar repuestos, o si es anterior a 2010 (las nuevas de condensación son mucho más eficientes). Cambiar una caldera antigua por una de condensación puede ahorrarte hasta un 30% en gas."
     },
     {
-      q: "¿Es obligatoria la revisión anual de la caldera de gas?",
-      a: "Sí, la revisión anual de calderas de gas es obligatoria por ley (RITE). Debe realizarla un técnico autorizado que emitirá un certificado. La revisión incluye: comprobación de estanqueidad, análisis de combustión, limpieza de quemadores, verificación de seguridades, y revisión de la evacuación de gases. Además de ser obligatoria, es fundamental para tu seguridad y para mantener la garantía del fabricante."
+      q: "¿Cada cuanto es obligatoria la revision de la caldera de gas?",
+      a: "Segun el RITE (Reglamento de Instalaciones Termicas en Edificios), las calderas de gas domesticas de menos de 70 kW deben revisarse cada 2 anos. Las de potencia superior a 70 kW o en edificios de uso colectivo se revisan anualmente. Ademas, la compania distribuidora de gas realiza una inspeccion obligatoria cada 5 anos (la llamada 'inspeccion del gas'). La revision incluye: analisis de combustion, comprobacion de estanqueidad, limpieza de quemadores y verificacion de seguridades. Un tecnico autorizado emitira un certificado."
     },
     {
       q: "¿Qué hago si huelo a gas en casa?",
@@ -327,7 +327,7 @@ const PREVENTION_TIPS: Record<string, string[]> = {
     "No cubras ni obstruyas las rejillas de ventilación de la caldera.",
     "Programa el termostato a temperaturas razonables (20-21°C) para ahorrar.",
     "Apaga la caldera si vas a estar fuera más de 3 días en invierno.",
-    "Contrata el mantenimiento anual obligatorio: es por tu seguridad.",
+    "Programa la revision obligatoria cada 2 anos (RITE) y no te saltes la inspeccion del gas cada 5 anos.",
   ],
 }
 

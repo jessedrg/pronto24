@@ -123,9 +123,9 @@ const EXPERT_GUIDES: Record<string, ExpertGuide> = {
       },
       {
         title: "Calentadores y termos: cuidados esenciales",
-        content: "El calentador o termo es uno de los elementos mas importantes y costosos de tu instalacion. Los calentadores de gas requieren revision anual obligatoria por ley, que incluye limpieza de quemadores, verificacion de la llama y comprobacion de la evacuacion de gases. Los termos electricos acumulan cal en su interior, especialmente en zonas de agua dura, lo que reduce su eficiencia y vida util. Se recomienda revisar y descalcificar cada 2-3 anos. El anodo de magnesio protege el deposito de la corrosion y debe sustituirse cuando este consumido.",
+        content: "El calentador o termo es uno de los elementos mas importantes y costosos de tu instalacion. Las calderas de gas domesticas (menos de 70 kW) requieren revision obligatoria cada 2 anos segun el RITE. Las de uso colectivo o mayor potencia se revisan anualmente. La revision incluye limpieza de quemadores, verificacion de la llama y comprobacion de la evacuacion de gases. Los termos electricos acumulan cal en su interior, especialmente en zonas de agua dura, lo que reduce su eficiencia y vida util. Se recomienda revisar y descalcificar cada 2-3 anos. El anodo de magnesio protege el deposito de la corrosion y debe sustituirse cuando este consumido.",
         tips: [
-          "Programa la revision anual del calentador de gas sin falta",
+          "Programa la revision obligatoria del calentador de gas (cada 2 anos segun RITE)",
           "Ajusta el termostato del termo a 60C para eficiencia y seguridad",
           "Si el agua sale menos caliente o tarda mas en calentar, necesita revision"
         ]
@@ -317,12 +317,12 @@ const EXPERT_GUIDES: Record<string, ExpertGuide> = {
         ]
       },
       {
-        title: "La revision anual obligatoria",
-        content: "Por ley (Reglamento de Instalaciones Termicas en los Edificios - RITE), las calderas de gas deben ser revisadas anualmente por un tecnico autorizado. Esta revision no es un tramite: es fundamental para tu seguridad. Incluye: verificacion de estanqueidad de circuitos de gas, analisis de combustion para comprobar eficiencia, limpieza de quemadores e intercambiador, comprobacion del tiro y evacuacion de gases, revision de presostatos y elementos de seguridad, y verificacion del correcto funcionamiento general. El tecnico emitira un certificado que debes guardar.",
+        title: "La revision obligatoria de calderas (RITE)",
+        content: "Por ley (Reglamento de Instalaciones Termicas en los Edificios - RITE), las calderas de gas domesticas de menos de 70 kW deben revisarse cada 2 anos por un tecnico autorizado (las de mayor potencia o uso colectivo, anualmente). Esta revision no es un tramite: es fundamental para tu seguridad. Incluye: verificacion de estanqueidad de circuitos de gas, analisis de combustion para comprobar eficiencia, limpieza de quemadores e intercambiador, comprobacion del tiro y evacuacion de gases, revision de presostatos y elementos de seguridad, y verificacion del correcto funcionamiento general. El tecnico emitira un certificado que debes guardar.",
         tips: [
           "Programa la revision antes de la temporada de calefaccion",
           "Guarda todos los certificados de revision",
-          "La revision anual mantiene la garantia del fabricante"
+          "La revision periodica obligatoria mantiene la garantia del fabricante"
         ]
       },
       {
@@ -345,7 +345,7 @@ const EXPERT_GUIDES: Record<string, ExpertGuide> = {
       }
     ],
     commonMistakes: [
-      "Saltarse la revision anual obligatoria de calderas de gas",
+      "Saltarse la revision obligatoria de la caldera de gas (cada 2 anos segun RITE)",
       "Rellenar constantemente el circuito sin buscar la fuga",
       "Tapar rejillas de ventilacion donde esta instalada la caldera",
       "Subir el termostato a tope pensando que calentara mas rapido",
@@ -354,7 +354,7 @@ const EXPERT_GUIDES: Record<string, ExpertGuide> = {
       "Intentar reparaciones en circuitos de gas sin autorizacion"
     ],
     whenToCall: [
-      "Para la revision anual obligatoria",
+      "Para la revision obligatoria cada 2 anos",
       "Si la caldera no enciende o se apaga sola",
       "Si no hay agua caliente o tarda mucho en llegar",
       "Si hueles a gas (en este caso, ventila, sal y llama desde fuera)",

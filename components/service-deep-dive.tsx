@@ -185,7 +185,7 @@ const DEEP_DIVE_CONTENT: Record<string, {
     localExpertise: "Conocemos las caracteristicas de las redes de saneamiento de la zona, los problemas habituales segun el tipo de edificacion, y las mejores soluciones para cada caso."
   },
   calderas: {
-    whatWeDo: "Servicio completo de calderas que incluye la revision obligatoria anual, reparacion de todo tipo de averias, instalacion de calderas nuevas y mantenimiento preventivo. Trabajamos con todas las marcas del mercado: Vaillant, Junkers, Saunier Duval, Baxi, Ferroli, Ariston, Roca y muchas mas. Tambien reparamos termos electricos y sistemas de calefaccion por radiadores.",
+    whatWeDo: "Servicio completo de calderas que incluye la revision obligatoria segun RITE (cada 2 anos para domesticas de menos de 70 kW), reparacion de todo tipo de averias, instalacion de calderas nuevas y mantenimiento preventivo. Trabajamos con todas las marcas del mercado: Vaillant, Junkers, Saunier Duval, Baxi, Ferroli, Ariston, Roca y muchas mas. Tambien reparamos termos electricos y sistemas de calefaccion por radiadores.",
     howWeWork: "Para revisiones, acordamos cita en franja horaria comoda para ti. Para averias, evaluamos por telefono la urgencia (sin agua caliente en invierno es prioritario). Al llegar, realizamos diagnostico completo con equipos de medicion profesionales antes de presupuestar. Te explicamos que falla, por que, y cuales son las opciones de reparacion.",
     qualityStandards: [
       "Repuestos originales o de calidad equivalente homologada",
@@ -209,7 +209,7 @@ const DEEP_DIVE_CONTENT: Record<string, {
       "Equipos de vacio para trabajos en circuitos"
     ],
     serviceAreas: [
-      "Revision anual obligatoria con certificado",
+      "Revision obligatoria cada 2 anos (RITE) con certificado",
       "Reparacion de averias de calderas de gas",
       "Sustitucion de calderas antiguas",
       "Instalacion de calderas nuevas de condensacion",
@@ -217,7 +217,7 @@ const DEEP_DIVE_CONTENT: Record<string, {
       "Mantenimiento de sistemas de calefaccion"
     ],
     responseCommitment: "Para averias con afectacion de seguridad (olor a gas) o habitabilidad (sin agua caliente en invierno), respuesta prioritaria. Para revisiones, cita en menos de una semana. Epoca de invierno puede tener mas demanda.",
-    priceTransparency: "Revision anual con precio cerrado que incluye certificado. Reparaciones presupuestadas antes de ejecutar. Si la reparacion no es viable economicamente, te asesoramos sobre sustitucion.",
+    priceTransparency: "Revision obligatoria (cada 2 anos segun RITE para domesticas) con precio cerrado que incluye certificado. Reparaciones presupuestadas antes de ejecutar. Si la reparacion no es viable economicamente, te asesoramos sobre sustitucion.",
     afterService: "Garantia de 12 meses en reparaciones. Seguimiento tras la intervencion. Recordatorio de proxima revision. Atencion para cualquier duda sobre el funcionamiento.",
     localExpertise: "Conocemos las marcas y modelos mas habituales en la zona, las particularidades de las instalaciones de gas segun epoca de construccion, y las soluciones mas adecuadas para el clima local."
   }

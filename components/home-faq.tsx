@@ -135,7 +135,7 @@ const additionalFaqs = [
   },
   {
     question: "¿Ofrecen servicios de mantenimiento preventivo?",
-    answer: "Sí, además de urgencias, ofrecemos contratos de mantenimiento preventivo que pueden ahorrarte mucho dinero y disgustos a largo plazo: Mantenimiento de calderas: Revisión anual obligatoria por normativa, limpieza, ajustes y verificación de seguridad. Revisión eléctrica: Comprobación de cuadros, conexiones, y estado de la instalación. Mantenimiento de fontanería: Revisión de llaves, grifos, y detección temprana de fugas. Limpieza preventiva de desagües: Evita atascos graves con limpiezas periódicas. Los clientes con contrato de mantenimiento tienen: descuentos del 15-20% en reparaciones, prioridad de atención, y línea directa de contacto. Consulta nuestros planes de mantenimiento llamando al 936 946 639."
+    answer: "Sí, además de urgencias, ofrecemos contratos de mantenimiento preventivo que pueden ahorrarte mucho dinero y disgustos a largo plazo: Mantenimiento de calderas: Revisión obligatoria cada 2 años según RITE para domésticas, limpieza, ajustes y verificación de seguridad. Revisión eléctrica: Comprobación de cuadros, conexiones, y estado de la instalación. Mantenimiento de fontanería: Revisión de llaves, grifos, y detección temprana de fugas. Limpieza preventiva de desagües: Evita atascos graves con limpiezas periódicas. Los clientes con contrato de mantenimiento tienen: descuentos del 15-20% en reparaciones, prioridad de atención, y línea directa de contacto. Consulta nuestros planes de mantenimiento llamando al 936 946 639."
   },
   {
     question: "¿Cómo gestionan las reclamaciones si no estoy satisfecho?",

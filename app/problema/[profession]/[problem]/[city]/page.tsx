@@ -198,7 +198,7 @@ const PROBLEM_DETAILS: Record<string, Record<string, { longDescription: string; 
       urgencyLevel: "Alta - Especialmente en invierno",
       estimatedTime: "30-120 minutos",
       priceRange: "80-300",
-      preventionTips: ["Haz una revision anual obligatoria de la caldera", "Mantener la presion entre 1 y 1.5 bar", "No apagues la caldera por completo en invierno", "Purga los radiadores al inicio de cada temporada de frio"],
+      preventionTips: ["Haz la revision obligatoria de la caldera cada 2 anos (RITE)", "Mantener la presion entre 1 y 1.5 bar", "No apagues la caldera por completo en invierno", "Purga los radiadores al inicio de cada temporada de frio"],
       whileYouWait: ["Comprueba que la caldera esta encendida y no muestra codigos de error", "Verifica que la presion del manometro esta entre 1 y 1.5 bar", "Si la presion es baja, busca la llave de llenado y sube la presion lentamente", "Comprueba que la llave del gas no esta cerrada"],
       faqs: [
         { q: "Por que mi caldera no da agua caliente?", a: "Las causas mas frecuentes son: presion baja en el circuito, fallo del sensor de temperatura, vaso de expansion roto, o acumulacion de cal. Un tecnico puede diagnosticarlo en minutos." }

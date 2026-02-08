@@ -328,11 +328,11 @@ const PRICING_GUIDES: Record<string, {
     ]
   },
   calderas: {
-    introduction: "Los precios de servicios de calderas varian segun el tipo de intervencion (revision, reparacion o instalacion), la marca y modelo, y los repuestos necesarios. La revision anual obligatoria tiene precio cerrado. Las reparaciones se presupuestan tras el diagnostico.",
+    introduction: "Los precios de servicios de calderas varian segun el tipo de intervencion (revision, reparacion o instalacion), la marca y modelo, y los repuestos necesarios. La revision obligatoria (cada 2 anos segun RITE para calderas domesticas de menos de 70 kW) tiene precio cerrado. Las reparaciones se presupuestan tras el diagnostico.",
     priceRanges: [
       {
-        service: "Revision anual obligatoria",
-        description: "Mantenimiento preventivo con certificado oficial",
+        service: "Revision obligatoria (cada 2 anos RITE)",
+        description: "Mantenimiento preventivo con certificado oficial para calderas domesticas (<70 kW)",
         minPrice: 80,
         maxPrice: 120,
         factors: ["Marca y modelo de caldera", "Accesibilidad"],
@@ -393,9 +393,9 @@ const PRICING_GUIDES: Record<string, {
       "La epoca del ano afecta a la disponibilidad (invierno = mayor demanda)",
       "Circuitos de calefaccion con lodos requieren limpieza adicional"
     ],
-    transparencyCommitment: "La revision tiene precio cerrado. Para reparaciones, primero diagnosticamos y luego presupuestamos. Si la reparacion no es viable economicamente (coste superior al 50% de una caldera nueva), te lo decimos claramente y asesoramos sobre sustitucion.",
+    transparencyCommitment: "La revision obligatoria (cada 2 anos segun RITE para domesticas, anual para >70 kW) tiene precio cerrado. Para reparaciones, primero diagnosticamos y luego presupuestamos. Si la reparacion no es viable economicamente (coste superior al 50% de una caldera nueva), te lo decimos claramente y asesoramos sobre sustitucion.",
     noHiddenCosts: [
-      "Revision anual: precio cerrado todo incluido",
+      "Revision cada 2 anos (RITE): precio cerrado todo incluido",
       "Diagnostico: se descuenta del precio si aceptas la reparacion",
       "Repuestos: precio de catalogo sin sobreprecios",
       "Instalacion de caldera nueva: precio cerrado con todo incluido"

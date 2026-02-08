@@ -106,7 +106,7 @@ function generateReviews(profession: string, zoneName: string, postalcode: strin
       date: "Hace 1 día",
       text: `Excelente servicio en ${zoneName}. Llegaron en menos de 10 minutos y solucionaron el problema rápidamente. Muy profesionales y precio justo.`,
       service: profServices[seed % profServices.length],
-      verified: true,
+      verified: false,
     },
     {
       name: names[(seed + 3) % names.length],
@@ -115,7 +115,7 @@ function generateReviews(profession: string, zoneName: string, postalcode: strin
       date: "Hace 3 días",
       text: `Llamé a las 11 de la noche y vinieron enseguida. El técnico era muy profesional y explicó todo claramente. 100% recomendado para ${zoneName}.`,
       service: profServices[(seed + 1) % profServices.length],
-      verified: true,
+      verified: false,
     },
     {
       name: names[(seed + 5) % names.length],
@@ -124,7 +124,7 @@ function generateReviews(profession: string, zoneName: string, postalcode: strin
       date: "Hace 1 semana",
       text: `Servicio impecable. Presupuesto sin sorpresas y trabajo de calidad. Ya los he recomendado a mis vecinos del ${postalcode}.`,
       service: profServices[(seed + 2) % profServices.length],
-      verified: true,
+      verified: false,
     },
   ]
 }
