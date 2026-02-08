@@ -1,15 +1,15 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
-import { UrgencyBanner } from "@/components/urgency-banner"
+import Link from "next/link"
+import { MapPin, Wrench, ArrowRight, Navigation, AlertTriangle } from "lucide-react"
 import { Footer } from "@/components/footer"
-import { AIChatWidget } from "@/components/ai-chat-widget"
 import { PostalCodeHero } from "@/components/postal-code-hero"
 import { PostalCodeStats } from "@/components/postal-code-stats"
 import { PostalCodeFAQ } from "@/components/postal-code-faq"
 import { PostalCodeSchema } from "@/components/postal-code-schema"
 import { GuaranteeSection } from "@/components/guarantee-section"
 import { ServiceReviews } from "@/components/service-reviews"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 import {
   getPostalCodeData,
   getZoneName,
@@ -18,6 +18,7 @@ import {
   getTopPostalCodes,
   PROFESSIONS_POSTAL,
 } from "@/lib/postal-data"
+import { PROBLEMS } from "@/lib/seo-data"
 
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
@@ -153,6 +154,22 @@ export default async function PostalCodePage({ params }: PageProps) {
   const description = getZoneDescription(postalcode, profession)
   const reviews = generateReviews(profession, zoneName, postalcode)
 
+  // Generate nearby postal codes for interlinking
+  const postalPrefix = postalcode.substring(0, 3)
+  const postalNum = parseInt(postalcode)
+  const nearbyPostalCodes = Array.from({ length: 6 }, (_, i) => {
+    const offset = i < 3 ? -(i + 1) : i - 2
+    return String(postalNum + offset).padStart(5, '0')
+  }).filter(cp => cp !== postalcode && /^\d{5}$/.test(cp) && cp.startsWith(postalPrefix))
+
+  // Other professions for interlinking
+  const otherProfessions = PROFESSIONS_POSTAL.filter(p => p.id !== profession)
+
+  // City slug for linking to city pages
+  const citySlug = cityName.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
+
   return (
     <>
       <PostalCodeSchema
@@ -162,8 +179,13 @@ export default async function PostalCodePage({ params }: PageProps) {
         cityName={cityName}
       />
       <div className="min-h-screen flex flex-col bg-background">
-        <UrgencyBanner />
-        <Header />
+        <Breadcrumbs
+          items={[
+            { label: professionData.name, href: `/${profession}/` },
+            { label: cityName, href: `/${profession}/${citySlug}/` },
+            { label: `CP ${postalcode} - ${zoneName}` },
+          ]}
+        />
         <main className="flex-1">
           <PostalCodeHero
             profession={professionData}
@@ -188,9 +210,127 @@ export default async function PostalCodePage({ params }: PageProps) {
             zoneName={zoneName}
             cityName={cityName}
           />
+
+          {/* Interlinking: Common problems for this profession */}
+          {(() => {
+            const profProblems = PROBLEMS[profession as keyof typeof PROBLEMS] || []
+            return profProblems.length > 0 ? (
+              <section className="py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-destructive" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-foreground">
+                        Problemas comunes de {professionData.name.toLowerCase()} en {zoneName}
+                      </h2>
+                      <p className="text-sm text-muted-foreground">Selecciona tu problema para mas informacion y precios.</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {profProblems.slice(0, 8).map((problem) => (
+                      <Link
+                        key={problem.id}
+                        href={`/problema/${profession}/${problem.id}/${citySlug}/`}
+                        className={`group flex items-center gap-3 p-4 rounded-xl border transition-all hover:scale-[1.02] ${
+                          problem.urgent
+                            ? "bg-destructive/5 border-destructive/20 hover:border-destructive/50"
+                            : "bg-background border-border hover:border-foreground/30"
+                        }`}
+                      >
+                        <span className="text-lg">{problem.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-sm font-medium text-foreground block truncate">{problem.name}</span>
+                          {problem.urgent && <span className="text-[10px] font-bold text-destructive uppercase">Urgente</span>}
+                        </div>
+                        <ArrowRight className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-foreground" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            ) : null
+          })()}
+
+          {/* Interlinking: Other professions in this postal code */}
+          <section className="py-12 bg-muted/20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+                  <Wrench className="w-5 h-5 text-accent" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-foreground">
+                    Otros servicios urgentes en {zoneName} ({postalcode})
+                  </h2>
+                  <p className="text-sm text-muted-foreground">Disponibles 24 horas en tu codigo postal.</p>
+                </div>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {otherProfessions.map((prof) => (
+                  <Link
+                    key={prof.id}
+                    href={`/${prof.id}/cp/${postalcode}/`}
+                    className="group p-5 rounded-2xl border border-border bg-background hover:border-foreground/30 hover:shadow-lg transition-all"
+                  >
+                    <h3 className="font-bold text-foreground mb-2">{prof.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {prof.namePlural} en CP {postalcode}. Llegamos en 30 min.
+                    </p>
+                    <span className="flex items-center gap-1.5 text-sm font-medium text-foreground group-hover:gap-2.5 transition-all">
+                      Ver servicio <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Interlinking: Nearby postal codes */}
+          {nearbyPostalCodes.length > 0 && (
+            <section className="py-12">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center">
+                    <Navigation className="w-5 h-5 text-foreground" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground">
+                      {professionData.name} en codigos postales cercanos
+                    </h2>
+                    <p className="text-sm text-muted-foreground">Tambien damos servicio en estas zonas cercanas a {zoneName}.</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2.5">
+                  {nearbyPostalCodes.map((cp) => (
+                    <Link
+                      key={cp}
+                      href={`/${profession}/cp/${cp}/`}
+                      className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-muted/50 border border-border text-sm font-medium text-foreground hover:border-foreground/30 hover:bg-background transition-all"
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      <span>CP {cp}</span>
+                    </Link>
+                  ))}
+                </div>
+                
+                {/* Link back to city page */}
+                <div className="mt-8 pt-6 border-t border-border">
+                  <Link
+                    href={`/${profession}/${citySlug}/`}
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-foreground text-background font-medium hover:bg-foreground/90 transition-colors"
+                  >
+                    <MapPin className="w-4 h-4" />
+                    <span>Ver {professionData.name} en todo {cityName}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            </section>
+          )}
         </main>
         <Footer />
-        <AIChatWidget service={profession} />
       </div>
     </>
   )

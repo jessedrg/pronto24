@@ -1,109 +1,119 @@
-import { Mail, Clock, MapPin } from "lucide-react"
+import { Mail, Clock, MapPin, Phone, Shield, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Logo } from "./logo"
 
+const SERVICES = [
+  { id: "electricista", name: "Electricista" },
+  { id: "fontanero", name: "Fontanero" },
+  { id: "cerrajero", name: "Cerrajero" },
+  { id: "desatascos", name: "Desatascos" },
+  { id: "calderas", name: "Calderas" },
+]
+
+const TOP_CITIES = [
+  { slug: "barcelona", name: "Barcelona" },
+  { slug: "madrid", name: "Madrid" },
+  { slug: "valencia", name: "Valencia" },
+  { slug: "sevilla", name: "Sevilla" },
+  { slug: "malaga", name: "Malaga" },
+  { slug: "zaragoza", name: "Zaragoza" },
+]
+
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background py-16 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-4 gap-12 mb-12">
-          <div className="space-y-4">
+    <footer className="bg-foreground text-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* Brand */}
+          <div className="space-y-3">
             <Logo variant="light" size="lg" />
-            <p className="text-background/80 leading-relaxed">
-              Tu solución inmediata para emergencias del hogar y negocio en toda España. Profesionales verificados
-              disponibles 24/7.
+            <p className="text-background/70 text-sm leading-relaxed">
+              Servicios de emergencia 24/7 en toda Espana. Profesionales verificados con garantia.
             </p>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold">Servicios Urgentes</h4>
-            <ul className="space-y-2 text-background/80">
-              <li>
-                <Link href="/desatascos" className="hover:text-background transition-colors">
-                  Desatascos 24/7
-                </Link>
-              </li>
-              <li>
-                <Link href="/electricista" className="hover:text-background transition-colors">
-                  Electricista urgente
-                </Link>
-              </li>
-              <li>
-                <Link href="/fontanero" className="hover:text-background transition-colors">
-                  Fontanero express
-                </Link>
-              </li>
-              <li>
-                <Link href="/cerrajero" className="hover:text-background transition-colors">
-                  Cerrajero inmediato
-                </Link>
-              </li>
-              <li>
-                <Link href="/calderas" className="hover:text-background transition-colors">
-                  Reparación calderas
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold">Para Profesionales</h4>
-            <ul className="space-y-2 text-background/80">
-              <li>
-                <Link href="/partners" className="hover:text-background transition-colors font-semibold">
-                  🚀 Hazte Partner
-                </Link>
-              </li>
-              <li className="text-sm pt-2">Únete a nuestra red y recibe leads cualificados todos los días</li>
-            </ul>
-            <div className="pt-4">
-              <h4 className="text-lg font-semibold mb-2">Cobertura Actual</h4>
-              <ul className="space-y-2 text-background/80 text-sm">
-                <li className="font-semibold">✓ Barcelona</li>
-                <li className="text-xs">Próximamente: Madrid, Valencia, Sevilla y más</li>
-              </ul>
+            <div className="flex items-center gap-2 text-sm text-background/70">
+              <Shield className="w-3.5 h-3.5 shrink-0" />
+              <span>Garantia 12 meses</span>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold">Contacto 24/7</h4>
-            <div className="space-y-3 text-background/80">
+          {/* Services */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-background/50">Servicios</h3>
+            <ul className="space-y-1.5">
+              {SERVICES.map((s) => (
+                <li key={s.id}>
+                  <Link
+                    href={`/${s.id}/`}
+                    className="text-sm text-background/70 hover:text-background transition-colors flex items-center gap-1"
+                  >
+                    <ChevronRight className="w-3 h-3 shrink-0" />
+                    {s.name} urgente
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/partners/"
+                  className="text-sm font-semibold text-background/90 hover:text-background transition-colors flex items-center gap-1 pt-1"
+                >
+                  <ChevronRight className="w-3 h-3 shrink-0" />
+                  Hazte Partner
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Cities */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-background/50">Cobertura</h3>
+            <ul className="space-y-1.5">
+              {TOP_CITIES.map((c) => (
+                <li key={c.slug}>
+                  <Link
+                    href={`/electricista/${c.slug}/`}
+                    className="text-sm text-background/70 hover:text-background transition-colors flex items-center gap-1"
+                  >
+                    <MapPin className="w-3 h-3 shrink-0" />
+                    {c.name}
+                  </Link>
+                </li>
+              ))}
+              <li className="text-xs text-background/40 pt-1">+8.000 municipios en toda Espana</li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-background/50">Contacto 24/7</h3>
+            <a
+              href="tel:+34936946639"
+              className="flex items-center gap-2 text-background font-bold text-lg hover:text-background/80 transition-colors"
+            >
+              <Phone className="w-4 h-4" />
+              936 946 639
+            </a>
+            <div className="space-y-2 text-sm text-background/70">
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <span>info@pronto-24.com</span>
+                <Mail className="w-3.5 h-3.5 shrink-0" />
+                info@pronto-24.com
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                <span className="font-semibold">Disponible 24 horas</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                <span>Toda España</span>
+                <Clock className="w-3.5 h-3.5 shrink-0" />
+                <span className="font-medium">24h / 365 dias</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-background/20 pt-8 space-y-3">
-          <div className="text-center text-background/60 text-sm">
-            <p className="font-semibold">© 2025 pronto-24.com. Todos los derechos reservados.</p>
-            <p className="mt-2">
-              Servicio profesional de emergencias disponible actualmente en Barcelona. Próximamente en más ciudades de
-              España.
-            </p>
-          </div>
-          <div className="text-center text-background/50 text-xs pt-2">
-            <p>
-              Desatascos urgentes • Electricista 24h • Fontanero urgente • Cerrajero express • Reparaciones inmediatas
-            </p>
-          </div>
-          <div className="text-center text-background/40 text-xs pt-4 max-w-3xl mx-auto">
-            <p>
-              pronto-24.com actúa como plataforma de conexión entre clientes y profesionales independientes. Toda la
-              responsabilidad sobre la calidad, garantías y ejecución de los servicios recae exclusivamente en el
-              profesional que realiza el trabajo. Los profesionales son autónomos y no empleados de pronto-24.com.
-            </p>
-          </div>
+        {/* Bottom */}
+        <div className="mt-10 pt-6 border-t border-background/10 text-center space-y-2">
+          <p className="text-xs text-background/50">
+            {new Date().getFullYear()} pronto-24.com. Todos los derechos reservados.
+          </p>
+          <p className="text-[11px] text-background/30 max-w-2xl mx-auto">
+            pronto-24.com actua como plataforma de conexion entre clientes y profesionales independientes.
+            La responsabilidad sobre la ejecucion de los servicios recae en el profesional que realiza el trabajo.
+          </p>
         </div>
       </div>
     </footer>

@@ -17,10 +17,13 @@ export function PostalCodeSchema({
   cityName,
   phoneNumber = "936946639",
 }: PostalCodeSchemaProps) {
-  const siteUrl = "https://www.servicioshogar.xyz"
+  const siteUrl = "https://www.pronto-24.com"
   const phoneFormatted = phoneNumber.replace(/(\d{3})(\d{3})(\d{3})/, "+34 $1 $2 $3")
 
   const description = `${profession.name} urgente en ${zoneName} (${postalcode}), ${cityName}. Llegamos en 10 minutos. Servicio 24h. Presupuesto gratis.`
+  const seed = parseInt(postalcode.slice(-3))
+  const reviewCount = 200 + (seed % 300)
+  const rating = (4.7 + (seed % 3) * 0.1).toFixed(1)
 
   // LocalBusiness Schema - Hiperlocal por código postal
   const localBusinessSchema = {
@@ -59,8 +62,8 @@ export function PostalCodeSchema({
     },
     aggregateRating: {
       "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "2847",
+      ratingValue: rating,
+      reviewCount: String(reviewCount),
       bestRating: "5",
       worstRating: "1",
     },
@@ -75,7 +78,7 @@ export function PostalCodeSchema({
     description: description,
     provider: {
       "@type": "LocalBusiness",
-      name: "Servicios Hogar",
+      name: "pronto-24.com",
       telephone: phoneFormatted,
     },
     areaServed: {

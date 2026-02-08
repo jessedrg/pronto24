@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { AIChatWidget } from "@/components/ai-chat-widget"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { ElectricistaContentMalaga } from "@/components/electricista-content-malaga"
 
@@ -24,7 +23,6 @@ export default function ElectricistaMalagaPage() {
       <Header />
       <ElectricistaContentMalaga />
       <Footer />
-      <AIChatWidget service="electricista" />
     </main>
   )
 }
