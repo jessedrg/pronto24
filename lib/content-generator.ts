@@ -331,16 +331,15 @@ const PREVENTION_TIPS: Record<string, string[]> = {
   ],
 }
 
-  // Estadisticas del servicio - valores consistentes y honestos
-  // No fabricamos datos por ciudad. Usamos datos generales del servicio.
-  function generateStats(cityHash: number) {
+// Estadisticas del servicio - valores consistentes y honestos
+// No fabricamos datos por ciudad. Usamos datos generales del servicio.
+function generateStats(cityHash: number) {
   return {
-  servicesThisMonth: 0, // No claimamos numeros especificos por ciudad
-  yearsExperience: 10, // Experiencia media del equipo
-  rating: "4.8",
-  avgResponseTime: 30, // Tiempo maximo garantizado (consistente con homepage)
-  satisfactionRate: 97,
-  }
+    servicesThisMonth: 0,
+    yearsExperience: 10,
+    rating: "4.8",
+    avgResponseTime: 30,
+    satisfactionRate: 97,
   }
 }
 
