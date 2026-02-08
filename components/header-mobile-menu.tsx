@@ -35,34 +35,41 @@ export function MobileMenuToggle() {
       </div>
 
       {open && (
-        <div className="absolute top-14 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border/50 shadow-lg">
-          <nav className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
-            <a
-              href={`tel:+34${phoneNumber}`}
-              className="flex items-center gap-2 px-3 py-3 mx-1 mb-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-semibold rounded-lg"
-              onClick={() => setOpen(false)}
-            >
-              <Phone className="w-4 h-4" />
-              <span>Llamar ahora: {phoneFormatted}</span>
-            </a>
-            {[
-              { href: "/fontanero/", label: "Fontanero" },
-              { href: "/electricista/", label: "Electricista" },
-              { href: "/desatascos/", label: "Desatascos" },
-              { href: "/cerrajero/", label: "Cerrajero" },
-              { href: "/calderas/", label: "Calderas" },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        <>
+          <div
+            className="fixed inset-0 z-[60] bg-black/20"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="fixed top-14 left-0 right-0 z-[70] bg-background border-t border-border/50 shadow-lg">
+            <nav className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
+              <a
+                href={`tel:+34${phoneNumber}`}
+                className="flex items-center gap-2 px-3 py-3 mx-1 mb-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-semibold rounded-lg"
                 onClick={() => setOpen(false)}
               >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
+                <Phone className="w-4 h-4" />
+                <span>Llamar ahora: {phoneFormatted}</span>
+              </a>
+              {[
+                { href: "/fontanero/", label: "Fontanero" },
+                { href: "/electricista/", label: "Electricista" },
+                { href: "/desatascos/", label: "Desatascos" },
+                { href: "/cerrajero/", label: "Cerrajero" },
+                { href: "/calderas/", label: "Calderas" },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </>
       )}
     </div>
   )
