@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  trailingSlash: true,
+  poweredByHeader: false,
+  reactCompiler: true,
   typescript: {
     ignoreBuildErrors: true,
   },

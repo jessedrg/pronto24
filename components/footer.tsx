@@ -11,13 +11,21 @@ const SERVICES = [
 ]
 
 const TOP_CITIES = [
-  { slug: "barcelona", name: "Barcelona", profession: "electricista" },
-  { slug: "madrid", name: "Madrid", profession: "fontanero" },
-  { slug: "valencia", name: "Valencia", profession: "cerrajero" },
-  { slug: "sevilla", name: "Sevilla", profession: "desatascos" },
-  { slug: "malaga", name: "Malaga", profession: "calderas" },
-  { slug: "zaragoza", name: "Zaragoza", profession: "electricista" },
+  "madrid", "barcelona", "valencia", "sevilla", "malaga",
+  "zaragoza", "murcia", "bilbao", "alicante", "cordoba",
+  "valladolid", "vigo", "gijon", "granada", "oviedo",
+  "santander", "pamplona", "san-sebastian", "almeria", "burgos",
 ]
+
+const CITY_NAMES: Record<string, string> = {
+  "madrid": "Madrid", "barcelona": "Barcelona", "valencia": "Valencia",
+  "sevilla": "Sevilla", "malaga": "Malaga", "zaragoza": "Zaragoza",
+  "murcia": "Murcia", "bilbao": "Bilbao", "alicante": "Alicante",
+  "cordoba": "Cordoba", "valladolid": "Valladolid", "vigo": "Vigo",
+  "gijon": "Gijon", "granada": "Granada", "oviedo": "Oviedo",
+  "santander": "Santander", "pamplona": "Pamplona",
+  "san-sebastian": "San Sebastian", "almeria": "Almeria", "burgos": "Burgos",
+}
 
 export function Footer() {
   return (
@@ -63,18 +71,18 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Cities */}
+          {/* Cities - top 10 with link to primary service */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-background/50">Cobertura</h3>
             <ul className="space-y-1.5">
-              {TOP_CITIES.map((c) => (
-                <li key={c.slug}>
+              {TOP_CITIES.slice(0, 10).map((slug) => (
+                <li key={slug}>
                   <Link
-                    href={`/${c.profession}/${c.slug}/`}
+                    href={`/electricista/${slug}/`}
                     className="text-sm text-background/70 hover:text-background transition-colors flex items-center gap-1"
                   >
                     <MapPin className="w-3 h-3 shrink-0" />
-                    {c.name}
+                    {CITY_NAMES[slug]}
                   </Link>
                 </li>
               ))}
@@ -88,6 +96,7 @@ export function Footer() {
             <a
               href="tel:+34936946639"
               className="flex items-center gap-2 text-background font-bold text-lg hover:text-background/80 transition-colors"
+              aria-label="Llamar al 936 946 639"
             >
               <Phone className="w-4 h-4" />
               936 946 639
@@ -105,8 +114,26 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Service + City Combo Links - massive internal linking boost */}
+        <div className="mt-10 pt-6 border-t border-background/10">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-background/30 mb-4">Servicios por ciudad</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-1">
+            {SERVICES.map((service) =>
+              TOP_CITIES.slice(0, 8).map((slug) => (
+                <Link
+                  key={`${service.id}-${slug}`}
+                  href={`/${service.id}/${slug}/`}
+                  className="text-[11px] text-background/40 hover:text-background/70 transition-colors truncate"
+                >
+                  {service.name} {CITY_NAMES[slug]}
+                </Link>
+              ))
+            )}
+          </div>
+        </div>
+
         {/* Bottom */}
-        <div className="mt-10 pt-6 border-t border-background/10 text-center space-y-2">
+        <div className="mt-8 pt-6 border-t border-background/10 text-center space-y-2">
           <p className="text-xs text-background/50">
             {new Date().getFullYear()} pronto-24.com. Todos los derechos reservados.
           </p>

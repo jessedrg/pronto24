@@ -266,6 +266,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: `Solucionamos ${problem.name.toLowerCase()} en ${cityName}. ${profession.namePlural} disponibles 24/7. ${details ? `Desde ${details.priceRange.split('-')[0]} EUR.` : ''} Llama: 936 946 639`,
       type: "website",
     },
+    other: {
+      "geo.region": "ES",
+      "geo.placename": cityName,
+      "date": new Date().toISOString().split("T")[0],
+    },
   }
 }
 
