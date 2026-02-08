@@ -130,3 +130,15 @@
     overflow-x: hidden;
   }
 }
+
+/* Safe area for floating CTA on iPhone notch */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Add padding to body bottom on mobile to account for floating CTA */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 80px;
+  }
+}

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { Header } from "@/components/header"
+import { FloatingCallButton } from "@/components/floating-call-button"
 import Script from "next/script"
 import "./globals.css"
 
@@ -212,6 +213,7 @@ export default function RootLayout({
         <ScrollToTop />
         <Header />
         {children}
+        <FloatingCallButton />
       </body>
     </html>
   )
