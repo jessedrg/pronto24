@@ -30,7 +30,7 @@ export function PostalCodeFAQ({
     },
     {
       question: `¿Cuánto tarda en llegar un ${profession.name.toLowerCase()} al ${postalcode}?`,
-      answer: `Nuestros ${profession.namePlural.toLowerCase()} llegan en un máximo de 10 minutos a cualquier punto del código postal ${postalcode} (${zoneName}). Tenemos profesionales distribuidos por toda la zona de ${cityName} para garantizar una respuesta ultrarrápida.`,
+      answer: `Nuestros ${profession.namePlural.toLowerCase()} llegan en un maximo de 30 minutos a cualquier punto del codigo postal ${postalcode} (${zoneName}). Tenemos profesionales distribuidos por toda la zona de ${cityName} para garantizar una respuesta rapida.`,
     },
     {
       question: `¿Hay ${profession.namePlural.toLowerCase()} 24 horas en ${zoneName}?`,
@@ -42,11 +42,11 @@ export function PostalCodeFAQ({
     },
     {
       question: `¿Cómo contactar con un ${profession.name.toLowerCase()} urgente en ${postalcode}?`,
-      answer: `Para contactar con un ${profession.name.toLowerCase()} urgente en el código postal ${postalcode}, llama al 936 946 639. Estamos disponibles 24/7 y un profesional estará en tu domicilio de ${zoneName} en menos de 10 minutos.`,
+      answer: `Para contactar con un ${profession.name.toLowerCase()} urgente en el codigo postal ${postalcode}, llama al 936 946 639. Estamos disponibles 24/7 y un profesional estara en tu domicilio de ${zoneName} en un maximo de 30 minutos.`,
     },
     {
       question: `¿Qué zonas cubren cerca del ${postalcode}?`,
-      answer: `Cubrimos todo ${zoneName} y códigos postales cercanos en ${cityName}. Nuestros ${profession.namePlural.toLowerCase()} están estratégicamente ubicados para llegar rápidamente a cualquier punto de la zona. Servicio garantizado en menos de 10 minutos.`,
+      answer: `Cubrimos todo ${zoneName} y codigos postales cercanos en ${cityName}. Nuestros ${profession.namePlural.toLowerCase()} estan distribuidos por toda la zona para llegar rapidamente a cualquier punto. Tiempo maximo de llegada: 30 minutos.`,
     },
   ]
 

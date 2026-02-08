@@ -10,6 +10,7 @@ import { PostalCodeSchema } from "@/components/postal-code-schema"
 import { GuaranteeSection } from "@/components/guarantee-section"
 import { ServiceReviews } from "@/components/service-reviews"
 import { Breadcrumbs } from "@/components/breadcrumbs"
+import { PostalZoneContent } from "@/components/postal-zone-content"
 import {
   getPostalCodeData,
   getZoneName,
@@ -60,8 +61,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "No encontrado" }
   }
 
-  const title = `${professionData.name} Urgente en ${zoneName} (${postalcode}) | 10 Min | 936 946 639`
-  const description = `${professionData.name} urgente en ${zoneName}, ${cityName}. Código postal ${postalcode}. Llegamos en 10 MINUTOS. Servicio 24h. Presupuesto GRATIS. Llama: 936 946 639`
+  const title = `${professionData.name} Urgente en ${zoneName} (${postalcode}) | 30 Min | 936 946 639`
+  const description = `${professionData.name} urgente en ${zoneName}, ${cityName}. Codigo postal ${postalcode}. Llegamos en 30 minutos. Servicio 24h. Presupuesto GRATIS. Llama: 936 946 639`
 
   return {
     title,
@@ -70,7 +71,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: `${siteUrl}/${profession}/cp/${postalcode}/`,
     },
     openGraph: {
-      title: `${professionData.name} en ${zoneName} (${postalcode}) - Llegamos en 10 min`,
+      title: `${professionData.name} en ${zoneName} (${postalcode}) - Llegamos en 30 min`,
       description: `Servicio de ${professionData.name.toLowerCase()} urgente en código postal ${postalcode}. Disponibles 24/7. Llama: 936 946 639`,
       type: "website",
     },
@@ -104,7 +105,7 @@ function generateReviews(profession: string, zoneName: string, postalcode: strin
       location: zoneName,
       rating: 5 as const,
       date: "Hace 1 día",
-      text: `Excelente servicio en ${zoneName}. Llegaron en menos de 10 minutos y solucionaron el problema rápidamente. Muy profesionales y precio justo.`,
+      text: `Excelente servicio en ${zoneName}. Llegaron rapidamente y solucionaron el problema de forma profesional. Precio justo y sin sorpresas.`,
       service: profServices[seed % profServices.length],
       verified: false,
     },
@@ -195,6 +196,15 @@ export default async function PostalCodePage({ params }: PageProps) {
           />
           
           <PostalCodeStats postalcode={postalcode} />
+
+          <PostalZoneContent
+            profession={profession}
+            professionName={professionData.name}
+            postalcode={postalcode}
+            zoneName={zoneName}
+            cityName={cityName}
+            provincia={postalData?.provincia}
+          />
           
           <ServiceReviews 
             service={professionData.name} 
