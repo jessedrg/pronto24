@@ -190,7 +190,7 @@ export function Footer() {
 
         <div className="border-t border-background/20 pt-8 space-y-3">
           <div className="text-center text-background/60 text-sm">
-            <p className="font-semibold">2025 pronto-24.com. Todos los derechos reservados.</p>
+            <p className="font-semibold">{new Date().getFullYear()} pronto-24.com. Todos los derechos reservados.</p>
             <p className="mt-2">
               Servicio profesional de emergencias disponible en toda Espana. Electricistas, fontaneros, cerrajeros, desatascos y calderas.
             </p>

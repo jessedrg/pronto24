@@ -681,9 +681,9 @@ export function ServiceLandingTemplate({
                       <span className="font-bold text-foreground">{review.name}</span>
                       <BadgeCheck className="w-4 h-4 text-blue-500" />
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <time className="text-xs text-muted-foreground" dateTime={new Date().toISOString().split("T")[0]}>
                       {review.city} - {review.time}
-                    </div>
+                    </time>
                   </div>
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((s) => (

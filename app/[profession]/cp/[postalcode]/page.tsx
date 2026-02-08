@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Link from "next/link"
-import { MapPin, Wrench, ArrowRight, Navigation } from "lucide-react"
+import { MapPin, Wrench, ArrowRight, Navigation, AlertTriangle } from "lucide-react"
 import { Footer } from "@/components/footer"
 import { PostalCodeHero } from "@/components/postal-code-hero"
 import { PostalCodeStats } from "@/components/postal-code-stats"
@@ -18,6 +18,7 @@ import {
   getTopPostalCodes,
   PROFESSIONS_POSTAL,
 } from "@/lib/postal-data"
+import { PROBLEMS } from "@/lib/seo-data"
 
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
@@ -209,6 +210,48 @@ export default async function PostalCodePage({ params }: PageProps) {
             zoneName={zoneName}
             cityName={cityName}
           />
+
+          {/* Interlinking: Common problems for this profession */}
+          {(() => {
+            const profProblems = PROBLEMS[profession as keyof typeof PROBLEMS] || []
+            return profProblems.length > 0 ? (
+              <section className="py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-destructive" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-foreground">
+                        Problemas comunes de {professionData.name.toLowerCase()} en {zoneName}
+                      </h2>
+                      <p className="text-sm text-muted-foreground">Selecciona tu problema para mas informacion y precios.</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {profProblems.slice(0, 8).map((problem) => (
+                      <Link
+                        key={problem.id}
+                        href={`/problema/${profession}/${problem.id}/${citySlug}/`}
+                        className={`group flex items-center gap-3 p-4 rounded-xl border transition-all hover:scale-[1.02] ${
+                          problem.urgent
+                            ? "bg-destructive/5 border-destructive/20 hover:border-destructive/50"
+                            : "bg-background border-border hover:border-foreground/30"
+                        }`}
+                      >
+                        <span className="text-lg">{problem.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-sm font-medium text-foreground block truncate">{problem.name}</span>
+                          {problem.urgent && <span className="text-[10px] font-bold text-destructive uppercase">Urgente</span>}
+                        </div>
+                        <ArrowRight className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-foreground" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            ) : null
+          })()}
 
           {/* Interlinking: Other professions in this postal code */}
           <section className="py-12 bg-muted/20">
