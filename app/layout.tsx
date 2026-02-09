@@ -130,7 +130,9 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.className} antialiased`} suppressHydrationWarning>
         <Header />
-        {children}
+        <div className="pt-14">
+          {children}
+        </div>
         <FloatingCallButton />
       </body>
     </html>
