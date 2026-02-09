@@ -65,6 +65,15 @@ export function ServiceLandingTemplate({
   const phoneFormatted = "936 946 639"
 
   const profession = professionProp || PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
+
+  const PROFESSION_IMAGES: Record<string, string> = {
+    fontanero: "/images/fontanero_trabajando.png",
+    electricista: "/images/electricista_trabajando.png",
+    cerrajero: "/images/cerrajero_trabajando.png",
+    desatascos: "/images/fontanero_trabajando.png",
+    calderas: "/images/fontanero_trabajando.png",
+  }
+  const heroImage = PROFESSION_IMAGES[profession.id] || "/images/fontanero_trabajando.png"
   const cityName = cityProp?.name || (citySlug ? getCityDisplayName(citySlug) : "Espana")
   const actualCitySlug = cityProp?.slug || citySlug
   const provinceName = cityProp?.province || (actualCitySlug ? getCityProvince(actualCitySlug) : "")
@@ -275,7 +284,7 @@ export function ServiceLandingTemplate({
               <div className="relative max-w-sm sm:max-w-md mx-auto lg:max-w-none">
                 <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
-                    src="/professional-service-technician-worker-with-tools-.jpg"
+                    src={heroImage}
                     alt={`${profession.name} profesional en ${cityName} - Servicio urgente 24 horas`}
                     fill
                     className="object-cover"

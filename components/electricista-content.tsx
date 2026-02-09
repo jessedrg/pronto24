@@ -137,7 +137,7 @@ export function ElectricistaContent() {
                 {/* Main Image */}
                 <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
-                    src="/images/electricista-profesional.jpg"
+                    src="/images/electricista_trabajando.png"
                     alt="Electricista profesional"
                     fill
                     className="object-cover"

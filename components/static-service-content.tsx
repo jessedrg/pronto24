@@ -78,6 +78,14 @@ export function StaticServiceContent({
 
   const IconComponent = ICONS[iconName] || Wrench
 
+  const PROFESSION_IMAGES: Record<string, string> = {
+    droplets: "/images/fontanero_trabajando.png",
+    zap: "/images/electricista_trabajando.png",
+    key: "/images/cerrajero_trabajando.png",
+    flame: "/images/fontanero_trabajando.png",
+  }
+  const heroImage = PROFESSION_IMAGES[iconName] || "/images/fontanero_trabajando.png"
+
   const handleCall = () => {
     if (typeof window !== "undefined" && (window as any).gtag) {
       ;(window as any).gtag("event", "conversion", {
@@ -181,7 +189,7 @@ export function StaticServiceContent({
               <div className="relative max-w-sm sm:max-w-md mx-auto lg:max-w-none">
                 <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
-                    src="/professional-service-technician-worker-with-tools-.jpg"
+                    src={heroImage}
                     alt={`${serviceName} profesional - Servicio urgente 24 horas`}
                     fill
                     className="object-cover"

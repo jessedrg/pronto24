@@ -2,14 +2,14 @@
 
 import { Phone, CheckCircle2 } from "lucide-react"
 
-interface ActiveUsersProps {
+interface LiveBadgeProps {
   profession: { namePlural: string }
   cityName: string
   modifier?: string
   isUrgent?: boolean
 }
 
-export function LiveBadge({ profession, cityName, modifier, isUrgent }: ActiveUsersProps) {
+export function LiveBadge({ profession, cityName, modifier, isUrgent }: LiveBadgeProps) {
   const getBadgeText = () => {
     switch (modifier) {
       case "24-horas":

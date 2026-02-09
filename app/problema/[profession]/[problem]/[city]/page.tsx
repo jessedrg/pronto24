@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
-import { MapPin, ArrowRight, Wrench, AlertTriangle, Clock, Euro, Phone, Shield, CheckCircle2, Star, BadgeCheck, HelpCircle, Lightbulb, Timer, Navigation } from "lucide-react"
+import { MapPin, ArrowRight, Wrench, AlertTriangle, Clock, Euro, Phone, Shield, CheckCircle2, HelpCircle, Lightbulb, Timer, Navigation } from "lucide-react"
 import { Footer } from "@/components/footer"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { CallButton, LiveBadge } from "@/components/hero-client-parts"
@@ -289,6 +289,15 @@ export default async function ProblemCityPage({ params }: PageProps) {
   const otherProfessions = PROFESSIONS.filter(p => p.id !== professionId)
   const details = PROBLEM_DETAILS[professionId]?.[problemId]
 
+  const PROFESSION_IMAGES: Record<string, string> = {
+    fontanero: "/images/fontanero_trabajando.png",
+    electricista: "/images/electricista_trabajando.png",
+    cerrajero: "/images/cerrajero_trabajando.png",
+    desatascos: "/images/fontanero_trabajando.png",
+    calderas: "/images/fontanero_trabajando.png",
+  }
+  const heroImage = PROFESSION_IMAGES[professionId] || "/images/fontanero_trabajando.png"
+
   const phoneNumber = "936946639"
   const phoneFormatted = "936 946 639"
 
@@ -424,7 +433,7 @@ export default async function ProblemCityPage({ params }: PageProps) {
               <div className="relative max-w-sm sm:max-w-md mx-auto lg:max-w-none">
                 <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
-                    src="/professional-service-technician-worker-with-tools-.jpg"
+                    src={heroImage}
                     alt={`${profession.name} solucionando ${problem.name.toLowerCase()} en ${cityName}`}
                     fill
                     className="object-cover"
