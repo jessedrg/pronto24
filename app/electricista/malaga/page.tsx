@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { ElectricistaContentMalaga } from "@/components/electricista-content-malaga"
@@ -20,7 +19,6 @@ export default function ElectricistaMalagaPage() {
   return (
     <main className="min-h-screen bg-background">
       <UrgencyBanner />
-      <Header />
       <ElectricistaContentMalaga />
       <Footer />
     </main>

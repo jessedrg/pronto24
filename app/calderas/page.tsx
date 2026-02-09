@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { StaticServiceContent } from "@/components/static-service-content"
@@ -116,7 +115,6 @@ export default function CalderasPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calderasSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <UrgencyBanner />
-      <Header />
       <StaticServiceContent {...calderasData} />
       <Footer />
     </main>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { StaticServiceContent } from "@/components/static-service-content"
@@ -196,7 +195,6 @@ export default function FontaneroPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <UrgencyBanner />
-      <Header />
       <StaticServiceContent {...fontaneroData} />
       <Footer />
     </main>
