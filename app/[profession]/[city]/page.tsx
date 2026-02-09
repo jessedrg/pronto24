@@ -138,8 +138,7 @@ export default async function ProfessionCityPage({ params }: PageProps) {
   const { profession: rawProfession, city: citySlug } = await params
 
   if (RESERVED_PATHS.includes(rawProfession)) {
-    // Let the actual route handler process this
-    redirect(`/${rawProfession}/${citySlug}`)
+    notFound()
   }
 
   const { professionId, modifier } = parseProfessionAndModifier(rawProfession)

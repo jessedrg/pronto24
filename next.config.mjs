@@ -19,7 +19,6 @@ const nextConfig = {
         source: "/(.*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
@@ -36,15 +35,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/sitemap-v10.xml",
-        destination: "/sitemap-v10.xml",
-      },
-      {
-        source: "/sitemap.xml",
-        destination: "/sitemap.xml",
-      },
-      {
-        source: "/:slug.xml",
+        source: "/:slug((?!sitemap\\.xml|sitemap-v10\\.xml).+\\.xml)",
         destination: "/_sitemaps/:slug.xml",
       },
     ]
