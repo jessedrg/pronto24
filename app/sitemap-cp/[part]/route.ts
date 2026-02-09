@@ -1,17 +1,24 @@
 import { NextResponse } from "next/server"
 import { POSTAL_CODE_NAMES } from "@/lib/postal-code-names"
+import { getAllIndexableCPs, hasEnrichedContent } from "@/lib/local-enrichment"
 
 const PROFESSIONS = ["fontanero", "electricista", "cerrajero", "desatascos", "calderas"]
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pronto-24.com"
 const URLS_PER_SITEMAP = 10000
 
-function getAllPostalCodes(): string[] {
-  return Object.keys(POSTAL_CODE_NAMES).sort()
+/**
+ * Only return indexable CPs (enriched + capital cities).
+ * This dramatically reduces sitemap size from ~55,000 to ~3,000-5,000 URLs,
+ * concentrating Google's crawl budget on quality pages.
+ */
+function getIndexablePostalCodes(): string[] {
+  const allCodes = Object.keys(POSTAL_CODE_NAMES).sort()
+  return getAllIndexableCPs(allCodes)
 }
 
 export function getTotalSitemaps(): number {
-  const totalCodes = Object.keys(POSTAL_CODE_NAMES).length
-  const totalUrls = totalCodes * PROFESSIONS.length
+  const indexableCodes = getIndexablePostalCodes()
+  const totalUrls = indexableCodes.length * PROFESSIONS.length
   return Math.ceil(totalUrls / URLS_PER_SITEMAP)
 }
 
@@ -22,7 +29,6 @@ interface RouteParams {
 export async function GET(request: Request, { params }: RouteParams) {
   const { part } = await params
   
-  // Quitar .xml si viene en el parámetro
   const cleanPart = part.replace('.xml', '')
   const partNumber = parseInt(cleanPart)
   
@@ -30,7 +36,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     return new NextResponse("Invalid sitemap part", { status: 400 })
   }
   
-  const allCodes = getAllPostalCodes()
+  const indexableCodes = getIndexablePostalCodes()
   const today = new Date().toISOString().split("T")[0]
   
   const startIndex = (partNumber - 1) * URLS_PER_SITEMAP
@@ -38,7 +44,7 @@ export async function GET(request: Request, { params }: RouteParams) {
   
   const allUrls: { profession: string; cp: string }[] = []
   for (const profession of PROFESSIONS) {
-    for (const cp of allCodes) {
+    for (const cp of indexableCodes) {
       allUrls.push({ profession, cp })
     }
   }
@@ -54,11 +60,15 @@ export async function GET(request: Request, { params }: RouteParams) {
 `
 
   for (const { profession, cp } of urlsForThisPart) {
+    // Enriched CPs get highest priority, capital city CPs get medium
+    const priority = hasEnrichedContent(cp) ? "0.9" : "0.7"
+    const changefreq = hasEnrichedContent(cp) ? "weekly" : "monthly"
+    
     xml += `  <url>
     <loc>${SITE_URL}/${profession}/cp/${cp}/</loc>
     <lastmod>${today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
   </url>
 `
   }
