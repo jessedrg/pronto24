@@ -1443,11 +1443,331 @@ export const LOCAL_ENRICHMENT: Record<string, LocalEnrichment> = {
 }
 
 /**
+ * Datos de enriquecimiento a nivel de CIUDAD para capitales de provincia.
+ * Se usa como fallback cuando no hay datos especificos del CP.
+ * Cubre automaticamente todos los CPs de las principales ciudades.
+ */
+const CITY_ENRICHMENT: Record<string, { range: [number, number]; data: Omit<LocalEnrichment, "cp"> }> = {
+  madrid: {
+    range: [28001, 28055],
+    data: {
+      municipio: "Madrid",
+      provincia: "Madrid",
+      comunidadAutonoma: "Comunidad de Madrid",
+      poblacionAprox: "~3.300.000 habitantes",
+      tipoZona: "urbana",
+      descripcionLocal:
+        "Madrid, capital de Espana y ciudad mas poblada del pais. Con un parque de viviendas que va desde edificios historicos del siglo XVIII en el centro hasta bloques de los 60-80 en los barrios perifericos. El Canal de Isabel II suministra agua de sierra con 28-32 grados franceses de dureza.",
+      problemasLocales: {
+        desatascos: [
+          "Bajantes comunitarias de fibrocemento (uralita) en edificios de los 60-80 al final de su vida util",
+          "Red de alcantarillado del centro historico con tramos centenarios que colapsan",
+          "Atascos por toallitas humedas en tuberias de 80mm de edificios antiguos",
+          "Inundaciones en garajes subterraneos del centro por saturacion del alcantarillado",
+        ],
+        fontanero: [
+          "Agua del Canal de Isabel II con dureza de 28-32 grados franceses que calcifica instalaciones",
+          "Columnas montantes de hierro galvanizado con mas de 40 anos en barrios como Chamberi o Salamanca",
+          "Heladas en tuberias exteriores y azoteas de diciembre a febrero",
+          "Tuberias de plomo en edificios anteriores a 1970 que hay que sustituir por normativa sanitaria",
+        ],
+        electricista: [
+          "Instalaciones electricas anteriores al REBT 2002 sin diferenciales de 30mA",
+          "Potencia insuficiente para climatizacion en pisos del centro sin preinstalacion de aire",
+          "Cuadros electricos de los anos 70-80 con magnetotermicos de baja capacidad",
+          "Necesidad de cargadores de vehiculo electrico en garajes comunitarios",
+        ],
+        cerrajero: [
+          "Puertas de seguridad con bombines antibumping en zonas de alta actividad",
+          "Portales de edificios historicos con cerraduras multipunto que se atascan",
+          "Alta demanda de aperturas urgentes en distritos con mucha rotacion de alquiler",
+        ],
+        calderas: [
+          "Calderas de gas natural con 15-20 anos que pierden eficiencia y necesitan sustitucion",
+          "Revision obligatoria bianual de calderas de gas en la Comunidad de Madrid",
+          "Transicion de calderas comunitarias a individuales en muchas comunidades del centro",
+        ],
+      },
+      infraestructura:
+        "Madrid tiene un parque de viviendas muy diverso: desde el casco historico (siglos XVII-XIX) hasta los PAU de los 2000. Los barrios de los 60-80 (Carabanchel, Usera, Vallecas, Moratalaz) concentran el mayor volumen de vivienda que necesita renovacion de instalaciones.",
+      barriosZonas: ["Centro", "Chamberi", "Salamanca", "Retiro", "Arganzuela", "Tetuan", "Chamartin"],
+      datosUnicos: [
+        "Madrid tiene mas de 1.600.000 viviendas, de las cuales el 45% fueron construidas antes de 1980",
+        "El Canal de Isabel II distribuye agua de sierra de calidad pero con dureza suficiente para calcificar",
+        "Las heladas invernales (-5C en enero) causan roturas de tuberias en exteriores y azoteas",
+      ],
+    },
+  },
+  barcelona: {
+    range: [8001, 8042],
+    data: {
+      municipio: "Barcelona",
+      provincia: "Barcelona",
+      comunidadAutonoma: "Cataluna",
+      poblacionAprox: "~1.620.000 habitantes",
+      tipoZona: "urbana",
+      clima: "Mediterraneo con humedad alta por la costa",
+      descripcionLocal:
+        "Barcelona, segunda ciudad de Espana. El Eixample con su trama Cerda de edificios de 6-8 plantas del siglo XIX-XX es un reto constante para los tecnicos. Ciutat Vella conserva edificios medievales. Los barrios de los 60-70 (Nou Barris, Sant Marti) tienen otro tipo de problematicas.",
+      problemasLocales: {
+        desatascos: [
+          "Bajantes centenarias de fundicion en edificios del Eixample que se corroen y colapsan",
+          "Torrenciales mediterraneas que desbordan la red unitaria de alcantarillado",
+          "Atascos en restaurantes del casco antiguo por acumulacion de grasa en tuberias estrechas",
+          "Raices de plataneros (arbol tipico de Barcelona) que invaden tuberias de saneamiento",
+        ],
+        fontanero: [
+          "Agua del Ter-Llobregat con dureza variable (20-35 grados franceses) que calcifica",
+          "Tuberias de plomo en fincas del Eixample anteriores a 1950 que hay que sustituir",
+          "Bajantes de fibrocemento en edificios de Nou Barris y Trinitat que se degradan",
+          "Calderas de gas con revision obligatoria anual en Cataluna (mas estricta que la media nacional)",
+        ],
+        electricista: [
+          "Instalaciones electricas del Eixample con mas de 80 anos empotradas en muros de carga",
+          "Potencia insuficiente en pisos del casco antiguo para soportar aire acondicionado",
+          "Cuadros electricos comunitarios de edificios de 1900-1950 sin protecciones modernas",
+          "Instalacion de cargadores EV en aparcamientos comunitarios del Eixample",
+        ],
+        cerrajero: [
+          "Puertas de madera maciza en edificios modernistas con cerraduras de epoca que se bloquean",
+          "Alta demanda de aperturas en distritos turisticos (Ciutat Vella, Eixample)",
+          "Cambios de cerradura en pisos turisticos con alta rotacion de llaves",
+        ],
+      },
+      infraestructura:
+        "Barcelona tiene mas de 70.000 edificios, de los cuales el 35% son anteriores a 1960. El Eixample concentra la mayor densidad de edificios centenarios con instalaciones que necesitan actualizacion constante. Nou Barris y Sant Andreu tienen bloques de los 60-70.",
+      barriosZonas: ["Eixample", "Ciutat Vella", "Gracia", "Sant Marti", "Sants-Montjuic", "Sarria-Sant Gervasi"],
+      datosUnicos: [
+        "Barcelona tiene mas de 9.000 edificios catalogados como patrimonio historico que condicionan las obras",
+        "La humedad marina del litoral mediterrano corroe instalaciones metalicas mas rapido que en ciudades de interior",
+        "La trama Cerda del Eixample (manzanas octogonales) crea patios interiores con condiciones de humedad especificas",
+      ],
+    },
+  },
+  valencia: {
+    range: [46001, 46026],
+    data: {
+      municipio: "Valencia",
+      provincia: "Valencia",
+      comunidadAutonoma: "Comunidad Valenciana",
+      poblacionAprox: "~800.000 habitantes",
+      tipoZona: "urbana",
+      clima: "Mediterraneo con episodios de DANA en otono",
+      descripcionLocal:
+        "Valencia, tercera ciudad de Espana, marcada por la DANA de octubre 2024 que demostro la vulnerabilidad de su sistema de drenaje. El casco historico (Ciutat Vella) tiene edificios del siglo XVIII. Los barrios de expansion (Campanar, Benimaclet) crecieron en los 70-80.",
+      problemasLocales: {
+        desatascos: [
+          "Inundaciones por DANA como la devastadora de octubre 2024 que afecto al area metropolitana",
+          "Alcantarillado antiguo del centro subdimensionado para lluvias torrenciales mediterraneas",
+          "Barrios junto al antiguo cauce del Turia con nivel freatico alto que satura drenajes",
+          "Sedimentos y barro que bloquean tuberias tras cada episodio de lluvias fuertes",
+        ],
+        fontanero: [
+          "Agua con dureza media-alta (25-30 grados franceses) que calcifica rapidamente",
+          "Tuberias de hierro galvanizado en edificios del Ensanche de los anos 60-70",
+          "Danos por inundaciones que requieren reinstalacion completa de fontaneria en plantas bajas",
+        ],
+        electricista: [
+          "Reinstalaciones electricas tras danos por inundaciones (DANA octubre 2024)",
+          "Cuadros electricos en garajes subterraneos que se inundaron y necesitan sustitucion",
+          "Instalaciones del Ensanche de los 60-70 con potencia insuficiente para climatizacion",
+        ],
+        cerrajero: [
+          "Puertas danadas por inundaciones que no cierran correctamente",
+          "Cerraduras de portales oxidadas por la humedad residual tras riadas",
+        ],
+      },
+      infraestructura:
+        "Valencia tiene un centro historico medieval rodeado de barrios de expansion del siglo XIX-XX. Los barrios de los 60-80 (Campanar, Benicalap, Patraix) concentran el mayor volumen de vivienda. La DANA de 2024 ha acelerado la renovacion de infraestructuras.",
+      barriosZonas: ["Ciutat Vella", "Eixample", "Campanar", "Benimaclet", "Ruzafa", "Patraix"],
+      datosUnicos: [
+        "La DANA de octubre 2024 dejo mas de 300 litros/m2 y causo danos en miles de viviendas del area metropolitana",
+        "El antiguo cauce del Turia (ahora parque) marca un nivel freatico alto que afecta a sotanos y garajes",
+        "Valencia tiene mas de 4.000 horas de sol al ano que aceleran el deterioro de materiales exteriores",
+      ],
+    },
+  },
+  sevilla: {
+    range: [41001, 41020],
+    data: {
+      municipio: "Sevilla",
+      provincia: "Sevilla",
+      comunidadAutonoma: "Andalucia",
+      poblacionAprox: "~685.000 habitantes",
+      tipoZona: "urbana",
+      clima: "Mediterraneo continentalizado con veranos extremos (hasta 47C)",
+      descripcionLocal:
+        "Sevilla, cuarta ciudad de Espana y una de las mas calurosas de Europa. Los veranos extremos (record de 47.4C) y el casco historico con corrales de vecinos y casas-patio del siglo XVIII generan problematicas unicas. El Guadalquivir marca el nivel freatico de la ciudad.",
+      problemasLocales: {
+        electricista: [
+          "Caidas de tension masivas en olas de calor por sobredemanda de aire acondicionado en toda la ciudad",
+          "Cableado que pierde aislamiento por las altas temperaturas en bajo-cubierta y buhardillas",
+          "Instalaciones del casco historico empotradas en muros de tapial que no se pueden renovar facilmente",
+          "Ampliaciones de potencia para soportar climatizacion en pisos sin preinstalacion",
+        ],
+        desatascos: [
+          "Terreno arcilloso del valle del Guadalquivir que se agrieta en verano y hincha con lluvias, rompiendo tuberias",
+          "Alcantarillado del casco historico con tramos del siglo XIX que colapsan",
+          "Raices de naranjos amargos (arbol tipico de Sevilla) que invaden tuberias de saneamiento",
+        ],
+        fontanero: [
+          "Agua de Sevilla con dureza alta (35-40 grados franceses) del embalse de El Gergal",
+          "Calentadores y calderas que se calcifican en 3-5 anos por la dureza del agua",
+          "Tuberias de terrazas y azoteas que sufren dilataciones extremas por el calor",
+        ],
+      },
+      infraestructura:
+        "Sevilla conserva uno de los cascos historicos mas grandes de Europa con edificios de los siglos XVI-XIX. Los barrios de expansion (Los Remedios, Nervion, Macarena) crecieron en los 60-80. Las infraestructuras de agua y saneamiento del centro son las mas antiguas.",
+      barriosZonas: ["Casco Antiguo", "Triana", "Los Remedios", "Nervion", "Macarena", "Cerro-Amate"],
+      datosUnicos: [
+        "Sevilla tiene el record de temperatura de Espana (47.4C) y veranos con 40+ dias por encima de 35C",
+        "El casco historico tiene mas de 500 edificios catalogados como patrimonio, condicionando cualquier obra",
+        "El terreno arcilloso expansivo del Guadalquivir mueve cimentaciones y rompe conducciones enterradas",
+      ],
+    },
+  },
+  malaga: {
+    range: [29001, 29018],
+    data: {
+      municipio: "Malaga",
+      provincia: "Malaga",
+      comunidadAutonoma: "Andalucia",
+      poblacionAprox: "~580.000 habitantes",
+      tipoZona: "urbana",
+      clima: "Mediterraneo subtropical, el mas calido de la peninsula",
+      descripcionLocal:
+        "Malaga, sexta ciudad de Espana y capital de la Costa del Sol. El boom turistico ha transformado el centro historico con rehabilitaciones que requieren actualizacion de todas las instalaciones. La brisa marina y la humedad costera aceleran la corrosion.",
+      problemasLocales: {
+        electricista: [
+          "Instalaciones electricas de edificios reconvertidos en apartamentos turisticos con potencia insuficiente",
+          "Cuadros electricos deteriorados por la humedad salina del litoral",
+          "Aires acondicionados masivos en verano que sobrecargan la red electrica del centro",
+        ],
+        fontanero: [
+          "Agua dura de los embalses de la Axarquia que calcifica electrodomesticos en 3-5 anos",
+          "Tuberias de cobre corroidas por la salinidad ambiental costera",
+          "Fugas en instalaciones de piscinas comunitarias (alta densidad en barrios residenciales)",
+        ],
+        desatascos: [
+          "Bajantes estrechas (80mm) en edificios del centro de los anos 60-70 que se atascan facilmente",
+          "Raices de ficus (arbol emblematico de Malaga) que invaden tuberias de saneamiento",
+          "Torrenciales mediterraneas que desbordan el Guadalmedina e inundan el centro",
+        ],
+      },
+      infraestructura:
+        "El centro historico de Malaga esta en plena transformacion con rehabilitaciones de edificios del XVIII-XIX para uso turistico y residencial. Los barrios de expansion (Cruz de Humilladero, Carretera de Cadiz) tienen bloques de los 60-80.",
+      barriosZonas: ["Centro Historico", "Soho", "La Malagueta", "Cruz de Humilladero", "El Palo", "Pedregalejo"],
+      datosUnicos: [
+        "Malaga tiene el clima mas templado de la peninsula con una media de 19C y 300 dias de sol al ano",
+        "El boom turistico ha disparado la demanda de reformas integrales en edificios del centro historico",
+        "El rio Guadalmedina, canalizado, divide la ciudad y causa riesgo de inundacion en su desembocadura",
+      ],
+    },
+  },
+  bilbao: {
+    range: [48001, 48015],
+    data: {
+      municipio: "Bilbao",
+      provincia: "Vizcaya",
+      comunidadAutonoma: "Pais Vasco",
+      poblacionAprox: "~345.000 habitantes",
+      tipoZona: "urbana",
+      clima: "Oceanico con lluvias frecuentes (mas de 1.200 mm anuales)",
+      descripcionLocal:
+        "Bilbao, la mayor ciudad del Pais Vasco, construida en el estrecho valle del Nervion. La ria y las lluvias constantes (1.200 mm/ano) generan problemas de humedad omnipresentes. La reconversion industrial ha dejado suelos contaminados en zonas como Abandoibarra.",
+      problemasLocales: {
+        fontanero: [
+          "Agua blanda del embalse de Zadorra que, paradojicamente, es agresiva con tuberias de cobre",
+          "Humedades cronicas en plantas bajas de edificios construidos junto a la ria del Nervion",
+          "Calefaccion central con radiadores de hierro fundido en edificios antiguos del Casco Viejo",
+          "Calderas de condensacion que necesitan mantenimiento frecuente por la humedad del aire de combustion",
+        ],
+        electricista: [
+          "Humedades que provocan derivaciones a tierra y salto constante de diferenciales",
+          "Instalaciones electricas en lonjas y bajos comerciales con problemas de condensacion",
+          "Cuadros electricos deteriorados por la humedad ambiental del 78% medio",
+        ],
+        desatascos: [
+          "Alcantarillado que se satura con las lluvias persistentes (150+ dias de lluvia al ano)",
+          "Bajantes y canalones obstruidos por hojas y musgo por la humedad constante",
+          "Garajes subterraneos con filtraciones cronicas por el nivel freatico alto junto al Nervion",
+        ],
+      },
+      infraestructura:
+        "Bilbao se extiende a lo largo del valle del Nervion con edificios pegados a las laderas. El Casco Viejo (Siete Calles) conserva edificios de los siglos XVII-XIX. Ensanche y Abando tienen edificios de 1900-1950. Deusto, Rekalde y Basurto concentran vivienda de los 60-80.",
+      barriosZonas: ["Casco Viejo", "Ensanche-Abando", "Deusto", "Rekalde", "Basurto", "Indautxu"],
+      datosUnicos: [
+        "Bilbao tiene mas de 150 dias de lluvia al ano, haciendo de la humedad el enemigo numero uno de las instalaciones",
+        "La ria del Nervion atraviesa la ciudad y su nivel afecta al freatico de los barrios riberenos",
+        "La reconversion de Abandoibarra (donde esta el Guggenheim) ha dejado suelos que afectan a conducciones enterradas",
+      ],
+    },
+  },
+  zaragoza: {
+    range: [50001, 50018],
+    data: {
+      municipio: "Zaragoza",
+      provincia: "Zaragoza",
+      comunidadAutonoma: "Aragon",
+      poblacionAprox: "~680.000 habitantes",
+      tipoZona: "urbana",
+      clima: "Mediterraneo continental con cierzo y amplitud termica extrema (-8C a 42C)",
+      descripcionLocal:
+        "Zaragoza, quinta ciudad de Espana, castigada por el cierzo (viento del noroeste que supera 100 km/h) y una amplitud termica de casi 50 grados entre invierno y verano. El Ebro atraviesa la ciudad con riesgo de crecida.",
+      problemasLocales: {
+        fontanero: [
+          "Agua del Ebro con alto contenido calcareo que calcifica tuberias y electrodomesticos",
+          "Roturas de tuberias por heladas en exteriores (hasta -8C con el cierzo en invierno)",
+          "Dilataciones extremas por amplitud termica de 50 grados entre verano e invierno",
+        ],
+        electricista: [
+          "Cierzo que arranca cables aereos y dana instalaciones exteriores con rachas de 100+ km/h",
+          "Caidas de tension en picos de demanda por calefaccion (invierno) y aire acondicionado (verano)",
+          "Paneles solares y antenas danados por el viento cierzo",
+        ],
+        desatascos: [
+          "Red unitaria de alcantarillado (pluviales + residuales) que se desborda con tormentas",
+          "Cal acumulada en tuberias que reduce el diametro util progresivamente",
+          "Crecidas del Ebro que saturan la red de saneamiento de barrios riberenos",
+        ],
+      },
+      infraestructura:
+        "Zaragoza tiene un centro historico con edificios mudejar y renacentistas rodeado de barrios de expansion de los 60-80. Las Delicias, Torrero, Las Fuentes y San Jose concentran el mayor volumen de vivienda que necesita renovacion.",
+      barriosZonas: ["Casco Historico", "Centro", "Delicias", "San Jose", "Las Fuentes", "Torrero"],
+      datosUnicos: [
+        "El cierzo es un viento unico que puede soplar durante dias a 80-100 km/h, danando instalaciones exteriores",
+        "Zaragoza tiene una amplitud termica anual de casi 50 grados: de -8C en invierno a 42C en verano",
+        "El Ebro ha inundado barrios riberenos multiples veces (2013, 2015, 2018)",
+      ],
+    },
+  },
+}
+
+/**
  * Obtener datos de enriquecimiento local para un codigo postal.
- * Retorna null si no hay datos especificos para ese CP.
+ * Busca primero en datos especificos del CP, luego en datos a nivel de ciudad.
  */
 export function getLocalEnrichment(cp: string): LocalEnrichment | null {
-  return LOCAL_ENRICHMENT[cp] || null
+  // Primero: datos especificos del CP (maximo detalle)
+  if (LOCAL_ENRICHMENT[cp]) {
+    return LOCAL_ENRICHMENT[cp]
+  }
+
+  // Segundo: datos a nivel de ciudad (buen detalle para capitales)
+  const cpNum = parseInt(cp, 10)
+  if (isNaN(cpNum)) return null
+
+  for (const cityData of Object.values(CITY_ENRICHMENT)) {
+    const [min, max] = cityData.range
+    if (cpNum >= min && cpNum <= max) {
+      return {
+        cp,
+        ...cityData.data,
+      }
+    }
+  }
+
+  return null
 }
 
 /**
@@ -1464,4 +1784,110 @@ export function getLocalProblems(cp: string, professionId: string): string[] | n
  */
 export function hasEnrichedContent(cp: string): boolean {
   return cp in LOCAL_ENRICHMENT
+}
+
+/**
+ * Rangos de CPs de capitales de provincia y grandes ciudades.
+ * Estos CPs se indexan aunque no tengan contenido enriquecido
+ * porque tienen volumen de busqueda real.
+ */
+const INDEXABLE_CP_RANGES: [number, number][] = [
+  // Madrid capital
+  [28001, 28055],
+  // Barcelona capital
+  [8001, 8042],
+  // Valencia capital
+  [46001, 46026],
+  // Sevilla capital
+  [41001, 41020],
+  // Zaragoza capital
+  [50001, 50018],
+  // Malaga capital
+  [29001, 29018],
+  // Bilbao
+  [48001, 48015],
+  // Murcia
+  [30001, 30012],
+  // Palma de Mallorca
+  [7001, 7015],
+  // Las Palmas de GC
+  [35001, 35018],
+  // Alicante
+  [3001, 3016],
+  // Cordoba
+  [14001, 14014],
+  // Valladolid
+  [47001, 47014],
+  // Vigo
+  [36201, 36214],
+  // Gijon
+  [33201, 33212],
+  // A Coruna
+  [15001, 15011],
+  // Granada
+  [18001, 18015],
+  // San Sebastian
+  [20001, 20018],
+  // Santander
+  [39001, 39012],
+  // Oviedo
+  [33001, 33013],
+  // Pamplona
+  [31001, 31015],
+  // Tarragona
+  [43001, 43010],
+  // Cadiz
+  [11001, 11012],
+  // Almeria
+  [4001, 4009],
+  // Burgos
+  [9001, 9007],
+  // Salamanca
+  [37001, 37008],
+  // Lleida
+  [25001, 25008],
+  // Terrassa
+  [8220, 8228],
+  // Sabadell
+  [8201, 8208],
+  // Mostoles
+  [28930, 28938],
+  // Alcorcon
+  [28920, 28926],
+  // Getafe
+  [28901, 28906],
+  // Hospitalet de Llobregat
+  [8901, 8908],
+  // Santa Cruz de Tenerife
+  [38001, 38010],
+]
+
+/**
+ * Determina si un CP debe ser indexado por Google.
+ * Solo indexamos:
+ * 1. CPs con contenido enriquecido (datos reales locales)
+ * 2. CPs de capitales de provincia y grandes ciudades (volumen de busqueda real)
+ *
+ * El resto se marca como noindex para no diluir el crawl budget y la autoridad.
+ */
+export function shouldIndexCP(cp: string): boolean {
+  // Siempre indexar CPs con contenido enriquecido
+  if (cp in LOCAL_ENRICHMENT) return true
+
+  const cpNum = parseInt(cp, 10)
+  if (isNaN(cpNum)) return false
+
+  // Indexar si esta en un rango de capital de provincia / gran ciudad
+  for (const [min, max] of INDEXABLE_CP_RANGES) {
+    if (cpNum >= min && cpNum <= max) return true
+  }
+
+  return false
+}
+
+/**
+ * Obtener la lista de todos los CPs indexables (para sitemaps).
+ */
+export function getAllIndexableCPs(allCPs: string[]): string[] {
+  return allCPs.filter(shouldIndexCP)
 }

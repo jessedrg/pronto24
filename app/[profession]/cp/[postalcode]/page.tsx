@@ -19,7 +19,7 @@ import {
   PROFESSIONS_POSTAL,
 } from "@/lib/postal-data"
 import { PROBLEMS } from "@/lib/seo-data"
-import { getLocalEnrichment } from "@/lib/local-enrichment"
+import { getLocalEnrichment, shouldIndexCP } from "@/lib/local-enrichment"
 import { LocalContent } from "@/components/local-content"
 
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
@@ -89,7 +89,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "website",
     },
     robots: {
-      index: true,
+      index: shouldIndexCP(postalcode),
       follow: true,
     },
   }
