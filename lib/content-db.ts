@@ -1,6 +1,7 @@
 import { neon } from "@neondatabase/serverless"
 import type { LocalEnrichment } from "@/lib/local-enrichment"
 import { getLocalEnrichment as getStaticEnrichment } from "@/lib/local-enrichment"
+import { getPostalCodeData } from "@/lib/postal-data"
 
 const sql = neon(process.env.DATABASE_URL!)
 
@@ -46,11 +47,12 @@ export async function getEnrichedContent(
           : rows[0].content
 
       // Convert DB content to LocalEnrichment format
+      const postalData = getPostalCodeData(cp)
       return {
         cp,
         municipio: dbContent.municipio,
-        provincia: dbContent.clima ? "" : "", // filled below
-        comunidadAutonoma: "",
+        provincia: postalData?.provincia || "",
+        comunidadAutonoma: postalData?.comunidad || "",
         poblacionAprox: dbContent.poblacionAprox,
         tipoZona: dbContent.tipoZona,
         clima: dbContent.clima,

@@ -11,7 +11,6 @@ import {
 
 const sql = neon(process.env.DATABASE_URL!)
 
-const PROFESSIONS = ["fontanero", "electricista", "cerrajero", "desatascos", "calderas"]
 const BATCH_SIZE = 80 // CPs per run (x5 professions = ~400 pages per run)
 
 /**
