@@ -31,7 +31,7 @@ export function LiveBadge({ profession, cityName, modifier, isUrgent }: ActiveUs
       case "festivos":
         return `Trabajamos todos los festivos`
       case "rapido":
-        return `Llegada express en 10 minutos`
+        return `Llegada express en 30 minutos`
       case "ahora":
         return `${activeUsers} profesionales disponibles AHORA`
       case "hoy":

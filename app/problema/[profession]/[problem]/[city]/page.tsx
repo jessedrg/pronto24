@@ -251,8 +251,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const title = `${problem.name} en ${cityName} - ${profession.name} Urgente 24h | 936 946 639`
   const description = details
-    ? `${details.longDescription.slice(0, 140)}... ${profession.namePlural} urgentes en ${cityName}. Precio: ${details.priceRange} EUR. Llegamos en 10 min. Llama: 936 946 639.`
-    : `${problem.description} en ${cityName}? Solucionamos ${problem.name.toLowerCase()} en 10 minutos. ${profession.namePlural} 24h. Llama: 936 946 639.`
+    ? `${details.longDescription.slice(0, 140)}... ${profession.namePlural} urgentes en ${cityName}. Precio: ${details.priceRange} EUR. Llegamos en 30 min. Llama: 936 946 639.`
+    : `${problem.description} en ${cityName}? Solucionamos ${problem.name.toLowerCase()} en 30 minutos. ${profession.namePlural} 24h. Llama: 936 946 639.`
 
   return {
     title,
@@ -262,7 +262,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: `https://www.pronto-24.com/problema/${professionId}/${problemId}/${citySlug}/`,
     },
     openGraph: {
-      title: `${problem.name} en ${cityName} - Solucion Urgente en 10 min`,
+      title: `${problem.name} en ${cityName} - Solucion Urgente en 30 min`,
       description: `Solucionamos ${problem.name.toLowerCase()} en ${cityName}. ${profession.namePlural} disponibles 24/7. ${details ? `Desde ${details.priceRange.split('-')[0]} EUR.` : ''} Llama: 936 946 639`,
       type: "website",
     },
@@ -389,14 +389,14 @@ export default async function ProblemCityPage({ params }: PageProps) {
                 <h1 id="problem-hero-title" className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] text-balance">
                   <span className="text-foreground">{problem.name} en {cityName}</span>
                   <span className="block text-foreground/70 mt-2 text-2xl sm:text-3xl lg:text-4xl">
-                    {profession.name} urgente - Llegamos en 10 min
+                    {profession.name} urgente - Llegamos en 30 min
                   </span>
                 </h1>
 
                 <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">
                   {details
                     ? details.longDescription.slice(0, 200) + '...'
-                    : `Solucionamos ${problem.name.toLowerCase()} en ${cityName}. ${profession.namePlural} profesionales disponibles 24/7. Llegamos en 10 minutos.`
+                    : `Solucionamos ${problem.name.toLowerCase()} en ${cityName}. ${profession.namePlural} profesionales disponibles 24/7. Llegamos en 30 minutos maximo.`
                   }
                 </p>
 
@@ -567,7 +567,7 @@ export default async function ProblemCityPage({ params }: PageProps) {
                 {problem.name} en {cityName}: Servicio urgente 24h
               </h2>
               <p className="text-muted-foreground leading-relaxed text-lg mb-6">
-                {problem.description} en {cityName}? Nuestros {profession.namePlural.toLowerCase()} profesionales estan disponibles las 24 horas del dia para solucionar tu problema. Llegamos en 10 minutos y damos presupuesto antes de empezar.
+                {problem.description} en {cityName}? Nuestros {profession.namePlural.toLowerCase()} profesionales estan disponibles las 24 horas del dia para solucionar tu problema. Llegamos en un maximo de 30 minutos y damos presupuesto antes de empezar.
               </p>
               <div className="p-6 rounded-2xl bg-foreground text-background text-center">
                 <p className="text-lg font-bold mb-2">Llama ahora y solucionamos {problem.name.toLowerCase()} en {cityName}</p>
@@ -762,6 +762,57 @@ export default async function ProblemCityPage({ params }: PageProps) {
             </div>
           </div>
         </section>
+
+        {/* Interlinking: Postal codes in this city */}
+        {(() => {
+          // Generate CPs from the city's province prefix
+          const provincePrefix = citySlug === "madrid" ? "280" : citySlug === "barcelona" ? "080" :
+            citySlug === "valencia" ? "460" : citySlug === "sevilla" ? "410" :
+            citySlug === "malaga" ? "290" : citySlug === "zaragoza" ? "500" :
+            citySlug === "bilbao" ? "480" : citySlug === "alicante" ? "030" :
+            citySlug === "murcia" ? "300" : citySlug === "palma-de-mallorca" ? "070" :
+            citySlug === "granada" ? "180" : citySlug === "cordoba" ? "140" :
+            citySlug === "valladolid" ? "470" : citySlug === "vigo" ? "362" :
+            citySlug === "gijon" ? "332" : citySlug === "hospitalet-de-llobregat" ? "089" :
+            citySlug === "vitoria-gasteiz" ? "010" : citySlug === "santander" ? "390" :
+            citySlug === "san-sebastian" ? "200" : null
+
+          if (!provincePrefix) return null
+
+          const postalCodes = Array.from({ length: 8 }, (_, i) => {
+            return String(parseInt(provincePrefix) * 100 + 1 + i * 2).padStart(5, '0')
+          })
+
+          return (
+            <section className="py-12" aria-labelledby="postal-codes-heading">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center">
+                    <MapPin className="w-5 h-5 text-foreground" />
+                  </div>
+                  <div>
+                    <h2 id="postal-codes-heading" className="text-2xl font-bold text-foreground">
+                      {profession.name} por codigo postal en {cityName}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">Encuentra el profesional mas cercano a tu zona.</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2.5">
+                  {postalCodes.map((cp) => (
+                    <Link
+                      key={cp}
+                      href={`/${professionId}/cp/${cp}/`}
+                      className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-muted/50 border border-border text-sm font-medium text-foreground hover:border-foreground/30 hover:bg-background transition-all"
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      <span>CP {cp}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )
+        })()}
       </main>
       <Footer />
     </div>

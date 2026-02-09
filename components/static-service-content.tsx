@@ -109,7 +109,7 @@ export function StaticServiceContent({
   }
 
   const guarantees = [
-    { icon: Timer, title: "10 min", subtitle: "Tiempo de llegada" },
+    { icon: Timer, title: "30 min", subtitle: "Tiempo max. llegada" },
     { icon: Shield, title: "Garantía", subtitle: "En cada trabajo" },
     { icon: Award, title: "Certificados", subtitle: "Profesionales oficiales" },
     { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
@@ -495,7 +495,7 @@ export function StaticServiceContent({
           </h2>
 
           <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-            Un {serviceName.toLowerCase()} certificado puede estar en tu casa en menos de 10 minutos.
+            Un {serviceName.toLowerCase()} certificado puede estar en tu casa en un maximo de 30 minutos.
           </p>
 
           <a

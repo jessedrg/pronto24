@@ -20,7 +20,7 @@ export function PostalCodeSchema({
   const siteUrl = "https://www.pronto-24.com"
   const phoneFormatted = phoneNumber.replace(/(\d{3})(\d{3})(\d{3})/, "+34 $1 $2 $3")
 
-  const description = `${profession.name} urgente en ${zoneName} (${postalcode}), ${cityName}. Llegamos en 10 minutos. Servicio 24h. Presupuesto gratis.`
+  const description = `${profession.name} urgente en ${zoneName} (${postalcode}), ${cityName}. Llegamos en 30 minutos maximo. Servicio 24h. Presupuesto gratis.`
 
   // LocalBusiness Schema - Hiperlocal por código postal
   const localBusinessSchema = {
@@ -110,7 +110,7 @@ export function PostalCodeSchema({
         name: `¿Cuánto tarda en llegar un ${profession.name.toLowerCase()} al ${postalcode}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Nuestros ${profession.namePlural.toLowerCase()} llegan en máximo 10 minutos a cualquier punto del código postal ${postalcode} (${zoneName}).`,
+          text: `Nuestros ${profession.namePlural.toLowerCase()} llegan en un maximo de 30 minutos a cualquier punto del código postal ${postalcode} (${zoneName}).`,
         },
       },
       {

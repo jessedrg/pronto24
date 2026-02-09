@@ -37,7 +37,7 @@ export function ElectricistaContent() {
   ]
 
   const guarantees = [
-    { icon: Timer, title: "10 min", subtitle: "Tiempo de llegada", color: "text-[#FF6B35]" },
+    { icon: Timer, title: "30 min", subtitle: "Tiempo max. llegada", color: "text-[#FF6B35]" },
     { icon: Shield, title: "Garantía", subtitle: "En cada trabajo", color: "text-[#FF6B35]" },
     { icon: Award, title: "Certificados", subtitle: "Electricistas oficiales", color: "text-[#FF6B35]" },
     { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones", color: "text-[#FF6B35]" },
@@ -86,7 +86,7 @@ export function ElectricistaContent() {
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1]">
                 <span className="text-foreground">¿Sin luz en casa?</span>
-                <span className="block text-[#FF6B35] mt-2">Llegamos en 10 min</span>
+                <span className="block text-[#FF6B35] mt-2">Llegamos en 30 min</span>
               </h1>
 
               <p className="text-base sm:text-lg text-muted-foreground max-w-xl">
@@ -220,7 +220,7 @@ export function ElectricistaContent() {
                 </div>
                 <div>
                   <h2 className="text-2xl md:text-3xl font-black text-foreground">Toda España</h2>
-                  <p className="text-muted-foreground">Llegamos en 10 minutos a cualquier punto</p>
+                  <p className="text-muted-foreground">Llegamos en 30 minutos a cualquier punto</p>
                 </div>
               </div>
               <div className="flex flex-wrap justify-center gap-2">
@@ -293,7 +293,7 @@ export function ElectricistaContent() {
           </h2>
 
           <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-            No esperes más. Un electricista certificado puede estar en tu casa en menos de 10 minutos.
+            No esperes más. Un electricista certificado puede estar en tu casa en un maximo de 30 minutos.
           </p>
 
           <a

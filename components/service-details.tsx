@@ -27,7 +27,7 @@ export function ServiceDetails({ features, benefits, cities }: ServiceDetailsPro
             <div className="flex items-center gap-3 bg-[#00B8A9] text-white px-6 py-4 rounded-xl shadow-lg shadow-[#00B8A9]/25">
               <Clock className="h-8 w-8" />
               <div>
-                <p className="text-3xl md:text-4xl font-bold">10 min</p>
+                <p className="text-3xl md:text-4xl font-bold">30 min</p>
                 <p className="text-sm opacity-90">Tiempo de llegada</p>
               </div>
             </div>
@@ -77,7 +77,7 @@ export function ServiceDetails({ features, benefits, cities }: ServiceDetailsPro
             </div>
             <div className="flex items-center gap-2 bg-green-500/10 text-green-500 px-4 py-2 rounded-full text-sm font-semibold">
               <Clock className="h-4 w-4" />
-              Llegamos en 10 minutos
+              Llegamos en 30 min max.
             </div>
           </div>
 

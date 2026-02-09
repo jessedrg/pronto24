@@ -10,7 +10,7 @@ export const PROFESSIONS = [
     color: "#FF6B35",
     urgentProblems: ["apagon", "cortocircuito", "olor-quemado", "diferencial-salta"],
     description: "Electricistas certificados disponibles 24/7",
-    metaDescription: "Electricista urgente 24 horas. Llegamos en 10 minutos. Servicio profesional y garantizado.",
+    metaDescription: "Electricista urgente 24 horas. Llegamos en 30 minutos maximo. Servicio profesional y garantizado.",
   },
   {
     id: "fontanero",
@@ -20,7 +20,7 @@ export const PROFESSIONS = [
     color: "#3B82F6",
     urgentProblems: ["fuga-agua", "tuberia-rota", "inundacion", "atasco-grave"],
     description: "Fontaneros profesionales disponibles 24/7",
-    metaDescription: "Fontanero urgente 24 horas. Llegamos en 10 minutos. Reparaciones garantizadas.",
+    metaDescription: "Fontanero urgente 24 horas. Llegamos en 30 minutos maximo. Reparaciones garantizadas.",
   },
   {
     id: "cerrajero",
@@ -30,7 +30,7 @@ export const PROFESSIONS = [
     color: "#8B5CF6",
     urgentProblems: ["puerta-bloqueada", "cerradura-rota", "llave-dentro", "robo"],
     description: "Cerrajeros de confianza disponibles 24/7",
-    metaDescription: "Cerrajero urgente 24 horas. Abrimos sin daños. Llegamos en 10 minutos.",
+    metaDescription: "Cerrajero urgente 24 horas. Abrimos sin danos. Llegamos en 30 minutos maximo.",
   },
   {
     id: "desatascos",
@@ -40,7 +40,7 @@ export const PROFESSIONS = [
     color: "#10B981",
     urgentProblems: ["wc-atascado", "fregadero-atascado", "arqueta-atascada", "mal-olor"],
     description: "Servicio de desatascos profesional 24/7",
-    metaDescription: "Desatascos urgentes 24 horas. Camión cuba. Llegamos en 10 minutos.",
+    metaDescription: "Desatascos urgentes 24 horas. Camion cuba. Llegamos en 30 minutos maximo.",
   },
   {
     id: "calderas",
@@ -50,7 +50,7 @@ export const PROFESSIONS = [
     color: "#EF4444",
     urgentProblems: ["sin-agua-caliente", "caldera-no-enciende", "fuga-gas", "ruido-caldera"],
     description: "Técnicos de calderas certificados 24/7",
-    metaDescription: "Reparación de calderas urgente 24h. Todas las marcas. Llegamos en 10 minutos.",
+    metaDescription: "Reparacion de calderas urgente 24h. Todas las marcas. Llegamos en 30 minutos maximo.",
   },
 ]
 
