@@ -98,13 +98,28 @@ async function submitUrl(
   }
 }
 
-export async function GET(request: Request) {
-  // Verify cron secret
+function isAuthorized(request: Request): boolean {
   const authHeader = request.headers.get("authorization")
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  return authHeader === `Bearer ${process.env.CRON_SECRET}`
+}
+
+// POST for manual triggers from admin panel
+export async function POST(request: Request) {
+  if (!isAuthorized(request)) {
     return new Response("Unauthorized", { status: 401 })
   }
+  return runIndexing()
+}
 
+// GET for Vercel cron
+export async function GET(request: Request) {
+  if (!isAuthorized(request)) {
+    return new Response("Unauthorized", { status: 401 })
+  }
+  return runIndexing()
+}
+
+async function runIndexing() {
   // Check if we have the Google credentials configured
   if (
     !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ||

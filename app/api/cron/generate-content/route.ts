@@ -203,12 +203,28 @@ async function saveContent(
   `
 }
 
-export async function GET(request: Request) {
-  // Verify cron secret
+function isAuthorized(request: Request): boolean {
   const authHeader = request.headers.get("authorization")
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  return authHeader === `Bearer ${process.env.CRON_SECRET}`
+}
+
+// POST for manual triggers from admin panel
+export async function POST(request: Request) {
+  if (!isAuthorized(request)) {
     return new Response("Unauthorized", { status: 401 })
   }
+  return runGeneration()
+}
+
+// GET for Vercel cron
+export async function GET(request: Request) {
+  if (!isAuthorized(request)) {
+    return new Response("Unauthorized", { status: 401 })
+  }
+  return runGeneration()
+}
+
+async function runGeneration() {
 
   const startTime = Date.now()
   const batch = await getNextBatch()
