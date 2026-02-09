@@ -542,46 +542,4 @@ function generateSeoText(
   return templates[hash % templates.length]()
 }
 
-/**
- * Genera variantes de testimonios basados en la ciudad
- */
-export function generateTestimonials(citySlug: string, cityName: string, professionName: string) {
-  const hash = hashCity(citySlug)
-  
-  const firstNames = ["María", "Carlos", "Ana", "José", "Laura", "Pedro", "Carmen", "Antonio", "Isabel", "Manuel", "Lucía", "Francisco"]
-  const lastInitials = ["G", "R", "M", "L", "S", "P", "F", "T", "V", "N"]
-  
-  const templates = [
-    "Vinieron en menos de 15 minutos. Muy profesionales y el precio justo.",
-    "Excelente servicio. Resolvieron el problema rápidamente.",
-    "Los recomiendo 100%. Puntuales y muy limpios trabajando.",
-    "Llamé a las 11 de la noche y vinieron enseguida. Muy agradecido.",
-    "Presupuesto sin sorpresas y trabajo impecable.",
-    "Llevaba días con el problema y lo solucionaron en una hora.",
-    "Trato muy amable y precio competitivo.",
-    "Segunda vez que les llamo. Siempre responden rápido.",
-  ]
-  
-  const times = ["Hace 2 horas", "Hace 5 horas", "Ayer", "Hace 2 días", "Esta semana"]
-  
-  return [
-    {
-      name: `${firstNames[hash % firstNames.length]} ${lastInitials[hash % lastInitials.length]}.`,
-      text: templates[hash % templates.length],
-      time: times[hash % times.length],
-      city: cityName,
-    },
-    {
-      name: `${firstNames[(hash + 3) % firstNames.length]} ${lastInitials[(hash + 2) % lastInitials.length]}.`,
-      text: templates[(hash + 2) % templates.length],
-      time: times[(hash + 1) % times.length],
-      city: cityName,
-    },
-    {
-      name: `${firstNames[(hash + 7) % firstNames.length]} ${lastInitials[(hash + 5) % lastInitials.length]}.`,
-      text: templates[(hash + 4) % templates.length],
-      time: times[(hash + 2) % times.length],
-      city: cityName,
-    },
-  ]
-}
+

@@ -1,13 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import {
   Phone,
   Shield,
   CheckCircle2,
   MapPin,
-  Star,
-  BadgeCheck,
   Timer,
   Award,
   ThumbsUp,
@@ -38,13 +35,6 @@ interface Problem {
   urgent: boolean
 }
 
-interface Review {
-  name: string
-  city: string
-  text: string
-  time: string
-}
-
 interface FAQ {
   question: string
   answer: string
@@ -59,7 +49,6 @@ interface StaticServiceContentProps {
   description: string
   iconName: keyof typeof ICONS
   problems: Problem[]
-  reviews: Review[]
   faqs: FAQ[]
   whyChooseUs: string[]
   serviceProcess: string[]
@@ -77,7 +66,6 @@ export function StaticServiceContent({
   description,
   iconName,
   problems,
-  reviews,
   faqs,
   whyChooseUs,
   serviceProcess,
@@ -87,16 +75,16 @@ export function StaticServiceContent({
 }: StaticServiceContentProps) {
   const phoneNumber = "936946639"
   const phoneFormatted = "936 946 639"
-  const [activeUsers, setActiveUsers] = useState(12)
 
   const IconComponent = ICONS[iconName] || Wrench
 
-  useEffect(() => {
-    const userInterval = setInterval(() => {
-      setActiveUsers((prev: number) => Math.max(8, Math.min(18, prev + Math.floor(Math.random() * 3) - 1)))
-    }, 8000)
-    return () => clearInterval(userInterval)
-  }, [])
+  const PROFESSION_IMAGES: Record<string, string> = {
+    droplets: "/images/fontanero_trabajando.png",
+    zap: "/images/electricista_trabajando.png",
+    key: "/images/cerrajero_trabajando.png",
+    flame: "/images/fontanero_trabajando.png",
+  }
+  const heroImage = PROFESSION_IMAGES[iconName] || "/images/fontanero_trabajando.png"
 
   const handleCall = () => {
     if (typeof window !== "undefined" && (window as any).gtag) {
@@ -112,7 +100,7 @@ export function StaticServiceContent({
     { icon: Timer, title: "30 min", subtitle: "Tiempo max. llegada" },
     { icon: Shield, title: "Garantía", subtitle: "En cada trabajo" },
     { icon: Award, title: "Certificados", subtitle: "Profesionales oficiales" },
-    { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones" },
+    { icon: ThumbsUp, title: "Gratis", subtitle: "Presupuesto" },
   ]
 
   return (
@@ -127,11 +115,7 @@ export function StaticServiceContent({
             <div className="space-y-6">
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00B8A9]/10 border border-[#00B8A9]/30 text-[#00B8A9] text-sm font-semibold">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                </span>
-                <span>{activeUsers} {serviceNamePlural.toLowerCase()} disponibles ahora</span>
+                <span>{serviceNamePlural} disponibles 24h</span>
               </div>
 
               {/* Main Headline */}
@@ -205,7 +189,7 @@ export function StaticServiceContent({
               <div className="relative max-w-sm sm:max-w-md mx-auto lg:max-w-none">
                 <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
-                    src="/professional-service-technician-worker-with-tools-.jpg"
+                    src={heroImage}
                     alt={`${serviceName} profesional - Servicio urgente 24 horas`}
                     fill
                     className="object-cover"
@@ -268,7 +252,7 @@ export function StaticServiceContent({
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00B8A9]/10 text-[#00B8A9] text-sm font-medium mb-4">
               <Users className="w-4 h-4" />
-              <span>Más de 2,800 clientes satisfechos</span>
+              <span>Servicio profesional 24 horas</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               ¿Por qué elegir nuestro servicio de {serviceName.toLowerCase()}?
@@ -408,43 +392,36 @@ export function StaticServiceContent({
         </div>
       </section>
 
-      {/* Reviews */}
+      {/* Trust Section */}
       <section className="py-12 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-1 mb-2">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="w-6 h-6 text-[#00B8A9] fill-[#00B8A9]" />
-              ))}
-            </div>
-                <p className="text-foreground font-bold text-lg">Experiencias de nuestros clientes</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Nuestro compromiso contigo</h2>
+            <p className="text-muted-foreground">Garantias reales en cada servicio de {serviceName.toLowerCase()}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {reviews.map((review, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-background border border-border">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-11 h-11 rounded-full bg-[#00B8A9] flex items-center justify-center text-white font-bold text-lg shrink-0">
-                    {review.name[0]}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-foreground">{review.name}</span>
-                      <BadgeCheck className="w-4 h-4 text-blue-500" />
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {review.city} - {review.time}
-                    </div>
-                  </div>
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="w-3.5 h-3.5 text-[#00B8A9] fill-[#00B8A9]" />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground">&quot;{review.text}&quot;</p>
+            <div className="p-6 rounded-2xl bg-background border border-border text-center">
+              <div className="w-12 h-12 rounded-full bg-[#00B8A9]/10 flex items-center justify-center mx-auto mb-4">
+                <Clock className="w-6 h-6 text-[#00B8A9]" />
               </div>
-            ))}
+              <h3 className="font-bold text-foreground mb-2">Llegada en 30 min</h3>
+              <p className="text-sm text-muted-foreground">Nos comprometemos a estar en tu domicilio en un maximo de 30 minutos desde tu llamada.</p>
+            </div>
+            <div className="p-6 rounded-2xl bg-background border border-border text-center">
+              <div className="w-12 h-12 rounded-full bg-[#00B8A9]/10 flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-6 h-6 text-[#00B8A9]" />
+              </div>
+              <h3 className="font-bold text-foreground mb-2">Presupuesto cerrado</h3>
+              <p className="text-sm text-muted-foreground">Te damos un presupuesto cerrado antes de empezar. Sin sorpresas ni costes ocultos.</p>
+            </div>
+            <div className="p-6 rounded-2xl bg-background border border-border text-center">
+              <div className="w-12 h-12 rounded-full bg-[#00B8A9]/10 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="w-6 h-6 text-[#00B8A9]" />
+              </div>
+              <h3 className="font-bold text-foreground mb-2">Garantia por escrito</h3>
+              <p className="text-sm text-muted-foreground">12 meses de garantia en mano de obra y materiales en todos los trabajos realizados.</p>
+            </div>
           </div>
         </div>
       </section>

@@ -2,8 +2,6 @@ import {
   Phone,
   Shield,
   CheckCircle2,
-  Star,
-  BadgeCheck,
   Timer,
   Award,
   ThumbsUp,
@@ -27,7 +25,7 @@ import {
 import Image from "next/image"
 import Link from "next/link"
 import { getCityDisplayName, getCityProvince, getNearbyCities, PROBLEMS, PROFESSIONS } from "@/lib/seo-data"
-import { generateUniqueContent, generateTestimonials } from "@/lib/content-generator"
+import { generateUniqueContent } from "@/lib/content-generator"
 import { ExpertGuideSection } from "@/components/expert-guide-section"
 import { ServiceDeepDive } from "@/components/service-deep-dive"
 import { PricingGuideSection } from "@/components/pricing-guide-section"
@@ -67,6 +65,15 @@ export function ServiceLandingTemplate({
   const phoneFormatted = "936 946 639"
 
   const profession = professionProp || PROFESSIONS.find((p) => p.id === professionId) || PROFESSIONS[0]
+
+  const PROFESSION_IMAGES: Record<string, string> = {
+    fontanero: "/images/fontanero_trabajando.png",
+    electricista: "/images/electricista_trabajando.png",
+    cerrajero: "/images/cerrajero_trabajando.png",
+    desatascos: "/images/fontanero_trabajando.png",
+    calderas: "/images/fontanero_trabajando.png",
+  }
+  const heroImage = PROFESSION_IMAGES[profession.id] || "/images/fontanero_trabajando.png"
   const cityName = cityProp?.name || (citySlug ? getCityDisplayName(citySlug) : "Espana")
   const actualCitySlug = cityProp?.slug || citySlug
   const provinceName = cityProp?.province || (actualCitySlug ? getCityProvince(actualCitySlug) : "")
@@ -210,14 +217,6 @@ export function ServiceLandingTemplate({
     ? generateUniqueContent(actualCitySlug, cityName, profession.id, profession.name)
     : null
 
-  const reviews = actualCitySlug
-    ? generateTestimonials(actualCitySlug, cityName, profession.name)
-    : [
-        { name: "Maria G.", text: "Excelente servicio. Muy profesionales.", time: "Hace 2 horas", city: cityName },
-        { name: "Carlos P.", text: "Servicio 10. Muy recomendable.", time: "Hace 5 horas", city: cityName },
-        { name: "Ana R.", text: "Rapidos, limpios y profesionales.", time: "Ayer", city: cityName },
-      ]
-
   return (
     <div className="relative">
       {/* Hero Section */}
@@ -285,7 +284,7 @@ export function ServiceLandingTemplate({
               <div className="relative max-w-sm sm:max-w-md mx-auto lg:max-w-none">
                 <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
-                    src="/professional-service-technician-worker-with-tools-.jpg"
+                    src={heroImage}
                     alt={`${profession.name} profesional en ${cityName} - Servicio urgente 24 horas`}
                     fill
                     className="object-cover"
@@ -659,43 +658,36 @@ export function ServiceLandingTemplate({
         </div>
       )}
 
-      {/* Reviews */}
-      <section id="opiniones" className="py-12 bg-muted/30 scroll-mt-20" aria-labelledby="reviews-heading">
+      {/* Trust Commitments */}
+      <section id="opiniones" className="py-12 bg-muted/30 scroll-mt-20" aria-labelledby="trust-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-1 mb-2">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="w-6 h-6 text-foreground fill-foreground" />
-              ))}
-            </div>
-                <h2 id="reviews-heading" className="text-foreground font-bold text-lg">Experiencias de nuestros clientes</h2>
+            <h2 id="trust-heading" className="text-2xl md:text-3xl font-bold text-foreground mb-2">Nuestro compromiso en {cityName}</h2>
+            <p className="text-muted-foreground">Garantias reales en cada servicio de {profession.name.toLowerCase()}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {reviews.map((review, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-background border border-border">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-11 h-11 rounded-full bg-foreground flex items-center justify-center text-background font-bold text-lg shrink-0">
-                    {review.name[0]}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-foreground">{review.name}</span>
-                      <BadgeCheck className="w-4 h-4 text-blue-500" />
-                    </div>
-                    <time className="text-xs text-muted-foreground" dateTime={new Date().toISOString().split("T")[0]}>
-                      {review.city} - {review.time}
-                    </time>
-                  </div>
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="w-3.5 h-3.5 text-foreground fill-foreground" />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground">{`"${review.text}"`}</p>
+            <div className="p-6 rounded-2xl bg-background border border-border text-center">
+              <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center mx-auto mb-4">
+                <Clock className="w-6 h-6 text-foreground" />
               </div>
-            ))}
+              <h3 className="font-bold text-foreground mb-2">Llegada en 30 min</h3>
+              <p className="text-sm text-muted-foreground">Nos comprometemos a estar en tu domicilio de {cityName} en un maximo de 30 minutos.</p>
+            </div>
+            <div className="p-6 rounded-2xl bg-background border border-border text-center">
+              <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-6 h-6 text-foreground" />
+              </div>
+              <h3 className="font-bold text-foreground mb-2">Presupuesto cerrado</h3>
+              <p className="text-sm text-muted-foreground">Te damos un presupuesto cerrado antes de empezar. Sin sorpresas ni costes ocultos.</p>
+            </div>
+            <div className="p-6 rounded-2xl bg-background border border-border text-center">
+              <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="w-6 h-6 text-foreground" />
+              </div>
+              <h3 className="font-bold text-foreground mb-2">Garantia por escrito</h3>
+              <p className="text-sm text-muted-foreground">12 meses de garantia en mano de obra y materiales utilizados.</p>
+            </div>
           </div>
         </div>
       </section>

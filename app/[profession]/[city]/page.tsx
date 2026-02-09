@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { PROFESSIONS, getCityDisplayName, getCityProvince, getKeywordModifier } from "@/lib/seo-data"
-import { generateUniqueContent, generateTestimonials } from "@/lib/content-generator"
+import { generateUniqueContent } from "@/lib/content-generator"
 
 export const dynamicParams = true
 export const revalidate = 604800

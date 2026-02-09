@@ -288,28 +288,6 @@ export function getZoneDescription(cp: string, profession: string): string {
   return profDescriptions[index]
 }
 
-// Estadísticas ficticias pero realistas por zona
-export function getZoneStats(cp: string): {
-  serviciosHoy: number
-  tiempoMedio: number
-  tecnicos: number
-  satisfaccion: number
-} {
-  // Generar números pseudo-aleatorios pero consistentes basados en el CP
-  const seed = parseInt(cp)
-  const serviciosHoy = 3 + (seed % 12)
-  const tiempoMedio = 8 + (seed % 7)
-  const tecnicos = 2 + (seed % 4)
-  const satisfaccion = 4.7 + ((seed % 3) * 0.1)
-  
-  return {
-    serviciosHoy,
-    tiempoMedio,
-    tecnicos,
-    satisfaccion: Math.round(satisfaccion * 10) / 10,
-  }
-}
-
 // Top códigos postales para pre-renderizar (ciudades grandes)
 export function getTopPostalCodes(): string[] {
   const topCodes: string[] = []
