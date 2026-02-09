@@ -26,7 +26,18 @@ export async function triggerIndexingAction(): Promise<{ message: string }> {
     })
     const data = await res.json()
     if (res.ok) {
-      return { message: `Indexacion: ${data.submitted ?? 0} URLs enviadas a Google` }
+      // The API uses after() so the real work happens in background.
+      // Response has: status ("accepted"|"done"|"skipped"), message, pending
+      if (data.status === "accepted") {
+        return { message: `Indexacion iniciada en background: ${data.pending ?? 0} URLs pendientes de enviar a Google` }
+      }
+      if (data.status === "done") {
+        return { message: "No hay URLs pendientes de indexar" }
+      }
+      if (data.status === "skipped") {
+        return { message: `Indexacion omitida: ${data.message}` }
+      }
+      return { message: data.message || "Indexacion procesada" }
     }
     return { message: `Error: ${data.error || res.statusText}` }
   } catch (e) {
