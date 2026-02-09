@@ -13,16 +13,29 @@ export async function GET() {
   const totalUrls = indexableCodes.length * PROFESSIONS.length
   const totalSitemaps = Math.ceil(totalUrls / URLS_PER_SITEMAP)
   
-  const today = new Date().toISOString().split("T")[0]
+  // Use a recent but not "always today" date for the index
+  // This updates weekly to reflect content generation cadence
+  const now = new Date()
+  // Round down to the most recent Monday for a stable, weekly-updating date
+  const dayOfWeek = now.getDay()
+  const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+  const lastMonday = new Date(now)
+  lastMonday.setDate(now.getDate() - daysSinceMonday)
+  const indexDate = lastMonday.toISOString().split("T")[0]
   
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 `
 
   for (let i = 1; i <= totalSitemaps; i++) {
+    // Stagger sub-sitemap dates slightly so they don't all match
+    const staggered = new Date(lastMonday)
+    staggered.setDate(lastMonday.getDate() - (i % 3))
+    const subDate = staggered.toISOString().split("T")[0]
+    
     xml += `  <sitemap>
     <loc>${SITE_URL}/sitemap-cp/${i}.xml</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${subDate}</lastmod>
   </sitemap>
 `
   }
