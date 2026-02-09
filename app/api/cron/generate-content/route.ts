@@ -77,13 +77,13 @@ function getPrioritizedCPs(): string[] {
 
 const contentSchema = z.object({
   municipio: z.string(),
-  descripcionLocal: z.string().describe("2-3 frases describiendo la zona, su tipo de viviendas, y particularidades. No incluir nombre de empresa."),
-  problemasLocales: z.array(z.string()).describe("3-5 problemas tecnicos REALES y especificos de la zona para esta profesion"),
-  infraestructura: z.string().describe("1-2 frases sobre el estado de las instalaciones en la zona"),
-  datosUnicos: z.array(z.string()).describe("2-3 datos verificables y unicos sobre esta zona relevantes al servicio"),
-  clima: z.string().nullable().describe("Breve descripcion del clima si afecta al servicio"),
+  descripcionLocal: z.string().describe("2-4 frases con personalidad propia sobre la zona. Mencionar calles, plazas o barrios concretos. Varia entre frases cortas y largas. No usar 'destaca por' ni 'se caracteriza por'."),
+  problemasLocales: z.array(z.string()).describe("3-5 problemas tecnicos MUY especificos. Incluir materiales exactos (plomo, fibrocemento, hierro galvanizado), anos concretos de construccion, y causas tecnicas reales. Cada problema debe ser diferente en estructura gramatical."),
+  infraestructura: z.string().describe("2-3 frases sobre el estado real de las instalaciones. Mencionar anos de construccion, materiales, y si ha habido renovaciones recientes o no."),
+  datosUnicos: z.array(z.string()).describe("2-4 datos hiperlocales verificables: dureza del agua en grados franceses, tipo de suelo, normativa municipal especifica, datos del catastro o INE sobre antiguedad de edificios."),
+  clima: z.string().nullable().describe("Solo si afecta directamente al servicio. Ser especifico: humedad relativa media, heladas/ano, mm de lluvia, etc."),
   tipoZona: z.enum(["urbana", "semiurbana", "rural"]),
-  consejo: z.string().describe("Un consejo tecnico real y util para habitantes de esta zona con este tipo de problema"),
+  consejo: z.string().describe("Un consejo tecnico MUY concreto y accionable, como lo diria un profesional con 20 anos de experiencia en la zona. Incluir una medida preventiva especifica."),
 })
 
 function isAuthorized(request: Request): boolean {
@@ -137,24 +137,65 @@ async function runGeneration() {
 
       for (const prof of PROFESSIONS_POSTAL) {
         try {
+          // Randomize style to avoid repetitive AI patterns
+          const toneVariants = [
+            "Escribe como un tecnico veterano de la zona que lleva 20 anos trabajando ahi. Usa un tono directo, sin florituras.",
+            "Escribe como si redactaras una ficha tecnica interna para un equipo de profesionales que van a trabajar en esta zona por primera vez.",
+            "Escribe como un vecino de la zona que ademas es profesional del gremio. Conoces cada calle y cada edificio.",
+            "Escribe como un perito tasador que describe las particularidades tecnicas de las viviendas de la zona para un informe.",
+            "Escribe como un inspector municipal que conoce los problemas recurrentes de esta zona por las quejas vecinales.",
+          ]
+          const styleVariants = [
+            "Alterna entre frases cortas y frases mas desarrolladas. No empieces todas las frases igual.",
+            "Usa alguna expresion coloquial tecnica entre frases formales. Varia la longitud de las frases.",
+            "Se directo y concreto. Evita subordinadas largas. Mezcla datos con observaciones practicas.",
+            "Combina datos tecnicos con anecdotas tipicas de la zona. No uses listas mentales, varia la estructura.",
+            "Empieza por lo mas llamativo de la zona. Luego baja al detalle tecnico. Cierra con algo practico.",
+          ]
+          const selectedTone = toneVariants[Math.floor(Math.random() * toneVariants.length)]
+          const selectedStyle = styleVariants[Math.floor(Math.random() * styleVariants.length)]
+
           const { output } = await generateText({
             model: "openai/gpt-4o-mini",
             output: Output.object({ schema: contentSchema }),
-            prompt: `Genera contenido LOCAL REAL y TECNICO para una pagina de servicio de ${prof.name} en el codigo postal ${cp} (${cpName}, ${cityName}).
+            system: `Eres un redactor tecnico especializado en servicios para el hogar en Espana. Tu trabajo es crear contenido hiperlocal que parece escrito por alguien que VIVE en la zona.
 
-REGLAS ESTRICTAS:
-- Solo datos VERIFICABLES y REALES sobre la zona
-- Problemas tecnicos ESPECIFICOS de la zona (tipo de viviendas, antiguedad, materiales, clima local)
-- NO mencionar ninguna empresa ni marca
-- NO inventar estadisticas de satisfaccion ni reviews
-- Tono tecnico-profesional, como un experto local que conoce la zona
-- El contenido debe ser UNICO para esta combinacion de CP+profesion
-- Piensa en que tipo de edificios hay (antiguos, nuevos, bloques, chalets), que problemas tipicos tienen
-- Considera el clima de la zona y como afecta a las instalaciones
+REGLAS ANTI-DETECCION IA (CRITICO):
+- NUNCA uses estas palabras/frases: "destaca por", "se caracteriza", "es importante destacar", "cabe mencionar", "sin duda", "en definitiva", "a lo largo de", "en este sentido", "juega un papel", "es fundamental"
+- NUNCA empieces 2 frases seguidas con la misma estructura gramatical
+- VARIA la longitud de las frases: mezcla frases de 5 palabras con frases de 25
+- USA contracciones y expresiones naturales del espanol: "no suele", "lo tipico es", "lo que pasa es que", "ojo con", "lo normal aqui"
+- INCLUYE alguna imperfeccion natural: una frase que empiece con "Y" o "Pero", alguna aclaracion entre guiones
+- EVITA listas donde cada item empieza con la misma estructura (articulo + sustantivo + adjetivo)
+- Cada problema tecnico debe tener una estructura gramatical DIFERENTE: uno puede empezar con el material, otro con la ubicacion, otro con la consecuencia
 
-Provincia/Region: ${postalData?.provincia || "Espana"}
-Nombre de la zona: ${cpName}
-Ciudad: ${cityName}`,
+${selectedTone}
+${selectedStyle}
+
+REGLAS DE CONTENIDO:
+- Solo datos que un profesional local podria saber: materiales de construccion por decada, normativa local, dureza del agua, tipo de suelo
+- Problemas tecnicos con CAUSA RAIZ: no "tuberias antiguas" sino "tuberias de hierro galvanizado de los 70 con corrosion interna que reduce el caudal un 40%"
+- Datos del catastro, INE, o ayuntamiento cuando sea posible
+- NO mencionar ninguna empresa, marca ni Pronto24
+- NO inventar porcentajes de satisfaccion ni numero de clientes`,
+            prompt: `Codigo postal: ${cp}
+Zona: ${cpName}
+Ciudad: ${cityName}
+Provincia: ${postalData?.provincia || "Espana"}
+Profesion: ${prof.name} (${prof.id})
+
+Genera contenido LOCAL para una pagina de servicio de ${prof.name} en ${cpName} (${cp}).
+
+CONTEXTO TECNICO QUE DEBES CONSIDERAR:
+- Decada de construccion predominante en esta zona (busca en tu conocimiento sobre urbanismo espanol)
+- Material de tuberias segun la epoca: plomo (pre-1970), hierro galvanizado (1960-1985), cobre (1975-2000), PEX/multicapa (2000+)
+- Material electrico segun epoca: aluminio (pre-1975), cobre con aislamiento PVC fino (1970-1990), cobre con aislamiento moderno (1990+)
+- Dureza del agua de la zona (varia mucho por provincia)
+- Clima local y como afecta: heladas, humedad costera, calor extremo, lluvias torrenciales
+- Si hay gas natural en la zona o se usa butano/propano
+- Tipo de edificacion: bloques, chalets, adosados, casas de pueblo, edificios historicos
+
+IMPORTANTE: Cada campo debe sonar como si lo hubiera escrito una persona diferente. No repitas patrones.`,
           })
 
           if (output) {
