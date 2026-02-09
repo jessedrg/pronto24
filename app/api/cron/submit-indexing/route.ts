@@ -1,27 +1,50 @@
-import { NextResponse } from "next/server"
+import { NextResponse, after } from "next/server"
 import { SignJWT, importPKCS8 } from "jose"
 import { getSQL } from "@/lib/db"
+
+// Allow up to 300s for background indexing work
+export const maxDuration = 300
 
 const BATCH_SIZE = 200 // Google allows 200 requests/day for Indexing API
 const GOOGLE_INDEXING_ENDPOINT = "https://indexing.googleapis.com/v3/urlNotifications:publish"
 
 /**
  * Generate a Google OAuth2 access token using a service account JWT.
+ * 
+ * Supports 3 formats for credentials:
+ * 1. GOOGLE_SERVICE_ACCOUNT_JSON - Full JSON file content (easiest - just paste the whole JSON)
+ * 2. GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY (PEM string)
+ * 3. GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY (base64-encoded PEM)
  */
 async function getGoogleAccessToken(): Promise<string> {
-  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
-  const keyRaw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
+  let email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
+  let keyPem = ""
 
-  if (!email || !keyRaw) {
-    throw new Error("Google service account credentials not configured")
+  // Option 1: Full JSON (recommended - just paste the whole downloaded JSON)
+  const jsonRaw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+  if (jsonRaw) {
+    try {
+      const parsed = JSON.parse(jsonRaw)
+      email = parsed.client_email
+      keyPem = parsed.private_key
+    } catch {
+      throw new Error("GOOGLE_SERVICE_ACCOUNT_JSON is not valid JSON")
+    }
+  } else {
+    // Option 2/3: Separate email + key
+    const keyRaw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
+    if (!email || !keyRaw) {
+      throw new Error("Google service account credentials not configured. Set GOOGLE_SERVICE_ACCOUNT_JSON (full JSON) or GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY")
+    }
+
+    keyPem = keyRaw
+    // The key may be base64-encoded
+    if (!keyRaw.includes("-----BEGIN")) {
+      keyPem = Buffer.from(keyRaw, "base64").toString("utf-8")
+    }
   }
 
-  // The key may be base64-encoded or raw PEM
-  let keyPem = keyRaw
-  if (!keyRaw.includes("-----BEGIN")) {
-    keyPem = Buffer.from(keyRaw, "base64").toString("utf-8")
-  }
-  // Handle escaped newlines
+  // Handle escaped newlines (common when pasting into env vars)
   keyPem = keyPem.replace(/\\n/g, "\n")
 
   const privateKey = await importPKCS8(keyPem, "RS256")
@@ -65,28 +88,57 @@ export async function POST(request: Request) {
   if (!isAuthorized(request)) {
     return new Response("Unauthorized", { status: 401 })
   }
-  return runIndexing()
+  return fireAndForget()
 }
 
 export async function GET(request: Request) {
   if (!isAuthorized(request)) {
     return new Response("Unauthorized", { status: 401 })
   }
-  return runIndexing()
+  return fireAndForget()
+}
+
+async function fireAndForget() {
+  // Check if Google credentials are configured (either JSON or email+key)
+  const hasJsonCreds = !!process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+  const hasSeparateCreds = !!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && !!process.env.GOOGLE_SERVICE_ACCOUNT_KEY
+  if (!hasJsonCreds && !hasSeparateCreds) {
+    return NextResponse.json({
+      status: "skipped",
+      message: "Google Indexing API credentials not configured. Set GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY.",
+    })
+  }
+
+  const sql = getSQL()
+  let pendingCount = 0
+  try {
+    const result = await sql`
+      SELECT COUNT(*) as count FROM indexing_queue
+      WHERE status = 'pending' AND (retry_count IS NULL OR retry_count < 3)
+    `
+    pendingCount = Number(result[0]?.count || 0)
+  } catch {
+    // DB might not be ready
+  }
+
+  if (pendingCount === 0) {
+    return NextResponse.json({ status: "done", message: "No pending URLs to submit", pending: 0 })
+  }
+
+  // Schedule background work AFTER response is sent
+  after(async () => {
+    await runIndexing()
+  })
+
+  return NextResponse.json({
+    status: "accepted",
+    message: `Indexing started in background. ${pendingCount} URLs pending, processing up to ${BATCH_SIZE}.`,
+    pending: pendingCount,
+  })
 }
 
 async function runIndexing() {
   const sql = getSQL()
-
-  // Check if Google credentials are configured
-  if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
-    // Still mark URLs as pending -- they'll be submitted when creds are added
-    return NextResponse.json({
-      message: "Google Indexing API credentials not configured yet. URLs remain in queue.",
-      submitted: 0,
-      pending: 0,
-    })
-  }
 
   try {
     // Get pending URLs from the queue
@@ -98,19 +150,14 @@ async function runIndexing() {
       LIMIT ${BATCH_SIZE}
     `
 
-    if (pending.length === 0) {
-      return NextResponse.json({ message: "No pending URLs to submit", submitted: 0 })
-    }
+    if (pending.length === 0) return
 
     let accessToken: string
     try {
       accessToken = await getGoogleAccessToken()
     } catch (e) {
-      console.error("[v0] Failed to get Google access token:", e)
-      return NextResponse.json(
-        { error: "Failed to authenticate with Google. Check GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_SERVICE_ACCOUNT_KEY." },
-        { status: 500 }
-      )
+      console.error("Failed to get Google access token:", e)
+      return
     }
 
     let submitted = 0
@@ -150,12 +197,12 @@ async function runIndexing() {
 
           // If rate limited, stop early
           if (res.status === 429) {
-            console.log("[v0] Google Indexing API rate limited, stopping batch")
+            console.log("Google Indexing API rate limited, stopping batch")
             break
           }
         }
       } catch (e) {
-        console.error(`[v0] Error submitting ${row.url}:`, e)
+        console.error(`Error submitting ${row.url}:`, e)
         const retryCount = (row.retry_count || 0) + 1
         await sql`
           UPDATE indexing_queue
@@ -166,17 +213,8 @@ async function runIndexing() {
       }
     }
 
-    return NextResponse.json({
-      message: `Submitted ${submitted} URLs to Google Indexing API`,
-      submitted,
-      failed,
-      totalPending: pending.length - submitted - failed,
-    })
+    console.log(`Indexing complete: ${submitted} submitted, ${failed} failed`)
   } catch (e) {
-    console.error("[v0] Submit indexing cron error:", e)
-    return NextResponse.json(
-      { error: e instanceof Error ? e.message : "Unknown error" },
-      { status: 500 }
-    )
+    console.error("Submit indexing cron error:", e)
   }
 }
