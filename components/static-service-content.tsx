@@ -205,11 +205,12 @@ export function StaticServiceContent({
               <div className="relative max-w-sm sm:max-w-md mx-auto lg:max-w-none">
                 <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
-                    src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&q=80&auto=format&fit=crop"
-                    alt={`${serviceName} profesional`}
+                    src="/professional-service-technician-worker-with-tools-.jpg"
+                    alt={`${serviceName} profesional - Servicio urgente 24 horas`}
                     fill
                     className="object-cover"
                     priority
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
 
@@ -235,8 +236,8 @@ export function StaticServiceContent({
                 <div className="absolute -top-3 -right-3 sm:top-4 sm:right-4 z-10">
                   <div className="px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-background border border-[#00B8A9]/30 shadow-xl">
                     <div className="text-center">
-                      <div className="text-2xl sm:text-3xl font-black text-[#00B8A9]">10</div>
-                      <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">min llegada</div>
+                      <div className="text-2xl sm:text-3xl font-black text-[#00B8A9]">30</div>
+                      <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">min max.</div>
                     </div>
                   </div>
                 </div>
