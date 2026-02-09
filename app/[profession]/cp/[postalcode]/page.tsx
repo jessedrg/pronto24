@@ -20,7 +20,6 @@ import {
 } from "@/lib/postal-data"
 import { PROBLEMS } from "@/lib/seo-data"
 import { getLocalEnrichment, shouldIndexCP } from "@/lib/local-enrichment"
-import { getEnrichedContent, hasDBContent } from "@/lib/content-db"
 import { LocalContent } from "@/components/local-content"
 
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
@@ -90,7 +89,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "website",
     },
     robots: {
-      index: shouldIndexCP(postalcode) || (await hasDBContent(postalcode)),
+      index: shouldIndexCP(postalcode),
       follow: true,
     },
   }
@@ -119,9 +118,7 @@ export default async function PostalCodePage({ params }: PageProps) {
   const postalData = getPostalCodeData(postalcode)
   const zoneName = getZoneName(postalcode)
   const cityName = getCityFromPostalCode(postalcode)
-  
-  // Try DB first (AI-generated, profession-specific), then static enrichment
-  const enrichment = await getEnrichedContent(postalcode, profession)
+  const enrichment = getLocalEnrichment(postalcode)
 
   // Use enriched description if available, otherwise generic
   const description = enrichment

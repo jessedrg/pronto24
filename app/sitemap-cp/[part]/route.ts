@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-import { neon } from "@neondatabase/serverless"
 import { POSTAL_CODE_NAMES } from "@/lib/postal-code-names"
 import { getAllIndexableCPs, hasEnrichedContent } from "@/lib/local-enrichment"
 
@@ -8,28 +7,19 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pronto-24.com"
 const URLS_PER_SITEMAP = 10000
 
 /**
- * Get all indexable CPs: static enrichment + capital cities + DB-generated content.
- * This grows automatically as the cron generates more content.
+ * Only return indexable CPs (enriched + capital cities).
+ * This dramatically reduces sitemap size from ~55,000 to ~3,000-5,000 URLs,
+ * concentrating Google's crawl budget on quality pages.
  */
-async function getIndexablePostalCodes(): Promise<Set<string>> {
+function getIndexablePostalCodes(): string[] {
   const allCodes = Object.keys(POSTAL_CODE_NAMES).sort()
-  const staticIndexable = getAllIndexableCPs(allCodes)
-  const cpSet = new Set(staticIndexable)
+  return getAllIndexableCPs(allCodes)
+}
 
-  // Also add CPs that have AI-generated content in the DB
-  try {
-    const sql = neon(process.env.DATABASE_URL!)
-    const dbCPs = await sql`
-      SELECT DISTINCT postal_code FROM cp_generated_content WHERE status = 'active'
-    `
-    for (const row of dbCPs) {
-      cpSet.add(row.postal_code)
-    }
-  } catch {
-    // DB unavailable, proceed with static only
-  }
-
-  return cpSet
+export function getTotalSitemaps(): number {
+  const indexableCodes = getIndexablePostalCodes()
+  const totalUrls = indexableCodes.length * PROFESSIONS.length
+  return Math.ceil(totalUrls / URLS_PER_SITEMAP)
 }
 
 interface RouteParams {
@@ -46,8 +36,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     return new NextResponse("Invalid sitemap part", { status: 400 })
   }
   
-  const indexableSet = await getIndexablePostalCodes()
-  const indexableCodes = Array.from(indexableSet).sort()
+  const indexableCodes = getIndexablePostalCodes()
   const today = new Date().toISOString().split("T")[0]
   
   const startIndex = (partNumber - 1) * URLS_PER_SITEMAP
@@ -71,7 +60,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 `
 
   for (const { profession, cp } of urlsForThisPart) {
-    // Enriched CPs get highest priority, capital city CPs get medium, DB-generated get high
+    // Enriched CPs get highest priority, capital city CPs get medium
     const priority = hasEnrichedContent(cp) ? "0.9" : "0.7"
     const changefreq = hasEnrichedContent(cp) ? "weekly" : "monthly"
     
@@ -89,7 +78,7 @@ export async function GET(request: Request, { params }: RouteParams) {
   return new NextResponse(xml, {
     headers: {
       "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=3600, s-maxage=3600",
+      "Cache-Control": "public, max-age=86400, s-maxage=86400",
     },
   })
 }
