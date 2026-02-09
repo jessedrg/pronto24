@@ -10,9 +10,6 @@ interface ActiveUsersProps {
 }
 
 export function LiveBadge({ profession, cityName, modifier, isUrgent }: ActiveUsersProps) {
-  // Static number - no setInterval, no re-renders, better performance
-  const activeUsers = 12
-
   const getBadgeText = () => {
     switch (modifier) {
       case "24-horas":
@@ -25,7 +22,7 @@ export function LiveBadge({ profession, cityName, modifier, isUrgent }: ActiveUs
       case "cerca-de-mi":
         return `El mas cercano a ti en ${cityName}`
       case "de-guardia":
-        return `${activeUsers} profesionales de guardia ahora`
+        return `${profession.namePlural} de guardia 24h`
       case "nocturno":
         return `Servicio nocturno sin recargo`
       case "festivos":
@@ -33,7 +30,7 @@ export function LiveBadge({ profession, cityName, modifier, isUrgent }: ActiveUs
       case "rapido":
         return `Llegada express en 30 minutos`
       case "ahora":
-        return `${activeUsers} profesionales disponibles AHORA`
+        return `${profession.namePlural} disponibles ahora en ${cityName}`
       case "hoy":
         return `Servicio garantizado para hoy`
       case "precio":
@@ -42,9 +39,9 @@ export function LiveBadge({ profession, cityName, modifier, isUrgent }: ActiveUs
         return `Respuesta inmediata garantizada`
       default:
         if (isUrgent) {
-          return `${activeUsers} ${profession.namePlural.toLowerCase()} de urgencias disponibles`
+          return `${profession.namePlural} de urgencias disponibles 24h`
         }
-        return `${activeUsers} ${profession.namePlural.toLowerCase()} disponibles en ${cityName}`
+        return `${profession.namePlural} disponibles 24h en ${cityName}`
     }
   }
 

@@ -8,7 +8,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { CallButton, LiveBadge } from "@/components/hero-client-parts"
 import { GuaranteeSection } from "@/components/guarantee-section"
 import { PROFESSIONS, PROBLEMS, getCityDisplayName, getNearbyCities } from "@/lib/seo-data"
-import { generateTestimonials } from "@/lib/content-generator"
+
 
 export const dynamicParams = true
 export const revalidate = 604800
@@ -288,7 +288,6 @@ export default async function ProblemCityPage({ params }: PageProps) {
   const otherProblems = problems.filter(p => p.id !== problemId)
   const otherProfessions = PROFESSIONS.filter(p => p.id !== professionId)
   const details = PROBLEM_DETAILS[professionId]?.[problemId]
-  const reviews = generateTestimonials(citySlug, cityName, profession.name)
 
   const phoneNumber = "936946639"
   const phoneFormatted = "936 946 639"
@@ -610,40 +609,27 @@ export default async function ProblemCityPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Reviews */}
-        <section className="py-12" aria-labelledby="problem-reviews-heading">
+        {/* Trust Commitments */}
+        <section className="py-12" aria-labelledby="problem-trust-heading">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-1 mb-2">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} className="w-5 h-5 text-foreground fill-foreground" />
-                ))}
-              </div>
-              <h2 id="problem-reviews-heading" className="text-foreground font-bold">
-                Opiniones de clientes en {cityName}
+              <h2 id="problem-trust-heading" className="text-2xl font-bold text-foreground mb-2">
+                Nuestro compromiso en {cityName}
               </h2>
+              <p className="text-muted-foreground">Garantias reales en cada servicio de {profession.name.toLowerCase()}</p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
-              {reviews.slice(0, 3).map((review, i) => (
-                <div key={i} className="p-6 rounded-2xl bg-muted/20 border border-border">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-foreground flex items-center justify-center text-background font-bold shrink-0">
-                      {review.name[0]}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-foreground text-sm">{review.name}</span>
-                        <BadgeCheck className="w-4 h-4 text-blue-500" />
-                      </div>
-                      <time className="text-xs text-muted-foreground">{review.time}</time>
-                    </div>
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className="w-3 h-3 text-foreground fill-foreground" />
-                      ))}
-                    </div>
+              {[
+                { title: "Llegada en 30 min", description: `Nos comprometemos a estar en tu domicilio de ${cityName} en un maximo de 30 minutos.` },
+                { title: "Presupuesto cerrado", description: "Te damos un presupuesto cerrado antes de empezar. Sin sorpresas ni costes ocultos." },
+                { title: "Garantia por escrito", description: "12 meses de garantia en mano de obra y materiales utilizados." },
+              ].map((item, i) => (
+                <div key={i} className="p-6 rounded-2xl bg-muted/20 border border-border text-center">
+                  <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center mx-auto mb-4">
+                    <Shield className="w-6 h-6 text-foreground" />
                   </div>
-                  <p className="text-sm text-muted-foreground">{`"${review.text}"`}</p>
+                  <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
                 </div>
               ))}
             </div>

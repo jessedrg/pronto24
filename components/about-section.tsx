@@ -1,4 +1,4 @@
-import { Shield, Users, Clock, Award, MapPin, Phone, CheckCircle, Star, Briefcase, Heart, Target, Zap } from "lucide-react"
+import { Shield, Users, Clock, Award, MapPin, Phone, CheckCircle, Briefcase, Heart, Target, Zap } from "lucide-react"
 
 export function AboutSection() {
   return (
@@ -214,53 +214,41 @@ export function AboutSection() {
           </div>
         </div>
 
-        {/* Testimonios destacados */}
+        {/* Nuestras garantias */}
         <div className="border-t border-border pt-16">
           <div className="text-center mb-12">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Lo que dicen nuestros clientes
+              Lo que nos diferencia
             </h3>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Estas son opiniones reales de clientes que han utilizado nuestros servicios. 
-              Puedes ver más en Google Reviews buscando "pronto-24.com".
+              Compromisos reales que respaldamos con hechos en cada servicio que realizamos.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                name: "María García",
-                location: "Madrid",
-                rating: 5,
-                text: "A las 3 de la mañana se rompió una tubería y en 20 minutos tenía al fontanero en casa. Resolvió el problema en menos de una hora. Precio justo y factura detallada. No puedo estar más agradecida.",
-                service: "Fontanería urgente"
+                title: "Presupuesto cerrado",
+                description: "Antes de tocar nada, te decimos exactamente cuanto va a costar. El precio que aceptas es el precio final. Sin sorpresas, sin conceptos extra, sin letras pequenas.",
+                icon: Shield,
               },
               {
-                name: "Carlos Martínez",
-                location: "Barcelona",
-                rating: 5,
-                text: "Me quedé fuera de casa con mi hija de 2 años dentro. Llamé desesperado y el cerrajero llegó en 15 minutos. Abrió la puerta sin dañar nada. Un servicio impecable en un momento muy angustioso.",
-                service: "Cerrajería 24h"
+                title: "Garantia de 12 meses",
+                description: "Todos nuestros trabajos incluyen garantia por escrito de 12 meses en mano de obra y materiales. Si algo falla, volvemos sin coste adicional.",
+                icon: Award,
               },
               {
-                name: "Ana López",
-                location: "Valencia",
-                rating: 5,
-                text: "La caldera dejó de funcionar en plena ola de frío. Vinieron el mismo día, diagnosticaron el problema y lo solucionaron en el momento. Llevaban la pieza de repuesto en la furgoneta. Excelentes.",
-                service: "Reparación de calderas"
-              }
-            ].map((testimonial, i) => (
+                title: "Satisfaccion o devolucion",
+                description: "Si no quedas satisfecho con el servicio recibido, te devolvemos el dinero. Tu tranquilidad es nuestra maxima prioridad.",
+                icon: CheckCircle,
+              },
+            ].map((item, i) => (
               <div key={i} className="p-6 rounded-2xl border border-border bg-background">
-                <div className="flex items-center gap-1 mb-4">
-                  {Array.from({ length: testimonial.rating }).map((_, j) => (
-                    <Star key={j} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  ))}
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <item.icon className="w-6 h-6 text-primary" />
                 </div>
-                <p className="text-muted-foreground mb-4 italic">"{testimonial.text}"</p>
-                <div className="border-t border-border pt-4">
-                  <div className="font-semibold text-foreground">{testimonial.name}</div>
-                  <div className="text-sm text-muted-foreground">{testimonial.location} - {testimonial.service}</div>
-                </div>
+                <h4 className="font-bold text-foreground text-lg mb-3">{item.title}</h4>
+                <p className="text-muted-foreground leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>

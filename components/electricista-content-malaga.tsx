@@ -1,21 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Phone, Zap, Shield, CheckCircle2, MapPin, Star, BadgeCheck, Timer, Award, ThumbsUp, Clock } from "lucide-react"
+import { Phone, Zap, Shield, CheckCircle2, MapPin, Timer, Award, ThumbsUp, Clock } from "lucide-react"
 import Image from "next/image"
 
 export function ElectricistaContentMalaga() {
   const phoneNumber = "936946639"
   const phoneFormatted = "936 946 639"
-  const [activeUsers, setActiveUsers] = useState(12)
 
-  useEffect(() => {
-    const userInterval = setInterval(() => {
-      setActiveUsers((prev) => Math.max(8, Math.min(18, prev + Math.floor(Math.random() * 3) - 1)))
-    }, 8000)
-
-    return () => clearInterval(userInterval)
-  }, [])
 
   const handleCall = () => {
     if (typeof window !== "undefined" && (window as any).gtag) {
@@ -40,27 +31,21 @@ export function ElectricistaContentMalaga() {
     { icon: Timer, title: "30 min", subtitle: "Tiempo max. llegada", color: "text-[#FF6B35]" },
     { icon: Shield, title: "Garantía", subtitle: "En cada trabajo", color: "text-[#FF6B35]" },
     { icon: Award, title: "Certificados", subtitle: "Electricistas oficiales", color: "text-[#FF6B35]" },
-    { icon: ThumbsUp, title: "4.9★", subtitle: "+2,800 opiniones", color: "text-[#FF6B35]" },
+    { icon: ThumbsUp, title: "Gratis", subtitle: "Presupuesto", color: "text-[#FF6B35]" },
   ]
 
-  const reviews = [
+  const trustItems = [
     {
-      name: "Antonio M.",
-      city: "Málaga",
-      text: "Llegaron en 7 minutos a Málaga centro. El electricista solucionó el cortocircuito rápidamente. Excelente servicio.",
-      time: "Hace 2 horas",
+      title: "Llegada en 30 min",
+      description: "Nos comprometemos a estar en tu domicilio de Malaga en un maximo de 30 minutos.",
     },
     {
-      name: "Elena F.",
-      city: "Marbella",
-      text: "Se me fue la luz en plena noche. Vinieron enseguida desde Málaga y lo arreglaron. Muy profesionales.",
-      time: "Hace 5 horas",
+      title: "Presupuesto cerrado",
+      description: "Te damos un presupuesto cerrado antes de empezar. Sin sorpresas ni costes ocultos.",
     },
     {
-      name: "Miguel S.",
-      city: "Torremolinos",
-      text: "Problema con el cuadro eléctrico. El técnico llegó rapidísimo y detectó el fallo en minutos.",
-      time: "Ayer",
+      title: "Garantia por escrito",
+      description: "12 meses de garantia en mano de obra y materiales utilizados.",
     },
   ]
 
@@ -80,7 +65,7 @@ export function ElectricistaContentMalaga() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
-                <span>{activeUsers} electricistas disponibles en Málaga ahora</span>
+                <span>Electricistas disponibles 24h en Malaga</span>
               </div>
 
               {/* Main Headline */}
@@ -238,41 +223,22 @@ export function ElectricistaContentMalaga() {
         </div>
       </section>
 
-      {/* Reviews */}
+      {/* Trust Commitments */}
       <section className="py-12 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-1 mb-2">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="w-6 h-6 text-[#FF6B35] fill-[#FF6B35]" />
-              ))}
-            </div>
-            <p className="text-foreground font-bold text-lg">Experiencias de nuestros clientes</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Nuestro compromiso en Malaga</h2>
+            <p className="text-muted-foreground">Garantias reales en cada servicio de electricista</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {reviews.map((review, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-background border border-border">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-11 h-11 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-bold text-lg shrink-0">
-                    {review.name[0]}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-foreground">{review.name}</span>
-                      <BadgeCheck className="w-4 h-4 text-blue-500" />
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {review.city} - {review.time}
-                    </div>
-                  </div>
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="w-3.5 h-3.5 text-[#FF6B35] fill-[#FF6B35]" />
-                    ))}
-                  </div>
+            {trustItems.map((item, i) => (
+              <div key={i} className="p-6 rounded-2xl bg-background border border-border text-center">
+                <div className="w-12 h-12 rounded-full bg-[#FF6B35]/10 flex items-center justify-center mx-auto mb-4">
+                  <Shield className="w-6 h-6 text-[#FF6B35]" />
                 </div>
-                <p className="text-sm text-muted-foreground">"{review.text}"</p>
+                <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.description}</p>
               </div>
             ))}
           </div>
