@@ -20,6 +20,7 @@ import {
 } from "@/lib/postal-data"
 import { PROBLEMS } from "@/lib/seo-data"
 import { getLocalEnrichment, shouldIndexCP } from "@/lib/local-enrichment"
+import { getEnrichedContent } from "@/lib/content-db"
 import { LocalContent } from "@/components/local-content"
 
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
@@ -118,7 +119,9 @@ export default async function PostalCodePage({ params }: PageProps) {
   const postalData = getPostalCodeData(postalcode)
   const zoneName = getZoneName(postalcode)
   const cityName = getCityFromPostalCode(postalcode)
-  const enrichment = getLocalEnrichment(postalcode)
+  
+  // Try DB first (AI-generated, profession-specific), then static enrichment
+  const enrichment = await getEnrichedContent(postalcode, profession)
 
   // Use enriched description if available, otherwise generic
   const description = enrichment
