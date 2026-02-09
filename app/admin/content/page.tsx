@@ -1,4 +1,6 @@
+import { redirect } from "next/navigation"
 import { getSQL } from "@/lib/db"
+import { isAuthenticated, logoutAction } from "../auth-actions"
 import { TriggerButtons } from "./trigger-buttons"
 
 interface Stats {
@@ -66,6 +68,9 @@ async function getStats(): Promise<Stats> {
 }
 
 export default async function AdminContentPage() {
+  const authed = await isAuthenticated()
+  if (!authed) redirect("/admin/login")
+
   let stats: Stats
   try {
     stats = await getStats()
@@ -90,11 +95,21 @@ export default async function AdminContentPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Content Generation Dashboard</h1>
-          <p className="text-muted-foreground mt-1">
-            Sistema automatizado de generacion de contenido con IA + Google Indexing API
-          </p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Content Generation Dashboard</h1>
+            <p className="text-muted-foreground mt-1">
+              Sistema automatizado de generacion de contenido con IA + Google Indexing API
+            </p>
+          </div>
+          <form action={logoutAction}>
+            <button
+              type="submit"
+              className="rounded-md border border-border bg-background px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              Cerrar sesion
+            </button>
+          </form>
         </div>
 
         {/* Manual triggers */}
