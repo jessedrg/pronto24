@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { after } from "next/server"
 import { generateText, Output } from "ai"
 import { z } from "zod"
 import { getSQL } from "@/lib/db"
@@ -6,7 +7,12 @@ import { POSTAL_CODE_NAMES } from "@/lib/postal-code-names"
 import { PROFESSIONS_POSTAL } from "@/lib/postal-data"
 import { getPostalCodeData, getCityFromPostalCode } from "@/lib/postal-data"
 
-const BATCH_SIZE = 80 // CPs per run (x5 professions = ~400 pages per run)
+// Allow up to 300s for background AI generation work
+export const maxDuration = 300
+
+// Reduced batch: 5 CPs x 5 professions = 25 AI calls per run
+// Runs 3x/day = 75 pages/day, ~2,250/month - steady and sustainable
+const BATCH_SIZE = 5
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pronto-24.com"
 
 // Priority order: capitals first, then by population
@@ -95,16 +101,68 @@ export async function POST(request: Request) {
   if (!isAuthorized(request)) {
     return new Response("Unauthorized", { status: 401 })
   }
-  return runGeneration()
+  return fireAndForget()
 }
 
 export async function GET(request: Request) {
   if (!isAuthorized(request)) {
     return new Response("Unauthorized", { status: 401 })
   }
-  return runGeneration()
+  return fireAndForget()
 }
 
+/**
+ * Fire-and-forget: returns 200 immediately, then runs generation in background
+ * using Next.js `after()` which continues execution after the response is sent.
+ */
+async function fireAndForget() {
+  const sql = getSQL()
+
+  // Quick check: how many are pending
+  let toProcessCount = 0
+  let totalExisting = 0
+  try {
+    const existing = await sql`
+      SELECT COUNT(DISTINCT postal_code) as count FROM cp_generated_content WHERE status = 'active'
+    `
+    totalExisting = Number(existing[0]?.count || 0)
+
+    const allPrioritized = getPrioritizedCPs()
+    const existingCPs = await sql`
+      SELECT DISTINCT postal_code FROM cp_generated_content WHERE status = 'active'
+    `
+    const existingSet = new Set(existingCPs.map((r) => r.postal_code))
+    toProcessCount = allPrioritized.filter((cp) => !existingSet.has(cp)).length
+  } catch {
+    // DB might not be ready yet, still proceed
+  }
+
+  if (toProcessCount === 0) {
+    return NextResponse.json({
+      status: "done",
+      message: "All CPs already have generated content",
+      totalGenerated: totalExisting,
+    })
+  }
+
+  // Schedule background work AFTER response is sent
+  after(async () => {
+    await runGeneration()
+  })
+
+  // Return immediately
+  return NextResponse.json({
+    status: "accepted",
+    message: `Generation started in background. ${toProcessCount} CPs remaining. Processing next ${BATCH_SIZE}.`,
+    totalExisting,
+    remaining: toProcessCount,
+    batchSize: BATCH_SIZE,
+  })
+}
+
+/**
+ * The actual generation logic - runs in background via after()
+ */
 async function runGeneration() {
   const startTime = Date.now()
   const sql = getSQL()
@@ -121,14 +179,27 @@ async function runGeneration() {
     const toProcess = allPrioritized.filter((cp) => !existingSet.has(cp)).slice(0, BATCH_SIZE)
 
     if (toProcess.length === 0) {
-      return NextResponse.json({
-        message: "All CPs already have generated content",
-        totalGenerated: existingSet.size,
-      })
+      return
     }
 
     let pagesGenerated = 0
     let errors = 0
+
+    // Randomize style variants ONCE per batch to avoid API overhead
+    const toneVariants = [
+      "Escribe como un tecnico veterano de la zona que lleva 20 anos trabajando ahi. Usa un tono directo, sin florituras.",
+      "Escribe como si redactaras una ficha tecnica interna para un equipo de profesionales que van a trabajar en esta zona por primera vez.",
+      "Escribe como un vecino de la zona que ademas es profesional del gremio. Conoces cada calle y cada edificio.",
+      "Escribe como un perito tasador que describe las particularidades tecnicas de las viviendas de la zona para un informe.",
+      "Escribe como un inspector municipal que conoce los problemas recurrentes de esta zona por las quejas vecinales.",
+    ]
+    const styleVariants = [
+      "Alterna entre frases cortas y frases mas desarrolladas. No empieces todas las frases igual.",
+      "Usa alguna expresion coloquial tecnica entre frases formales. Varia la longitud de las frases.",
+      "Se directo y concreto. Evita subordinadas largas. Mezcla datos con observaciones practicas.",
+      "Combina datos tecnicos con anecdotas tipicas de la zona. No uses listas mentales, varia la estructura.",
+      "Empieza por lo mas llamativo de la zona. Luego baja al detalle tecnico. Cierra con algo practico.",
+    ]
 
     for (const cp of toProcess) {
       const postalData = getPostalCodeData(cp)
@@ -137,21 +208,6 @@ async function runGeneration() {
 
       for (const prof of PROFESSIONS_POSTAL) {
         try {
-          // Randomize style to avoid repetitive AI patterns
-          const toneVariants = [
-            "Escribe como un tecnico veterano de la zona que lleva 20 anos trabajando ahi. Usa un tono directo, sin florituras.",
-            "Escribe como si redactaras una ficha tecnica interna para un equipo de profesionales que van a trabajar en esta zona por primera vez.",
-            "Escribe como un vecino de la zona que ademas es profesional del gremio. Conoces cada calle y cada edificio.",
-            "Escribe como un perito tasador que describe las particularidades tecnicas de las viviendas de la zona para un informe.",
-            "Escribe como un inspector municipal que conoce los problemas recurrentes de esta zona por las quejas vecinales.",
-          ]
-          const styleVariants = [
-            "Alterna entre frases cortas y frases mas desarrolladas. No empieces todas las frases igual.",
-            "Usa alguna expresion coloquial tecnica entre frases formales. Varia la longitud de las frases.",
-            "Se directo y concreto. Evita subordinadas largas. Mezcla datos con observaciones practicas.",
-            "Combina datos tecnicos con anecdotas tipicas de la zona. No uses listas mentales, varia la estructura.",
-            "Empieza por lo mas llamativo de la zona. Luego baja al detalle tecnico. Cierra con algo practico.",
-          ]
           const selectedTone = toneVariants[Math.floor(Math.random() * toneVariants.length)]
           const selectedStyle = styleVariants[Math.floor(Math.random() * styleVariants.length)]
 
@@ -219,7 +275,7 @@ IMPORTANTE: Cada campo debe sonar como si lo hubiera escrito una persona diferen
             pagesGenerated++
           }
         } catch (e) {
-          console.error(`[v0] Error generating content for ${cp}/${prof.id}:`, e)
+          console.error(`Error generating content for ${cp}/${prof.id}:`, e)
           errors++
         }
       }
@@ -237,23 +293,23 @@ IMPORTANTE: Cada campo debe sonar como si lo hubiera escrito una persona diferen
         ${errors},
         ${durationMs},
         'completed',
-        ${JSON.stringify({ cps: toProcess.slice(0, 10), totalExisting: existingSet.size })}
+        ${JSON.stringify({ cps: toProcess, totalExisting: existingSet.size })}
       )
     `
 
-    return NextResponse.json({
-      message: `Generated ${pagesGenerated} pages for ${toProcess.length} CPs`,
-      pagesGenerated,
-      cpsProcessed: toProcess.length,
-      errors,
-      durationMs,
-      totalExisting: existingSet.size + toProcess.length,
-    })
+    console.log(`Content generation complete: ${pagesGenerated} pages, ${errors} errors, ${durationMs}ms`)
   } catch (e) {
-    console.error("[v0] Content generation cron error:", e)
-    return NextResponse.json(
-      { error: e instanceof Error ? e.message : "Unknown error" },
-      { status: 500 }
-    )
+    console.error("Content generation cron error:", e)
+    
+    // Try to log the error
+    try {
+      const sql = getSQL()
+      await sql`
+        INSERT INTO content_generation_log (batch_size, cps_generated, pages_generated, errors, duration_ms, status, details)
+        VALUES (${BATCH_SIZE}, 0, 0, 1, ${Date.now() - startTime}, 'failed', ${JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" })})
+      `
+    } catch {
+      // Logging failed too, nothing we can do
+    }
   }
 }

@@ -1,6 +1,9 @@
-import { NextResponse } from "next/server"
+import { NextResponse, after } from "next/server"
 import { SignJWT, importPKCS8 } from "jose"
 import { getSQL } from "@/lib/db"
+
+// Allow up to 300s for background indexing work
+export const maxDuration = 300
 
 const BATCH_SIZE = 200 // Google allows 200 requests/day for Indexing API
 const GOOGLE_INDEXING_ENDPOINT = "https://indexing.googleapis.com/v3/urlNotifications:publish"
@@ -65,28 +68,55 @@ export async function POST(request: Request) {
   if (!isAuthorized(request)) {
     return new Response("Unauthorized", { status: 401 })
   }
-  return runIndexing()
+  return fireAndForget()
 }
 
 export async function GET(request: Request) {
   if (!isAuthorized(request)) {
     return new Response("Unauthorized", { status: 401 })
   }
-  return runIndexing()
+  return fireAndForget()
+}
+
+async function fireAndForget() {
+  // Check if Google credentials are configured
+  if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+    return NextResponse.json({
+      status: "skipped",
+      message: "Google Indexing API credentials not configured yet. URLs remain in queue.",
+    })
+  }
+
+  const sql = getSQL()
+  let pendingCount = 0
+  try {
+    const result = await sql`
+      SELECT COUNT(*) as count FROM indexing_queue
+      WHERE status = 'pending' AND (retry_count IS NULL OR retry_count < 3)
+    `
+    pendingCount = Number(result[0]?.count || 0)
+  } catch {
+    // DB might not be ready
+  }
+
+  if (pendingCount === 0) {
+    return NextResponse.json({ status: "done", message: "No pending URLs to submit", pending: 0 })
+  }
+
+  // Schedule background work AFTER response is sent
+  after(async () => {
+    await runIndexing()
+  })
+
+  return NextResponse.json({
+    status: "accepted",
+    message: `Indexing started in background. ${pendingCount} URLs pending, processing up to ${BATCH_SIZE}.`,
+    pending: pendingCount,
+  })
 }
 
 async function runIndexing() {
   const sql = getSQL()
-
-  // Check if Google credentials are configured
-  if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
-    // Still mark URLs as pending -- they'll be submitted when creds are added
-    return NextResponse.json({
-      message: "Google Indexing API credentials not configured yet. URLs remain in queue.",
-      submitted: 0,
-      pending: 0,
-    })
-  }
 
   try {
     // Get pending URLs from the queue
@@ -98,19 +128,14 @@ async function runIndexing() {
       LIMIT ${BATCH_SIZE}
     `
 
-    if (pending.length === 0) {
-      return NextResponse.json({ message: "No pending URLs to submit", submitted: 0 })
-    }
+    if (pending.length === 0) return
 
     let accessToken: string
     try {
       accessToken = await getGoogleAccessToken()
     } catch (e) {
-      console.error("[v0] Failed to get Google access token:", e)
-      return NextResponse.json(
-        { error: "Failed to authenticate with Google. Check GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_SERVICE_ACCOUNT_KEY." },
-        { status: 500 }
-      )
+      console.error("Failed to get Google access token:", e)
+      return
     }
 
     let submitted = 0
@@ -150,12 +175,12 @@ async function runIndexing() {
 
           // If rate limited, stop early
           if (res.status === 429) {
-            console.log("[v0] Google Indexing API rate limited, stopping batch")
+            console.log("Google Indexing API rate limited, stopping batch")
             break
           }
         }
       } catch (e) {
-        console.error(`[v0] Error submitting ${row.url}:`, e)
+        console.error(`Error submitting ${row.url}:`, e)
         const retryCount = (row.retry_count || 0) + 1
         await sql`
           UPDATE indexing_queue
@@ -166,17 +191,8 @@ async function runIndexing() {
       }
     }
 
-    return NextResponse.json({
-      message: `Submitted ${submitted} URLs to Google Indexing API`,
-      submitted,
-      failed,
-      totalPending: pending.length - submitted - failed,
-    })
+    console.log(`Indexing complete: ${submitted} submitted, ${failed} failed`)
   } catch (e) {
-    console.error("[v0] Submit indexing cron error:", e)
-    return NextResponse.json(
-      { error: e instanceof Error ? e.message : "Unknown error" },
-      { status: 500 }
-    )
+    console.error("Submit indexing cron error:", e)
   }
 }
