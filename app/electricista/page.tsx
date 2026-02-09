@@ -1,21 +1,20 @@
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { StaticServiceContent } from "@/components/static-service-content"
 
 export const metadata: Metadata = {
-  title: "Electricista Urgente 24h | pronto-24.com | Llegamos en 10 Minutos",
+  title: "Electricista Urgente 24h | pronto-24.com | Llegamos en 30 Minutos",
   description:
-    "Electricista urgente 24 horas en toda España. Llegamos en 10 minutos. Averías eléctricas, cuadros eléctricos, enchufes, cortocircuitos. Servicio 24/7. Presupuesto GRATIS. Llama: 936 946 639",
+    "Electricista urgente 24 horas en toda España. Llegamos en 30 minutos. Averías eléctricas, cuadros eléctricos, enchufes, cortocircuitos. Servicio 24/7. Presupuesto GRATIS. Llama: 936 946 639",
   keywords:
     "electricista urgente, electricista 24 horas, avería eléctrica, electricista Madrid, electricista Barcelona, sin luz, electricista cerca de mi",
   alternates: {
     canonical: "https://www.pronto-24.com/electricista/",
   },
   openGraph: {
-    title: "Electricista Urgente 24h | Llegamos en 10 min | pronto-24.com",
-    description: "Electricistas profesionales 24/7 en toda España. Llegamos en 10 minutos. Presupuesto gratis. Llama: 936 946 639",
+    title: "Electricista Urgente 24h | Llegamos en 30 min | pronto-24.com",
+    description: "Electricistas profesionales 24/7 en toda España. Llegamos en 30 minutos. Presupuesto gratis. Llama: 936 946 639",
     type: "website",
   },
 }
@@ -24,7 +23,7 @@ const electricistaSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Electricista Urgente 24h",
-  "description": "Servicio de electricista urgente 24 horas en toda España. Averías eléctricas, cuadros eléctricos, cortocircuitos. Llegamos en 10 minutos.",
+  "description": "Servicio de electricista urgente 24 horas en toda España. Averías eléctricas, cuadros eléctricos, cortocircuitos. Llegamos en 30 minutos.",
   "provider": {
     "@type": "LocalBusiness",
     "name": "pronto-24.com",
@@ -47,8 +46,8 @@ const faqSchema = {
   "@type": "FAQPage",
   "mainEntity": [
     { "@type": "Question", "name": "¿Cuánto cuesta un electricista urgente?", "acceptedAnswer": { "@type": "Answer", "text": "El precio depende del tipo de avería. Los servicios básicos empiezan desde 39€. Ofrecemos presupuesto GRATIS antes de empezar." } },
-    { "@type": "Question", "name": "¿Cuánto tarda en llegar el electricista?", "acceptedAnswer": { "@type": "Answer", "text": "Nuestros electricistas llegan en un máximo de 10 minutos en zonas urbanas de toda España." } },
-    { "@type": "Question", "name": "¿Qué hago si se va la luz en mi casa?", "acceptedAnswer": { "@type": "Answer", "text": "No toques el cuadro eléctrico y llámanos inmediatamente. Llegamos en 10 minutos para diagnosticar y solucionar el problema de forma segura." } },
+    { "@type": "Question", "name": "¿Cuánto tarda en llegar el electricista?", "acceptedAnswer": { "@type": "Answer", "text": "Nuestros electricistas llegan en un maximo de 30 minutos en zonas urbanas de toda España." } },
+    { "@type": "Question", "name": "¿Qué hago si se va la luz en mi casa?", "acceptedAnswer": { "@type": "Answer", "text": "No toques el cuadro eléctrico y llámanos inmediatamente. Llegamos en 30 minutos para diagnosticar y solucionar el problema de forma segura." } },
     { "@type": "Question", "name": "¿Trabajan de noche y festivos?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, estamos disponibles 24 horas al día, 7 días a la semana, incluidos festivos y noches en toda España." } }
   ]
 }
@@ -58,7 +57,7 @@ const electricistaData = {
   serviceName: "Electricista",
   serviceNamePlural: "Electricistas",
   headline: "¿Sin luz en casa?",
-  subheadline: "Llegamos en 10 minutos",
+  subheadline: "Llegamos en 30 minutos",
   description: "Electricistas profesionales certificados disponibles 24/7 en toda España. Solucionamos cualquier avería eléctrica: cortes de luz, diferenciales, cortocircuitos, cuadros eléctricos.",
   iconName: "zap" as const,
   problems: [
@@ -76,13 +75,13 @@ const electricistaData = {
   ],
   faqs: [
     { question: "¿Cuánto cuesta un electricista urgente?", answer: "El precio depende del tipo de avería. Los servicios básicos (reparación diferencial, enchufes) empiezan desde 39€. Trabajos más complejos (cuadro eléctrico, instalaciones) desde 80€. Ofrecemos presupuesto GRATIS y sin compromiso." },
-    { question: "¿Qué hago si se va la luz en mi casa?", answer: "Primero verifica si es un problema general del edificio o solo de tu vivienda. Si solo afecta a tu casa, no toques el cuadro eléctrico y llámanos inmediatamente. Llegamos en menos de 10 minutos para diagnosticar y solucionar el problema de forma segura." },
+    { question: "¿Qué hago si se va la luz en mi casa?", answer: "Primero verifica si es un problema general del edificio o solo de tu vivienda. Si solo afecta a tu casa, no toques el cuadro eléctrico y llámanos inmediatamente. Llegamos en un maximo de 30 minutos para diagnosticar y solucionar el problema de forma segura." },
     { question: "¿Son electricistas certificados?", answer: "Sí, todos nuestros electricistas están certificados y cuentan con el carnet profesional requerido. Tienen formación continua y están al día con todas las normativas de seguridad eléctrica vigentes." },
     { question: "¿Por qué salta el diferencial?", answer: "Las causas más comunes son: electrodomésticos defectuosos, humedad en enchufes, cables pelados, sobrecarga del circuito, o el propio diferencial estropeado. Nuestros electricistas diagnostican la causa exacta." },
     { question: "¿Trabajan los fines de semana y festivos?", answer: "Sí, estamos disponibles 24 horas al día, 7 días a la semana, incluidos festivos y noches en toda España. Las emergencias eléctricas no esperan y nosotros tampoco." },
   ],
   whyChooseUs: [
-    "Llegamos en 10 minutos de media a cualquier punto de España",
+    "Llegamos en 30 minutos de media a cualquier punto de España",
     "Electricistas certificados con carnet profesional",
     "Más de 400 servicios realizados este mes en toda España",
     "98% de clientes satisfechos nos recomiendan",
@@ -116,7 +115,6 @@ export default function ElectricistaPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(electricistaSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <UrgencyBanner />
-      <Header />
       <StaticServiceContent {...electricistaData} />
       <Footer />
     </main>

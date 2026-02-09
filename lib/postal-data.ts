@@ -258,27 +258,27 @@ export function getZoneDescription(cp: string, profession: string): string {
   const descriptions: Record<string, string[]> = {
     fontanero: [
       `Servicio de fontanería urgente en ${zona} (${cp}). Atendemos fugas, atascos y averías en toda la zona.`,
-      `Fontaneros profesionales disponibles 24h en ${zona}, ${city}. Llegamos en 10 minutos a tu domicilio.`,
+      `Fontaneros profesionales disponibles 24h en ${zona}, ${city}. Llegamos en 30 minutos maximo a tu domicilio.`,
       `¿Problemas de fontanería en ${zona}? Nuestros técnicos están cerca de ti. Código postal ${cp}.`,
     ],
     electricista: [
       `Electricistas urgentes en ${zona} (${cp}). Reparamos averías eléctricas, cuadros y cortocircuitos.`,
-      `Servicio eléctrico 24 horas en ${zona}, ${city}. Técnicos certificados a 10 minutos de ti.`,
+      `Servicio electrico 24 horas en ${zona}, ${city}. Tecnicos certificados a 30 minutos de ti.`,
       `¿Sin luz en ${zona}? Electricistas profesionales disponibles ahora. CP ${cp}.`,
     ],
     cerrajero: [
       `Cerrajeros urgentes en ${zona} (${cp}). Aperturas, cambios de cerradura y urgencias 24h.`,
-      `¿Te has quedado fuera en ${zona}? Cerrajeros a 10 minutos. Código postal ${cp}.`,
+      `Te has quedado fuera en ${zona}? Cerrajeros a 30 minutos maximo. Codigo postal ${cp}.`,
       `Servicio de cerrajería 24 horas en ${zona}, ${city}. Sin daños en tu puerta.`,
     ],
     desatascos: [
       `Desatascos urgentes en ${zona} (${cp}). Limpieza de tuberías y alcantarillado 24h.`,
-      `¿Atasco en ${zona}? Servicio de desatascos profesional. Llegamos en 10 minutos.`,
+      `Atasco en ${zona}? Servicio de desatascos profesional. Llegamos en 30 minutos maximo.`,
       `Desatascos 24 horas en ${zona}, ${city}. Equipos de alta presión. CP ${cp}.`,
     ],
     calderas: [
       `Reparación de calderas en ${zona} (${cp}). Técnicos certificados disponibles 24h.`,
-      `¿Caldera averiada en ${zona}? Servicio urgente de reparación. Llegamos en 10 minutos.`,
+      `Caldera averiada en ${zona}? Servicio urgente de reparacion. Llegamos en 30 minutos maximo.`,
       `Mantenimiento y reparación de calderas en ${zona}, ${city}. CP ${cp}.`,
     ],
   }

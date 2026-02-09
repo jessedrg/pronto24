@@ -1,21 +1,20 @@
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { StaticServiceContent } from "@/components/static-service-content"
 
 export const metadata: Metadata = {
-  title: "Cerrajero Urgente 24h | pronto-24.com | Llegamos en 10 Minutos",
+  title: "Cerrajero Urgente 24h | pronto-24.com | Llegamos en 30 Minutos",
   description:
-    "Cerrajero urgente 24 horas en toda España. Llegamos en 10 minutos. Apertura de puertas sin roturas, cambio de cerraduras, bombines. Servicio 24/7. Presupuesto GRATIS. Llama: 936 946 639",
+    "Cerrajero urgente 24 horas en toda España. Llegamos en 30 minutos. Apertura de puertas sin roturas, cambio de cerraduras, bombines. Servicio 24/7. Presupuesto GRATIS. Llama: 936 946 639",
   keywords:
     "cerrajero urgente, cerrajero 24 horas, apertura de puertas, cerrajero Madrid, cerrajero Barcelona, puerta bloqueada, cerrajero cerca de mi",
   alternates: {
     canonical: "https://www.pronto-24.com/cerrajero/",
   },
   openGraph: {
-    title: "Cerrajero Urgente 24h | Llegamos en 10 min | pronto-24.com",
-    description: "Cerrajeros profesionales 24/7. Apertura sin roturas. Llegamos en 10 minutos. Llama: 936 946 639",
+    title: "Cerrajero Urgente 24h | Llegamos en 30 min | pronto-24.com",
+    description: "Cerrajeros profesionales 24/7. Apertura sin roturas. Llegamos en 30 minutos. Llama: 936 946 639",
     type: "website",
   },
 }
@@ -24,7 +23,7 @@ const cerrajeroSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Cerrajero Urgente 24h",
-  "description": "Servicio de cerrajería urgente 24 horas en toda España. Apertura de puertas sin roturas, cambio de cerraduras y bombines. Llegamos en 10 minutos.",
+  "description": "Servicio de cerrajería urgente 24 horas en toda España. Apertura de puertas sin roturas, cambio de cerraduras y bombines. Llegamos en 30 minutos.",
   "provider": {
     "@type": "LocalBusiness",
     "name": "pronto-24.com",
@@ -48,7 +47,7 @@ const faqSchema = {
   "mainEntity": [
     { "@type": "Question", "name": "¿Cuánto cuesta un cerrajero urgente?", "acceptedAnswer": { "@type": "Answer", "text": "El precio de un cerrajero urgente depende del tipo de servicio. Las aperturas simples empiezan desde 39€. Ofrecemos presupuesto GRATIS antes de empezar." } },
     { "@type": "Question", "name": "¿Pueden abrir mi puerta sin romperla?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, en la gran mayoría de casos abrimos sin roturas usando técnicas profesionales. Solo en casos excepcionales puede ser necesario forzar." } },
-    { "@type": "Question", "name": "¿Cuánto tarda en llegar el cerrajero?", "acceptedAnswer": { "@type": "Answer", "text": "Nuestros cerrajeros llegan en un máximo de 10 minutos en zonas urbanas. Tenemos profesionales distribuidos por toda España." } },
+    { "@type": "Question", "name": "¿Cuánto tarda en llegar el cerrajero?", "acceptedAnswer": { "@type": "Answer", "text": "Nuestros cerrajeros llegan en un maximo de 30 minutos en zonas urbanas. Tenemos profesionales distribuidos por toda España." } },
     { "@type": "Question", "name": "¿Trabajan de noche y festivos?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, estamos disponibles 24 horas al día, 7 días a la semana, incluidos festivos y noches." } }
   ]
 }
@@ -58,7 +57,7 @@ const cerrajeroData = {
   serviceName: "Cerrajero",
   serviceNamePlural: "Cerrajeros",
   headline: "¿Te has quedado fuera de casa?",
-  subheadline: "Abrimos en 10 minutos",
+  subheadline: "Abrimos en 30 minutos",
   description: "Cerrajeros profesionales certificados disponibles 24/7 en toda España. Apertura de puertas sin roturas, cambio de cerraduras y bombines de seguridad.",
   iconName: "key" as const,
   problems: [
@@ -77,12 +76,12 @@ const cerrajeroData = {
   faqs: [
     { question: "¿Cuánto cuesta un cerrajero urgente?", answer: "El precio depende del tipo de servicio. Las aperturas simples empiezan desde 39€. Cambios de bombín desde 60€. Ofrecemos presupuesto GRATIS y sin compromiso antes de empezar cualquier trabajo." },
     { question: "¿Pueden abrir mi puerta sin romperla?", answer: "Sí, en la gran mayoría de casos abrimos sin roturas usando técnicas profesionales: ganzúas, bumping controlado, impresioning. Solo en casos excepcionales (cerraduras de muy alta seguridad dañadas) puede ser necesario forzar." },
-    { question: "¿Cuánto tarda en llegar el cerrajero?", answer: "Nuestros cerrajeros llegan en un máximo de 10 minutos en zonas urbanas. Tenemos profesionales distribuidos por toda España para garantizar respuesta rápida." },
+    { question: "¿Cuánto tarda en llegar el cerrajero?", answer: "Nuestros cerrajeros llegan en un maximo de 30 minutos en zonas urbanas. Tenemos profesionales distribuidos por toda España para garantizar respuesta rápida." },
     { question: "¿Debo cambiar la cerradura si pierdo las llaves?", answer: "Depende. Si las perdiste lejos de casa sin identificación, el riesgo es bajo. Pero si las perdiste cerca de casa o con documentos que incluyan tu dirección, recomendamos cambiar al menos el bombín por seguridad." },
     { question: "¿Qué cerradura recomiendan para más seguridad?", answer: "Recomendamos cerraduras con cilindro antibumping y antipalanca de marcas como Keso, Mul-T-Lock o Fichet. El escudo de seguridad es igual de importante. Te asesoramos según tu presupuesto." },
   ],
   whyChooseUs: [
-    "Llegamos en 10 minutos de media a cualquier punto de España",
+    "Llegamos en 30 minutos de media a cualquier punto de España",
     "Apertura sin roturas en el 95% de los casos",
     "Más de 400 servicios realizados este mes en toda España",
     "98% de clientes satisfechos nos recomiendan",
@@ -116,7 +115,6 @@ export default function CerrajeroPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(cerrajeroSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <UrgencyBanner />
-      <Header />
       <StaticServiceContent {...cerrajeroData} />
       <Footer />
     </main>

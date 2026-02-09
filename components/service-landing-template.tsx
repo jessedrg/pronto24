@@ -117,7 +117,7 @@ export function ServiceLandingTemplate({
 
   const getSubtitle = () => {
     if (currentProblem) {
-      return `Solucionamos ${currentProblem.description.toLowerCase()} en ${cityName}. Llegamos en 10 minutos.`
+      return `Solucionamos ${currentProblem.description.toLowerCase()} en ${cityName}. Llegamos en 30 minutos maximo.`
     }
     switch (modifier) {
       case "24-horas":
@@ -126,7 +126,7 @@ export function ServiceLandingTemplate({
       case "barato":
         return `${profession.namePlural} con los mejores precios en ${cityName}. Presupuesto sin compromiso. Calidad garantizada al mejor precio.`
       case "a-domicilio":
-        return `${profession.namePlural} que van a tu casa en ${cityName}. Servicio a domicilio profesional. Llegamos en 10 minutos.`
+        return `${profession.namePlural} que van a tu casa en ${cityName}. Servicio a domicilio profesional. Llegamos en 30 minutos maximo.`
       case "cerca-de-mi":
         return `El ${profession.name.toLowerCase()} mas cercano a tu ubicacion en ${cityName}. Profesionales en tu zona disponibles ahora.`
       case "de-guardia":
@@ -136,7 +136,7 @@ export function ServiceLandingTemplate({
       case "festivos":
         return `${profession.namePlural} trabajando festivos, domingos y dias especiales en ${cityName}. Todos los dias del ano.`
       case "rapido":
-        return `El servicio de ${profession.name.toLowerCase()} mas rapido de ${cityName}. Llegamos en 10 minutos garantizados.`
+        return `El servicio de ${profession.name.toLowerCase()} mas rapido de ${cityName}. Llegamos en 30 minutos maximo garantizados.`
       case "ahora":
         return `${profession.namePlural} disponibles ahora mismo en ${cityName}. No esperes mas, llamanos ya.`
       case "hoy":
@@ -147,9 +147,9 @@ export function ServiceLandingTemplate({
         return `Pide presupuesto gratis de ${profession.name.toLowerCase()} en ${cityName}. Sin compromiso y respuesta inmediata.`
       default:
         if (isUrgent) {
-          return `${profession.namePlural} de urgencias disponibles ahora en ${cityName}. Llegamos en 10 minutos. Llama ya.`
+          return `${profession.namePlural} de urgencias disponibles ahora en ${cityName}. Llegamos en 30 minutos maximo. Llama ya.`
         }
-        return `${profession.namePlural} profesionales disponibles 24/7 en ${cityName}. Llegamos en 10 minutos.`
+        return `${profession.namePlural} profesionales disponibles 24/7 en ${cityName}. Llegamos en 30 minutos maximo.`
     }
   }
 
@@ -240,7 +240,7 @@ export function ServiceLandingTemplate({
               <h1 id="hero-title" className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] text-balance">
                 <span className="text-foreground">{title}</span>
                 <span className="block text-foreground/80 mt-2">
-                  {modifier === "economico" || modifier === "barato" ? "Mejor Precio" : "Llegamos en 10 min"}
+                  {modifier === "economico" || modifier === "barato" ? "Mejor Precio" : "Llegamos en 30 min"}
                 </span>
               </h1>
 

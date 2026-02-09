@@ -11,7 +11,7 @@ const SERVICES_QUICK = [
 
 export function Hero() {
   return (
-    <section className="relative bg-background pt-20" aria-labelledby="hero-heading">
+    <section className="relative bg-background" aria-labelledby="hero-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 lg:py-32">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left column - Main content */}

@@ -97,7 +97,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (modifier) {
     const { modifierText, isUrgent } = getModifierMeta(modifier)
 
-    const urgencyText = isUrgent ? "Llegamos en 10 MIN. Disponible AHORA." : "Presupuesto SIN compromiso."
+    const urgencyText = isUrgent ? "Llegamos en 30 MIN maximo. Disponible AHORA." : "Presupuesto SIN compromiso."
 
     const priceText =
       modifier === "economico" || modifier === "barato"
@@ -105,13 +105,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         : "Precios justos y transparentes."
 
     return {
-      title: `${profession.name} ${modifierText} en ${cityName} | 10 Min | 936 946 639`,
+      title: `${profession.name} ${modifierText} en ${cityName} | 30 Min | 936 946 639`,
       description: `${profession.name} ${modifierText.toLowerCase()} en ${cityName}. ${urgencyText} ${priceText} Profesionales certificados 24/7. Llama GRATIS: 936 946 639`,
       alternates: {
         canonical: `https://www.pronto-24.com/${rawProfession}/${citySlug}/`,
       },
       openGraph: {
-        title: `${profession.name} ${modifierText} en ${cityName} - Llegamos en 10 min`,
+        title: `${profession.name} ${modifierText} en ${cityName} - Llegamos en 30 min`,
         description: `Servicio de ${profession.name.toLowerCase()} ${modifierText.toLowerCase()} en ${cityName}. Disponibles 24/7. Llama: 936 946 639`,
         type: "website",
       },
@@ -121,13 +121,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${profession.name} Urgente en ${cityName} | 24h Hoy | 936 946 639`,
-    description: `${profession.name} urgente en ${cityName}${provinceName ? `, ${provinceName}` : ""}. Llegamos en 10 MIN. Servicio 24h los 365 dias. Presupuesto GRATIS sin compromiso. Llama ahora: 936 946 639`,
+    description: `${profession.name} urgente en ${cityName}${provinceName ? `, ${provinceName}` : ""}. Llegamos en 30 minutos maximo. Servicio 24h los 365 dias. Presupuesto GRATIS sin compromiso. Llama ahora: 936 946 639`,
     alternates: {
       canonical: `https://www.pronto-24.com/${rawProfession}/${citySlug}/`,
     },
     openGraph: {
       title: `${profession.name} Urgente en ${cityName} - 24h Disponible Hoy`,
-      description: `Servicio de ${profession.name.toLowerCase()} urgente en ${cityName}. Profesionales certificados, llegamos en 10 minutos. Llama: 936 946 639`,
+      description: `Servicio de ${profession.name.toLowerCase()} urgente en ${cityName}. Profesionales certificados, llegamos en 30 minutos. Llama: 936 946 639`,
       type: "website",
     },
     other: geoAndDateMeta,
@@ -138,8 +138,7 @@ export default async function ProfessionCityPage({ params }: PageProps) {
   const { profession: rawProfession, city: citySlug } = await params
 
   if (RESERVED_PATHS.includes(rawProfession)) {
-    // Let the actual route handler process this
-    redirect(`/${rawProfession}/${citySlug}`)
+    notFound()
   }
 
   const { professionId, modifier } = parseProfessionAndModifier(rawProfession)

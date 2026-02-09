@@ -1,21 +1,20 @@
 import type { Metadata } from "next"
-import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { StaticServiceContent } from "@/components/static-service-content"
 
 export const metadata: Metadata = {
-  title: "Fontanero Urgente 24h | pronto-24.com | Llegamos en 10 Minutos",
+  title: "Fontanero Urgente 24h | pronto-24.com | Llegamos en 30 Minutos",
   description:
-    "Fontanero urgente 24 horas en toda España. Llegamos en 10 minutos. Fugas de agua, grifos, calderas, tuberías atascadas. Servicio 24/7. Presupuesto GRATIS. Llama: 936 946 639",
+    "Fontanero urgente 24 horas en toda España. Llegamos en 30 minutos. Fugas de agua, grifos, calderas, tuberías atascadas. Servicio 24/7. Presupuesto GRATIS. Llama: 936 946 639",
   keywords:
     "fontanero urgente, fontanero 24 horas, fuga de agua, reparación grifos, fontanero Madrid, fontanero Barcelona, fontanero cerca de mi",
   alternates: {
     canonical: "https://www.pronto-24.com/fontanero/",
   },
   openGraph: {
-    title: "Fontanero Urgente 24h | Llegamos en 10 min | pronto-24.com",
-    description: "Fontaneros profesionales 24/7. Llegamos en 10 minutos. Presupuesto gratis sin compromiso. Llama: 936 946 639",
+    title: "Fontanero Urgente 24h | Llegamos en 30 min | pronto-24.com",
+    description: "Fontaneros profesionales 24/7. Llegamos en 30 minutos. Presupuesto gratis sin compromiso. Llama: 936 946 639",
     type: "website",
   },
 }
@@ -24,7 +23,7 @@ const fontaneroSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Fontanero Urgente 24h",
-  "description": "Servicio de fontanería urgente 24 horas en toda España. Reparación de fugas, grifos, calderas, tuberías. Llegamos en 10 minutos.",
+  "description": "Servicio de fontanería urgente 24 horas en toda España. Reparación de fugas, grifos, calderas, tuberías. Llegamos en 30 minutos.",
   "provider": {
     "@type": "LocalBusiness",
     "name": "pronto-24.com",
@@ -67,7 +66,7 @@ const faqSchema = {
       "name": "¿Cuánto tarda en llegar el fontanero?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Nuestros fontaneros llegan en un máximo de 10 minutos en zonas urbanas. Tenemos profesionales distribuidos por toda España para garantizar una respuesta rápida."
+        "text": "Nuestros fontaneros llegan en un maximo de 30 minutos en zonas urbanas. Tenemos profesionales distribuidos por toda España para garantizar una respuesta rápida."
       }
     },
     {
@@ -75,7 +74,7 @@ const faqSchema = {
       "name": "¿Qué hago si tengo una fuga de agua urgente?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Cierra la llave de paso general inmediatamente para evitar daños mayores. Luego llámanos al 936 946 639 y llegaremos en menos de 10 minutos para localizar y reparar la fuga."
+        "text": "Cierra la llave de paso general inmediatamente para evitar daños mayores. Luego llámanos al 936 946 639 y llegaremos en un maximo de 30 minutos para localizar y reparar la fuga."
       }
     },
     {
@@ -102,7 +101,7 @@ const fontaneroData = {
   serviceName: "Fontanero",
   serviceNamePlural: "Fontaneros",
   headline: "¿Fuga de agua urgente?",
-  subheadline: "Llegamos en 10 minutos",
+  subheadline: "Llegamos en 30 minutos",
   description: "Fontaneros profesionales certificados disponibles 24/7 en toda España. Solucionamos cualquier problema de fontanería: fugas, grifos, calderas, tuberías atascadas.",
   iconName: "droplets" as const,
   problems: [
@@ -140,7 +139,7 @@ const fontaneroData = {
     },
     {
       question: "¿Qué hago si tengo una fuga de agua urgente?",
-      answer: "Cierra la llave de paso general inmediatamente para evitar daños mayores. Luego llámanos al 936 946 639 y llegaremos en menos de 10 minutos para localizar y reparar la fuga. Es importante actuar rápido para evitar inundaciones y daños en la vivienda.",
+      answer: "Cierra la llave de paso general inmediatamente para evitar daños mayores. Luego llámanos al 936 946 639 y llegaremos en un maximo de 30 minutos para localizar y reparar la fuga. Es importante actuar rápido para evitar inundaciones y daños en la vivienda.",
     },
     {
       question: "¿Reparan calderas de todas las marcas?",
@@ -156,7 +155,7 @@ const fontaneroData = {
     },
   ],
   whyChooseUs: [
-    "Llegamos en 10 minutos de media a cualquier punto de España",
+    "Llegamos en 30 minutos de media a cualquier punto de España",
     "Más de 15 años de experiencia nos avalan como profesionales de confianza",
     "Más de 500 servicios realizados este mes en toda España",
     "98% de clientes satisfechos nos recomiendan a familiares y amigos",
@@ -196,7 +195,6 @@ export default function FontaneroPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <UrgencyBanner />
-      <Header />
       <StaticServiceContent {...fontaneroData} />
       <Footer />
     </main>

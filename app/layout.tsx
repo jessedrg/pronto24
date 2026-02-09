@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "pronto-24.com - Servicios Urgentes 24/7 en Toda Espana",
-    description: "Profesionales verificados en menos de 10 minutos. Presupuesto gratis sin compromiso. Llama: 936 946 639",
+    description: "Profesionales verificados en un maximo de 30 minutos. Presupuesto gratis sin compromiso. Llama: 936 946 639",
     type: "website",
     locale: "es_ES",
     siteName: "pronto-24.com",
@@ -130,7 +130,9 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.className} antialiased`} suppressHydrationWarning>
         <Header />
-        {children}
+        <div className="pt-14">
+          {children}
+        </div>
         <FloatingCallButton />
       </body>
     </html>
