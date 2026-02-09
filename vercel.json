@@ -1,3 +1,13 @@
 {
-  "installCommand": "pnpm install --no-frozen-lockfile"
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "crons": [
+    {
+      "path": "/api/cron/generate-content",
+      "schedule": "0 6,14,22 * * *"
+    },
+    {
+      "path": "/api/cron/submit-indexing",
+      "schedule": "30 7,15,23 * * *"
+    }
+  ]
 }
