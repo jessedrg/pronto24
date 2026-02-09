@@ -765,6 +765,681 @@ export const LOCAL_ENRICHMENT: Record<string, LocalEnrichment> = {
       "El clima semiarido con menos de 300mm de lluvia anual contrasta con las gotas frias que pueden descargar 300mm en un dia",
     ],
   },
+
+  // ============================================
+  // PALMA DE MALLORCA (07xxx) - CPs adicionales
+  // ============================================
+  "07009": {
+    cp: "07009",
+    municipio: "Palma de Mallorca",
+    provincia: "Baleares",
+    comunidadAutonoma: "Islas Baleares",
+    poblacionAprox: "~16.000 habitantes en la zona",
+    tipoZona: "urbana",
+    clima: "Mediterraneo",
+    descripcionLocal:
+      "Zona residencial de Palma que abarca Son Ferriol y parte de Casa Blanca. Barrios perifericos con mezcla de viviendas unifamiliares antiguas y bloques de pisos mas recientes. Son Ferriol mantiene un caracter de pueblo absorbido por la expansion de Palma.",
+    problemasLocales: {
+      desatascos: [
+        "Fosas septicas en viviendas unifamiliares antiguas de Son Ferriol no conectadas al alcantarillado",
+        "Red de saneamiento insuficiente en zonas de crecimiento rapido",
+        "Atascos por depositos de tierra y grava en urbanizaciones sin aceras",
+      ],
+      fontanero: [
+        "Acometidas de agua de larga distancia con perdida de presion en viviendas aisladas",
+        "Tuberias de polietileno antiguas con uniones que fallan por movimientos del terreno",
+        "Pozos propios con bombas sumergidas que requieren mantenimiento periodico",
+      ],
+      electricista: [
+        "Lineas electricas aereas vulnerables a temporales de viento y lluvia",
+        "Instalaciones agricolas reconvertidas a residencial con potencia insuficiente",
+        "Cuadros electricos de exteriores deteriorados por la humedad y el salitre",
+      ],
+    },
+    infraestructura:
+      "Son Ferriol fue un nucleo rural independiente hasta los anos 60 y conserva viviendas de piedra con instalaciones muy antiguas. Las urbanizaciones posteriores (70-90) tienen calidades de construccion variables.",
+    barriosZonas: ["Son Ferriol", "Casa Blanca", "Sant Jordi"],
+    datosUnicos: [
+      "Son Ferriol conserva un trazado rural con calles estrechas que dificultan el acceso de vehiculos grandes",
+      "La proximidad al aeropuerto genera vibraciones que afectan a conducciones enterradas",
+      "Muchas viviendas mantienen pozos negros originales pendientes de conectar a la red general",
+    ],
+  },
+  "07010": {
+    cp: "07010",
+    municipio: "Palma de Mallorca",
+    provincia: "Baleares",
+    comunidadAutonoma: "Islas Baleares",
+    poblacionAprox: "~18.000 habitantes en la zona",
+    tipoZona: "urbana",
+    clima: "Mediterraneo",
+    descripcionLocal:
+      "Zona que incluye Es Vivero, Amanecer y parte de Sa Indioteria. Barrios residenciales consolidados con bloques de los anos 70-90 y algunas urbanizaciones mas recientes. Buena conectividad con el centro de Palma.",
+    problemasLocales: {
+      fontanero: [
+        "Bajantes comunitarias de fibrocemento de los anos 70 en proceso de sustitucion por PVC",
+        "Cal acumulada en calderas y calentadores por la dureza del agua de Mallorca",
+        "Fugas en tuberias empotradas de hierro galvanizado que se oxidan internamente",
+      ],
+      electricista: [
+        "Cuadros electricos comunitarios con protecciones insuficientes para la demanda actual",
+        "Necesidad de instalar puntos de recarga para vehiculos electricos en garajes comunitarios",
+        "Derivaciones a tierra por humedad en trasteros y garajes subterraneos",
+      ],
+      desatascos: [
+        "Atascos en arquetas comunitarias por acumulacion de grasa y residuos solidos",
+        "Drenaje insuficiente en garajes subterraneos que se inundan con lluvias fuertes",
+        "Bajantes de 80mm que se obstruyen facilmente en edificios de los anos 70",
+      ],
+    },
+    infraestructura:
+      "Predominan bloques residenciales de 5-7 plantas construidos entre 1970 y 1995. Las urbanizaciones mas recientes tienen mejores calidades. La red municipal de saneamiento ha sido renovada parcialmente.",
+    barriosZonas: ["Es Vivero", "Amanecer", "Sa Indioteria"],
+    datosUnicos: [
+      "Es Vivero es una zona con alta densidad de colegios y equipamientos deportivos que generan demanda especifica",
+      "Sa Indioteria conserva un caracter semirrural con viviendas unifamiliares antiguas",
+      "El barrio tiene buena accesibilidad por la Via de Cintura que permite llegadas rapidas",
+    ],
+  },
+
+  // ============================================
+  // MADRID (28xxx) - CPs adicionales
+  // ============================================
+  "28937": {
+    cp: "28937",
+    municipio: "Mostoles",
+    provincia: "Madrid",
+    comunidadAutonoma: "Comunidad de Madrid",
+    poblacionAprox: "~210.000 habitantes (municipio)",
+    tipoZona: "urbana",
+    descripcionLocal:
+      "Zona residencial de Mostoles, la segunda ciudad mas poblada del sur de Madrid. Barrios de vivienda construidos en los anos 80-90 durante el boom de expansion del area metropolitana. Alta densidad de edificios residenciales de 6-10 plantas.",
+    problemasLocales: {
+      desatascos: [
+        "Bajantes comunitarias de fibrocemento (uralita) que se degradan y colapsan internamente",
+        "Atascos por toallitas humedas que se acumulan en tuberias de 80mm de los anos 80",
+        "Red municipal de saneamiento saturada tras tormentas fuertes de verano",
+        "Arquetas comunitarias con tapas rotas o selladas que impiden el mantenimiento preventivo",
+      ],
+      fontanero: [
+        "Agua del Canal de Isabel II con 28-32 grados franceses de dureza que calcifica electrodomesticos",
+        "Columnas de agua comunitarias de hierro con 40 anos que reducen caudal y sueltan oxido",
+        "Roturas por heladas en tuberias de terrazas y azoteas mal aisladas (diciembre-febrero)",
+      ],
+      electricista: [
+        "Cuadros electricos de los 80 con magnetotermicos de baja capacidad para la demanda actual",
+        "Instalaciones sin diferenciales de 30mA en edificios anteriores a 1985",
+        "Necesidad de instalar cargadores de vehiculo electrico en garajes comunitarios",
+      ],
+    },
+    infraestructura:
+      "Mostoles crecio de 5.000 a 200.000 habitantes entre 1960 y 1990. La construccion masiva de vivienda de esa epoca utilizo materiales que hoy estan al final de su vida util. Las zonas mas nuevas (Mostoles Sur) tienen infraestructuras modernas.",
+    barriosZonas: ["Centro", "Parque Coimbra", "Villaverde-Manuela Malasana", "Mostoles Sur"],
+    datosUnicos: [
+      "Mostoles paso de pueblo a ciudad en 30 anos, generando un parque de vivienda de calidad variable",
+      "Mas de 60.000 viviendas construidas entre 1970-1990 estan llegando al final de la vida util de sus instalaciones",
+      "La linea de Metro Ligero conecta Mostoles con Madrid, atrayendo familias jovenes que demandan mejoras en viviendas",
+    ],
+  },
+  "28019": {
+    cp: "28019",
+    municipio: "Madrid",
+    provincia: "Madrid",
+    comunidadAutonoma: "Comunidad de Madrid",
+    poblacionAprox: "~80.000 habitantes en la zona",
+    tipoZona: "urbana",
+    descripcionLocal:
+      "Zona sur de Madrid que abarca Vista Alegre, Carabanchel Alto y parte de Aluche. Uno de los distritos mas densamente poblados de Madrid con una mezcla de vivienda social de los 60-70 y bloques mas recientes. Alta demanda de servicios urgentes.",
+    problemasLocales: {
+      desatascos: [
+        "Alcantarillado de los anos 60 con secciones de hormigon que se fisura y acumula sedimentos",
+        "Bajantes comunitarias de fundicion envejecidas que se corroen internamente",
+        "Atascos recurrentes en comunidades grandes (+100 viviendas) con bajantes insuficientes",
+      ],
+      fontanero: [
+        "Tuberias de plomo en edificios de proteccion oficial de los anos 50-60",
+        "Llaves de paso empotradas y calcificadas que no cierran en emergencias",
+        "Calentadores de gas en cocinas sin ventilacion adecuada que no cumplen normativa actual",
+      ],
+      cerrajero: [
+        "Puertas blindadas de primera generacion (anos 80) con bombines de baja seguridad",
+        "Alta demanda de aperturas urgentes por la densidad de poblacion del distrito",
+        "Cambios de cerradura por seguridad en portales de grandes comunidades de vecinos",
+      ],
+    },
+    infraestructura:
+      "Carabanchel es el distrito mas poblado de Madrid. Predominan bloques de vivienda de 6-10 plantas de los anos 60-80. Muchas comunidades estan acometiendo rehabilitaciones de fachada, ascensor y bajantes con ayudas del Plan MOVES.",
+    barriosZonas: ["Vista Alegre", "Carabanchel Alto", "Aluche", "Puerta Bonita"],
+    datosUnicos: [
+      "Carabanchel es el distrito mas poblado de Madrid con mas de 250.000 habitantes",
+      "Muchos edificios de los 60-70 estan recibiendo ayudas para rehabilitacion integral (ascensores, fachadas, instalaciones)",
+      "La proximidad al Hospital 12 de Octubre genera alta rotacion residencial en la zona",
+    ],
+  },
+
+  // ============================================
+  // CADIZ (11xxx) - CPs adicionales
+  // ============================================
+  "11100": {
+    cp: "11100",
+    municipio: "San Fernando",
+    provincia: "Cadiz",
+    comunidadAutonoma: "Andalucia",
+    poblacionAprox: "~95.000 habitantes",
+    tipoZona: "urbana",
+    clima: "Mediterraneo oceanico con alta humedad y brisa marina constante",
+    descripcionLocal:
+      "San Fernando es una isla-ciudad entre la bahia de Cadiz y el oceano Atlantico. La salinidad extrema del ambiente, rodeada de agua por todos lados, provoca una corrosion acelerada en todas las instalaciones metalicas. Sede del Arsenal de la Armada y la Isla de Leon.",
+    problemasLocales: {
+      desatascos: [
+        "Intrusiones de agua salada en la red de saneamiento por la cota baja de la ciudad respecto al nivel del mar",
+        "Alcantarillado historico de la zona centro que se satura con mareas vivas y temporales",
+        "Atascos por arena y sal en tuberias de viviendas cercanas a la playa de Camposoto",
+        "Inundaciones en garajes y bajos con cada temporal de poniente por la cota de la isla",
+      ],
+      electricista: [
+        "Corrosion extrema de instalaciones electricas exteriores por el ambiente salino permanente",
+        "Cuadros electricos que requieren envolventes IP65 minimo por la humedad salina",
+        "Instalaciones de la zona militar reconvertida a vivienda con electricidad obsoleta",
+      ],
+      fontanero: [
+        "Tuberias de cobre que se corroen en 15-20 anos (vs 50 anos en zonas de interior) por la salinidad",
+        "Calentadores y calderas con vida util reducida a la mitad por la agresividad del ambiente",
+      ],
+    },
+    infraestructura:
+      "El casco historico conserva edificios del siglo XVIII-XIX. Los barrios de expansion (anos 60-80) rodean el centro. La peculiar situacion de isla baja (cota maxima de 30m) hace que el drenaje sea un reto constante.",
+    barriosZonas: ["Centro historico", "Caseria de Ossio", "Bazán", "Camposoto"],
+    datosUnicos: [
+      "San Fernando es una isla conectada por puentes, rodeada de salinas y esteros que generan humedad salina extrema",
+      "La cota maxima de la ciudad es de solo 30 metros, lo que causa problemas de drenaje con temporales y mareas",
+      "El Observatorio de la Armada en San Fernando registra una humedad relativa media del 75%, una de las mas altas de Espana",
+    ],
+  },
+
+  // ============================================
+  // ALICANTE (03xxx) - CPs adicionales
+  // ============================================
+  "03170": {
+    cp: "03170",
+    municipio: "Rojales / Ciudad Quesada",
+    provincia: "Alicante",
+    comunidadAutonoma: "Comunidad Valenciana",
+    poblacionAprox: "~22.000 habitantes",
+    tipoZona: "semiurbana",
+    clima: "Mediterraneo semiarido con gotas frias (DANA)",
+    descripcionLocal:
+      "Rojales y Ciudad Quesada, en la Vega Baja del Segura. Ciudad Quesada es una de las mayores urbanizaciones de residentes europeos de Espana. Las viviendas con piscina y las gotas frias de septiembre generan problematicas muy especificas.",
+    problemasLocales: {
+      desatascos: [
+        "Inundaciones devastadoras por DANA como la de septiembre 2019 que colapso la Vega Baja",
+        "Fosas septicas en urbanizaciones de los anos 80-90 no conectadas a depuradora",
+        "Atascos por tierra y arena arrastrada por la escorrentia de lluvias torrenciales",
+        "Piscinas con desagues obstruidos por sedimentos del terreno arcilloso",
+      ],
+      electricista: [
+        "Reinstalaciones electricas tras danos por inundaciones recurrentes",
+        "Paneles solares con inversores averiados por sobretensiones de tormentas electricas",
+        "Automatizacion de piscinas y riego en viviendas con jardin",
+      ],
+      fontanero: [
+        "Bombas de piscina averiadas por funcionamiento continuo en verano (40-45C)",
+        "Tuberias de riego de jardines reventadas por las heladas ocasionales de enero",
+        "Descalcificadores saturados por la extrema dureza del agua de la Vega Baja",
+      ],
+    },
+    infraestructura:
+      "Ciudad Quesada se desarrollo a partir de los anos 80 como urbanizacion para jubilados europeos. Las viviendas son mayoritariamente unifamiliares con parcela y piscina. Muchas urbanizaciones antiguas carecen de conexion a la red de saneamiento municipal.",
+    barriosZonas: ["Rojales centro", "Ciudad Quesada", "Lo Pepin", "Benijofar cercano"],
+    datosUnicos: [
+      "La DANA de septiembre 2019 dejo 300mm de lluvia en 48 horas e inundo completamente la Vega Baja",
+      "Mas del 60% de los residentes de Ciudad Quesada son britanicos, alemanes y escandinavos",
+      "El rio Segura pasa por Rojales y su desbordamiento historico marca la necesidad de drenaje especial",
+    ],
+  },
+
+  // ============================================
+  // SEVILLA (41xxx) - CPs adicionales
+  // ============================================
+  "41300": {
+    cp: "41300",
+    municipio: "La Rinconada",
+    provincia: "Sevilla",
+    comunidadAutonoma: "Andalucia",
+    poblacionAprox: "~39.000 habitantes",
+    tipoZona: "semiurbana",
+    clima: "Mediterraneo continentalizado con veranos extremos (hasta 47C)",
+    descripcionLocal:
+      "La Rinconada es un municipio del area metropolitana norte de Sevilla. Combina el casco historico con urbanizaciones modernas y la pedania de San Jose de la Rinconada. El calor extremo del verano sevillano (maximo historico de 47.4C) genera problematicas especificas.",
+    problemasLocales: {
+      electricista: [
+        "Caidas de tension masivas en olas de calor por sobredemanda de aire acondicionado",
+        "Cableado que pierde aislamiento por las altas temperaturas en buhardillas y bajo-cubierta",
+        "Instalaciones de piscinas comunitarias que requieren cuadros electricos estancos",
+        "Ampliacion de potencia electrica para instalar equipos de climatizacion en chalets",
+      ],
+      desatascos: [
+        "Terreno arcilloso del valle del Guadalquivir que se agrieta en verano y se hincha con las lluvias, rompiendo tuberias",
+        "Raices de naranjos y olivos que invaden tuberias de saneamiento en urbanizaciones",
+        "Acumulacion de grasa solidificada en bajantes por el uso intensivo de frituras en la cocina andaluza",
+      ],
+      calderas: [
+        "Calderas sobredimensionadas para el invierno suave (8-12C) pero necesarias para ACS",
+        "Sistemas de aerotermia que sustituyen a calderas de gas en chalets modernos",
+      ],
+    },
+    infraestructura:
+      "El casco historico tiene viviendas de una o dos plantas con patios interiores. San Jose de la Rinconada crecio rapidamente en los 90-2000 con urbanizaciones de adosados y pisos.",
+    barriosZonas: ["La Rinconada centro", "San Jose de la Rinconada", "Los Carteros"],
+    datosUnicos: [
+      "La Rinconada esta junto al Guadalquivir, en una vega con terreno arcilloso expansivo que mueve cimentaciones",
+      "Los veranos superan habitualmente los 40C, con record de 47.4C en Sevilla capital que esta a 10 km",
+      "San Jose de la Rinconada triplico su poblacion en 15 anos, pasando de 10.000 a 30.000 habitantes",
+    ],
+  },
+
+  // ============================================
+  // GRAN CANARIA (35xxx)
+  // ============================================
+  "35100": {
+    cp: "35100",
+    municipio: "Maspalomas / San Bartolome de Tirajana",
+    provincia: "Las Palmas",
+    comunidadAutonoma: "Canarias",
+    poblacionAprox: "~55.000 habitantes (municipio)",
+    tipoZona: "urbana",
+    clima: "Subtropical arido, sol mas de 300 dias al ano",
+    descripcionLocal:
+      "Maspalomas es el principal polo turistico del sur de Gran Canaria. La mezcla de complejos hoteleros, apartamentos turisticos y viviendas residenciales genera una demanda constante de servicios tecnicos. El agua extremadamente dura y la calima sahariana afectan a las instalaciones.",
+    problemasLocales: {
+      fontanero: [
+        "Agua desalada de planta potabilizadora que es muy agresiva con las tuberias metalicas",
+        "Cal extrema por la dureza del agua (hasta 50 grados franceses) que destruye electrodomesticos",
+        "Fugas en instalaciones de piscinas de hoteles y complejos turisticos",
+        "Calentadores solares termicos con problemas de sobretemperatura en verano (mas de 40C)",
+      ],
+      electricista: [
+        "Instalaciones electricas de complejos turisticos de los anos 70-80 sobredimensionadas en su dia pero insuficientes ahora",
+        "Paneles solares con inversores danados por sobretensiones y calima (polvo sahariano)",
+        "Aire acondicionado centralizado que provoca sobrecargas en la red electrica",
+      ],
+      desatascos: [
+        "Tuberias de saneamiento danadas por la salinidad del agua de riego reciclada",
+        "Atascos en alcantarillado turistico saturado en temporada alta (noviembre-marzo en Canarias)",
+        "Arena y ceniza volcanica que se acumula en desagues exteriores durante episodios de calima",
+      ],
+    },
+    infraestructura:
+      "El boom turistico comenzo en los anos 60 con la construccion masiva de hoteles y apartamentos. Las infraestructuras de esa epoca estan al final de su vida util. Las zonas mas nuevas (Meloneras) tienen instalaciones modernas.",
+    barriosZonas: ["Maspalomas", "Playa del Ingles", "San Agustin", "Meloneras", "Sonnenland"],
+    datosUnicos: [
+      "Maspalomas recibe mas de 3 millones de turistas al ano, multiplicando la demanda de servicios",
+      "El agua procede de desalinizadoras y tiene una composicion quimica que corroe tuberias de cobre rapidamente",
+      "La calima (polvo sahariano) llega varias veces al ano y afecta a paneles solares, aires acondicionados y desagues",
+    ],
+  },
+
+  // ============================================
+  // MALAGA (29xxx) - CPs adicionales
+  // ============================================
+  "29013": {
+    cp: "29013",
+    municipio: "Malaga",
+    provincia: "Malaga",
+    comunidadAutonoma: "Andalucia",
+    poblacionAprox: "~35.000 habitantes en la zona",
+    tipoZona: "urbana",
+    clima: "Mediterraneo subtropical",
+    descripcionLocal:
+      "Zona norte de Malaga que incluye Ciudad Jardin y parte de Bailén-Miraflores. Barrios residenciales consolidados de los anos 60-80 con una renovacion urbanistica en marcha. Alta densidad de poblacion con bloques de 6-10 plantas.",
+    problemasLocales: {
+      electricista: [
+        "Instalaciones de los anos 60-70 con cableado de aluminio que se recalienta y pierde aislamiento",
+        "Cuadros electricos sin protecciones modernas (diferenciales superinmunizados) que saltan con el calor",
+        "Potencia contratada insuficiente para soportar aires acondicionados en verano (35-40C habituales)",
+      ],
+      fontanero: [
+        "Tuberias de hierro galvanizado con 40-50 anos que reducen el caudal y sueltan herrumbre",
+        "Agua dura de Malaga que calcifica calderas y electrodomesticos en 3-5 anos",
+        "Fugas en bajantes comunitarias de fibrocemento que requieren sustitucion urgente",
+      ],
+      desatascos: [
+        "Bajantes comunitarias estrechas (80mm) en edificios de los 70 que se atascan con facilidad",
+        "Alcantarillado del arroyo del Cuarto entubado que se desborda con lluvias fuertes",
+        "Raices de ficus (arbol tipico de Malaga) que invaden tuberias de saneamiento",
+      ],
+    },
+    infraestructura:
+      "Predominan edificios de vivienda de los anos 60-80. Ciudad Jardin es una zona con viviendas unifamiliares de los anos 50 que se estan densificando. Las infraestructuras subterraneas (saneamiento, agua) estan en su mayoria originales.",
+    barriosZonas: ["Ciudad Jardin", "Bailen-Miraflores", "La Roca"],
+    datosUnicos: [
+      "Malaga tiene el clima mas calido de la peninsula, con veranos de 35-40C que estresan las instalaciones electricas",
+      "El arroyo del Cuarto, entubado bajo el barrio, causa problemas de drenaje cuando llueve fuerte",
+      "Ciudad Jardin conserva un trazado de los anos 50 con viviendas unifamiliares que se estan reformando y dividiendo",
+    ],
+  },
+
+  // ============================================
+  // VALENCIA (46xxx) - CPs adicionales
+  // ============================================
+  "46019": {
+    cp: "46019",
+    municipio: "Valencia",
+    provincia: "Valencia",
+    comunidadAutonoma: "Comunidad Valenciana",
+    poblacionAprox: "~45.000 habitantes en la zona",
+    tipoZona: "urbana",
+    clima: "Mediterraneo con episodios de DANA en otono",
+    descripcionLocal:
+      "Zona de Campanar y Benicalap en Valencia. Barrios residenciales que mezclan vivienda de los anos 60-70 con desarrollos mas recientes junto al antiguo cauce del Turia. La DANA de octubre 2024 puso en evidencia los problemas de drenaje de la zona.",
+    problemasLocales: {
+      desatascos: [
+        "Inundaciones por DANA como la devastadora de octubre 2024 que afecto al area metropolitana",
+        "Alcantarillado de los anos 60 subdimensionado para episodios de lluvias torrenciales mediterraneas",
+        "Acumulacion de sedimentos en tuberias tras episodios de inundacion",
+      ],
+      fontanero: [
+        "Agua de Valencia con dureza media-alta (25-30 grados franceses) que calcifica instalaciones",
+        "Tuberias de hierro galvanizado en bloques de los 60-70 que reducen caudal",
+        "Fugas en juntas de dilatacion de tuberias por vibraciones del tranvia cercano",
+      ],
+      electricista: [
+        "Reinstalaciones electricas tras danos por inundaciones (DANA octubre 2024)",
+        "Cuadros electricos en garajes subterraneos que se inundaron y necesitan sustitucion completa",
+        "Instalaciones de los anos 60 con potencia insuficiente para climatizacion moderna",
+      ],
+    },
+    infraestructura:
+      "Campanar combina el casco antiguo del pueblo original con bloques de los 70-80 y desarrollos modernos junto al Turia. Benicalap tiene predominio de vivienda social de los 60-70 en proceso de rehabilitacion.",
+    barriosZonas: ["Campanar", "Benicalap", "Beniferri", "Tendetes"],
+    datosUnicos: [
+      "La DANA de octubre 2024 demostro la vulnerabilidad del sistema de drenaje de Valencia a las lluvias torrenciales",
+      "Campanar pueblo conserva un nucleo historico con instalaciones centenarias junto a edificios modernos",
+      "La proximidad al antiguo cauce del Turia (ahora parque) hace que el nivel freatico sea alto y afecte a cimentaciones",
+    ],
+  },
+
+  // ============================================
+  // BARCELONA / TERRASSA (08xxx)
+  // ============================================
+  "08225": {
+    cp: "08225",
+    municipio: "Terrassa",
+    provincia: "Barcelona",
+    comunidadAutonoma: "Cataluna",
+    poblacionAprox: "~220.000 habitantes (municipio)",
+    tipoZona: "urbana",
+    descripcionLocal:
+      "Zona residencial de Terrassa, la tercera ciudad mas poblada de Cataluna. Ciudad industrial reconvertida con un importante patrimonio modernista. Los barrios residenciales mezclan vivienda obrera de los 60-70 con desarrollos mas recientes.",
+    problemasLocales: {
+      desatascos: [
+        "Torrentes estacionales (rieras) que desbordan con lluvias fuertes e inundan garajes y bajos",
+        "Bajantes comunitarias de fibrocemento (uralita) en edificios de los 60-70 que hay que sustituir",
+        "Alcantarillado industrial reconvertido a residencial con diametros insuficientes",
+      ],
+      fontanero: [
+        "Agua de la red del Ter-Llobregat con dureza variable que requiere descalcificadores",
+        "Tuberias de plomo en edificios de los anos 50-60 del barrio obrero que hay que sustituir urgentemente",
+        "Calderas de gas natural que necesitan revision anual obligatoria por ley en Cataluna",
+      ],
+      electricista: [
+        "Instalaciones electricas de antiguos talleres textiles reconvertidos a lofts residenciales",
+        "Cuadros electricos comunitarios de los 70 sin protecciones diferenciales modernas",
+        "Potencia insuficiente para instalar aire acondicionado en pisos sin preinstalacion",
+      ],
+    },
+    infraestructura:
+      "Terrassa tiene un tejido urbano diverso: el centro historico con edificios modernistas, barrios obreros de los 60-70 (Sant Pere, Ca N'Aurell), y zonas de expansion mas recientes. Muchas naves industriales textiles se han reconvertido a vivienda o equipamientos.",
+    barriosZonas: ["Centre", "Ca N'Aurell", "Sant Pere Nord", "Les Fonts", "Egara"],
+    datosUnicos: [
+      "Terrassa fue la capital textil de Espana y conserva naves industriales del siglo XIX reconvertidas",
+      "La riera de Las Arenas cruza la ciudad y ha causado inundaciones historicas devastadoras",
+      "El patrimonio modernista de Terrassa (iglesias de Sant Pere) tiene instalaciones que requieren tratamiento especial",
+    ],
+  },
+
+  // ============================================
+  // TARRAGONA (43xxx)
+  // ============================================
+  "43006": {
+    cp: "43006",
+    municipio: "Tarragona",
+    provincia: "Tarragona",
+    comunidadAutonoma: "Cataluna",
+    poblacionAprox: "~20.000 habitantes en la zona",
+    tipoZona: "urbana",
+    clima: "Mediterraneo con brisa marina",
+    descripcionLocal:
+      "Zona que incluye la Part Alta (casco historico romano) y el Serrallo (barrio marinero) de Tarragona. La Part Alta conserva murallas romanas y edificios medievales con instalaciones muy antiguas. El Serrallo es un barrio de pescadores con humedad marina constante.",
+    problemasLocales: {
+      desatascos: [
+        "Alcantarillado del casco romano con tramos que datan de la epoca medieval",
+        "Atascos en restaurantes del Serrallo por acumulacion de grasa de pescado frito",
+        "Drenaje complicado en la Part Alta por la roca del promontorio donde se asienta",
+      ],
+      fontanero: [
+        "Tuberias empotradas en muros de piedra de 2 metros de grosor en la Part Alta",
+        "Humedad marina que corroe tuberias de cobre en el Serrallo en 10-15 anos",
+        "Presion de agua insuficiente en la Part Alta por la cota elevada del promontorio",
+      ],
+      electricista: [
+        "Instalaciones electricas condicionadas por la proteccion del patrimonio romano y medieval",
+        "Cableado empotrado en muros historicos que no se puede sustituir por normativa de patrimonio",
+        "Sobrecargas en locales de hosteleria del puerto que comparten acometida con viviendas",
+      ],
+    },
+    infraestructura:
+      "La Part Alta esta construida sobre y con las propias murallas romanas. Los edificios mezclan elementos del siglo I d.C. con reformas de todas las epocas. El Serrallo conserva casas de pescadores del siglo XIX con reformas diversas.",
+    barriosZonas: ["Part Alta", "El Serrallo", "Port", "Sant Pere i Sant Pau"],
+    datosUnicos: [
+      "La Part Alta de Tarragona es Patrimonio de la Humanidad por la UNESCO (Tarraco romana)",
+      "Las murallas romanas condicionan cualquier obra en el subsuelo, requiriendo supervision arqueologica",
+      "El Serrallo es el barrio marinero con uno de los puertos pesqueros mas activos de Cataluna",
+    ],
+  },
+
+  // ============================================
+  // MURCIA (30xxx) - CPs adicionales
+  // ============================================
+  "30010": {
+    cp: "30010",
+    municipio: "Murcia",
+    provincia: "Murcia",
+    comunidadAutonoma: "Region de Murcia",
+    poblacionAprox: "~460.000 habitantes (municipio)",
+    tipoZona: "urbana",
+    clima: "Mediterraneo semiarido con veranos muy calurosos",
+    descripcionLocal:
+      "Zona norte de Murcia ciudad que incluye barrios residenciales como Espinardo e Infante. Murcia es la septima ciudad de Espana con un clima extremo: veranos de 40-45C e inviernos suaves. El rio Segura atraviesa la ciudad y ha marcado su historia de inundaciones.",
+    problemasLocales: {
+      electricista: [
+        "Caidas de tension en olas de calor por sobredemanda de aire acondicionado en toda la ciudad",
+        "Cuadros electricos de los 70-80 que no soportan la potencia necesaria para climatizacion moderna",
+        "Instalaciones en azoteas deterioradas por el sol extremo (mas de 3.000 horas de sol anuales)",
+      ],
+      fontanero: [
+        "Agua del trasvase Tajo-Segura con alta salinidad que deteriora electrodomesticos y griferias",
+        "Calderas con depositos de cal por la dureza extrema del agua murciana",
+        "Fugas en tuberias de polietileno que se dilatan y contraen con los cambios de temperatura extremos",
+      ],
+      desatascos: [
+        "Riesgo de inundaciones por desbordamiento del Segura tras lluvias torrenciales de otono",
+        "Alcantarillado subdimensionado para episodios de gota fria que descargan 100mm en horas",
+        "Raices de ficus y moreras (arboles tipicos de Murcia) que invaden tuberias de saneamiento",
+      ],
+    },
+    infraestructura:
+      "Murcia norte tiene bloques de los 70-80 en Espinardo y urbanizaciones mas recientes. La universidad genera alta demanda de pisos de alquiler con rotacion de inquilinos. El rio Segura, canalizado, cruza la ciudad con riesgo de crecida.",
+    barriosZonas: ["Espinardo", "Infante", "Churra", "Santa Maria de Gracia"],
+    datosUnicos: [
+      "Murcia tiene una de las mayores amplitudes termicas de Espana: de 0C en enero a 45C en agosto",
+      "El trasvase Tajo-Segura suministra agua con alta concentracion de sales que acorta la vida de las instalaciones",
+      "La riada de 1973 (inundacion del rio Segura) marco la historia de la ciudad y motivo la canalizacion del rio",
+    ],
+  },
+
+  // ============================================
+  // A CORUNA (15xxx)
+  // ============================================
+  "15002": {
+    cp: "15002",
+    municipio: "A Coruna",
+    provincia: "A Coruna",
+    comunidadAutonoma: "Galicia",
+    poblacionAprox: "~245.000 habitantes (municipio)",
+    tipoZona: "urbana",
+    clima: "Oceanico con lluvias frecuentes (mas de 1.100 mm anuales)",
+    descripcionLocal:
+      "Centro de A Coruna, una ciudad peninsular rodeada de mar por tres lados. La humedad constante (media del 78%) y la brisa atlantica generan problemas especificos de corrosion y humedades. Las galerias acristaladas tipicas de la ciudad protegen del viento pero concentran condensacion.",
+    problemasLocales: {
+      electricista: [
+        "Humedad constante que deteriora mecanismos electricos y provoca derivaciones a tierra",
+        "Diferenciales que saltan frecuentemente por la humedad ambiental del 78% medio",
+        "Instalaciones en fachadas de galerias acristaladas con condensacion que dana enchufes e interruptores",
+        "Rayos y sobretensiones de temporales atlanticos que danan equipos electronicos",
+      ],
+      fontanero: [
+        "Corrosion acelerada de tuberias metalicas por la humedad y salinidad del ambiente costero",
+        "Humedades por condensacion en paredes interiores que se confunden con fugas y viceversa",
+        "Calentadores de gas en edificios del centro con tiros de humos comunitarios obstruidos",
+      ],
+      desatascos: [
+        "Alcantarillado que drena directamente al mar y sufre intrusion de agua salada con mareas vivas",
+        "Saturacion de la red de saneamiento con las frecuentes lluvias atlanticas (1.100 mm/ano)",
+        "Bajantes exteriores expuestas al viento atlantico que se deterioran y rompen",
+      ],
+    },
+    infraestructura:
+      "El centro de A Coruna combina edificios del siglo XIX con las tipicas galerias acristaladas y bloques de los anos 60-80. Las calles estrechas del casco antiguo dificultan el acceso de vehiculos de servicio. La proximidad al mar por tres lados intensifica la corrosion.",
+    barriosZonas: ["Ciudad Vieja", "Pescaderia", "Ensanche", "Monte Alto"],
+    datosUnicos: [
+      "A Coruna es una peninsula rodeada de mar por tres lados, lo que genera una humedad constante del 78%",
+      "Las galerias acristaladas, seña de identidad de la ciudad, crean problemas especificos de condensacion en instalaciones",
+      "El viento atlantico puede superar los 100 km/h en temporales de invierno, danando instalaciones exteriores",
+    ],
+  },
+
+  // ============================================
+  // VIGO (36xxx)
+  // ============================================
+  "36211": {
+    cp: "36211",
+    municipio: "Vigo",
+    provincia: "Pontevedra",
+    comunidadAutonoma: "Galicia",
+    poblacionAprox: "~295.000 habitantes (municipio)",
+    tipoZona: "urbana",
+    clima: "Oceanico con precipitaciones abundantes (1.400 mm anuales)",
+    descripcionLocal:
+      "Zona residencial de Vigo que incluye barrios de la periferia sur. Vigo es la ciudad mas poblada de Galicia, construida sobre colinas con pendientes pronunciadas que generan problemas especificos de drenaje y presion de agua.",
+    problemasLocales: {
+      desatascos: [
+        "Pendientes pronunciadas que generan velocidad excesiva en tuberias de saneamiento causando erosion",
+        "Lluvias persistentes (1.400 mm/ano) que saturan la red de alcantarillado frecuentemente",
+        "Raices de eucaliptos y acacias que invaden tuberias de saneamiento en zonas perifericas",
+        "Urbanizaciones en ladera con drenaje deficiente que provoca escorrentia sobre calzadas",
+      ],
+      fontanero: [
+        "Presion de agua excesiva en plantas bajas de edificios en cota baja por la orografia de colinas",
+        "Humedad constante que oxida tuberias de hierro en trasteros y garajes subterraneos",
+        "Calderas de calefaccion central en comunidades de los 70-80 con circuitos de radiadores corroidos",
+      ],
+      electricista: [
+        "Humedades en cuadros electricos de trasteros y garajes semienterrados en laderas",
+        "Derivaciones a tierra por la humedad ambiental constante (humedad relativa media del 80%)",
+        "Instalaciones exteriores deterioradas por la lluvia persistente y los temporales atlanticos",
+      ],
+    },
+    infraestructura:
+      "Vigo esta construida sobre colinas que bajan hacia la ria. Los barrios perifericos tienen pendientes del 10-15% que complican el saneamiento. Muchos edificios de los 60-70 fueron construidos en ladera con cimentaciones que sufren deslizamientos.",
+    barriosZonas: ["Bouzas", "Navia", "Teis", "Alcabre"],
+    datosUnicos: [
+      "Vigo es una de las ciudades mas lluviosas de Espana con 1.400 mm anuales repartidos en 150 dias de lluvia",
+      "La orografia de colinas hace que los problemas de presion de agua y drenaje sean especificos de cada cota",
+      "La ria de Vigo genera brisas humedas y salinas que corroen instalaciones metalicas cercanas al mar",
+    ],
+  },
+
+  // ============================================
+  // ZARAGOZA (50xxx)
+  // ============================================
+  "50010": {
+    cp: "50010",
+    municipio: "Zaragoza",
+    provincia: "Zaragoza",
+    comunidadAutonoma: "Aragon",
+    poblacionAprox: "~680.000 habitantes (municipio)",
+    tipoZona: "urbana",
+    clima: "Mediterraneo continental con cierzo y amplitud termica extrema",
+    descripcionLocal:
+      "Zona residencial de Zaragoza que incluye barrios como Las Fuentes y San Jose. El cierzo (viento del noroeste que puede superar los 100 km/h) y la amplitud termica de -5C a 42C entre invierno y verano generan un estres extremo en las instalaciones.",
+    problemasLocales: {
+      fontanero: [
+        "Agua del Ebro con alto contenido calcareo que calcifica tuberias y electrodomesticos rapidamente",
+        "Roturas de tuberias por heladas en canalizaciones exteriores (hasta -8C en invierno con el cierzo)",
+        "Dilataciones y contracciones extremas en tuberias por amplitud termica de 50 grados entre verano e invierno",
+      ],
+      electricista: [
+        "Cierzo que arranca cables aereos y dana instalaciones exteriores con rachas de mas de 100 km/h",
+        "Caidas de tension en olas de calor (42C) y frio extremo (-5C) por picos de demanda",
+        "Instalaciones de calefaccion electrica en pisos sin gas natural que sobrecargan la red",
+      ],
+      desatascos: [
+        "Alcantarillado que recoge aguas pluviales y residuales (red unitaria) que se desborda con tormentas",
+        "Depositos de cal en tuberias por el agua dura del Ebro que reduce el diametro util",
+        "Crecidas del Ebro que saturan la red de saneamiento de los barrios riberenos",
+      ],
+    },
+    infraestructura:
+      "Las Fuentes y San Jose son barrios de los anos 60-70 con bloques de vivienda social. Las infraestructuras de saneamiento son de red unitaria (pluviales + residuales) lo que causa problemas de capacidad. El viento cierzo es un factor unico que afecta a todas las instalaciones exteriores.",
+    barriosZonas: ["Las Fuentes", "San Jose", "La Magdalena", "Torrero"],
+    datosUnicos: [
+      "El cierzo es un viento persistente que puede soplar durante dias a 80-100 km/h, unico en Espana",
+      "Zaragoza tiene una amplitud termica anual de casi 50 grados: de -8C en invierno a 42C en verano",
+      "El Ebro ha inundado barrios riberenos varias veces (2013, 2015, 2018) obligando a mejorar el bombeo de saneamiento",
+    ],
+  },
+
+  // ============================================
+  // ASTURIAS (33xxx)
+  // ============================================
+  "33012": {
+    cp: "33012",
+    municipio: "Oviedo",
+    provincia: "Asturias",
+    comunidadAutonoma: "Principado de Asturias",
+    poblacionAprox: "~220.000 habitantes (municipio)",
+    tipoZona: "urbana",
+    clima: "Oceanico con lluvias frecuentes (mas de 1.000 mm anuales) y nieblas",
+    descripcionLocal:
+      "Zona residencial de Oviedo que incluye barrios como San Lazaro y Prados de la Fuente. Oviedo tiene un clima lluvioso con mas de 180 dias de precipitacion al ano. La humedad constante y las temperaturas suaves (pero nunca secas) generan problemas especificos.",
+    problemasLocales: {
+      electricista: [
+        "Humedad persistente que provoca derivaciones y salto continuo de diferenciales",
+        "Cuadros electricos en trasteros y garajes subterraneos con condensacion permanente",
+        "Calefaccion electrica en pisos sin gas natural que sobrecarga la instalacion en invierno",
+        "Cableado empotrado que pierde aislamiento por la humedad que penetra por las fachadas",
+      ],
+      fontanero: [
+        "Humedades por capilaridad en plantas bajas que danan tuberias empotradas",
+        "Calderas de condensacion que necesitan mantenimiento frecuente por la humedad del aire de combustion",
+        "Tuberias de calefaccion central con circuitos corroidos por la calidad del agua local",
+      ],
+      desatascos: [
+        "Bajantes y canalones saturados por las lluvias persistentes (180 dias de lluvia al ano)",
+        "Musgo y vegetacion que crece en sumideros y canaletas exteriores obstruyendo el drenaje",
+        "Garajes subterraneos con problemas cronicos de filtraciones y drenaje por la capa freatica alta",
+      ],
+    },
+    infraestructura:
+      "Oviedo tiene un centro historico medieval y barrios de expansion de los 60-80. Los edificios requieren impermeabilizacion constante. Los garajes subterraneos sufren filtraciones cronicas por el nivel freatico alto.",
+    barriosZonas: ["San Lazaro", "Prados de la Fuente", "La Corredoria", "Pumarín"],
+    datosUnicos: [
+      "Oviedo tiene mas de 180 dias de lluvia al ano, haciendo de la humedad el problema numero uno de las instalaciones",
+      "La ciudad conserva edificios prerromanicos del siglo IX (Patrimonio UNESCO) con instalaciones que requieren cuidado especial",
+      "El precio de la calefaccion en Oviedo es de los mas altos de Espana por la duracion del invierno (7 meses)",
+    ],
+  },
 }
 
 /**
