@@ -10,21 +10,41 @@ const GOOGLE_INDEXING_ENDPOINT = "https://indexing.googleapis.com/v3/urlNotifica
 
 /**
  * Generate a Google OAuth2 access token using a service account JWT.
+ * 
+ * Supports 3 formats for credentials:
+ * 1. GOOGLE_SERVICE_ACCOUNT_JSON - Full JSON file content (easiest - just paste the whole JSON)
+ * 2. GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY (PEM string)
+ * 3. GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY (base64-encoded PEM)
  */
 async function getGoogleAccessToken(): Promise<string> {
-  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
-  const keyRaw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
+  let email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
+  let keyPem = ""
 
-  if (!email || !keyRaw) {
-    throw new Error("Google service account credentials not configured")
+  // Option 1: Full JSON (recommended - just paste the whole downloaded JSON)
+  const jsonRaw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+  if (jsonRaw) {
+    try {
+      const parsed = JSON.parse(jsonRaw)
+      email = parsed.client_email
+      keyPem = parsed.private_key
+    } catch {
+      throw new Error("GOOGLE_SERVICE_ACCOUNT_JSON is not valid JSON")
+    }
+  } else {
+    // Option 2/3: Separate email + key
+    const keyRaw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
+    if (!email || !keyRaw) {
+      throw new Error("Google service account credentials not configured. Set GOOGLE_SERVICE_ACCOUNT_JSON (full JSON) or GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY")
+    }
+
+    keyPem = keyRaw
+    // The key may be base64-encoded
+    if (!keyRaw.includes("-----BEGIN")) {
+      keyPem = Buffer.from(keyRaw, "base64").toString("utf-8")
+    }
   }
 
-  // The key may be base64-encoded or raw PEM
-  let keyPem = keyRaw
-  if (!keyRaw.includes("-----BEGIN")) {
-    keyPem = Buffer.from(keyRaw, "base64").toString("utf-8")
-  }
-  // Handle escaped newlines
+  // Handle escaped newlines (common when pasting into env vars)
   keyPem = keyPem.replace(/\\n/g, "\n")
 
   const privateKey = await importPKCS8(keyPem, "RS256")
@@ -79,11 +99,13 @@ export async function GET(request: Request) {
 }
 
 async function fireAndForget() {
-  // Check if Google credentials are configured
-  if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+  // Check if Google credentials are configured (either JSON or email+key)
+  const hasJsonCreds = !!process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+  const hasSeparateCreds = !!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && !!process.env.GOOGLE_SERVICE_ACCOUNT_KEY
+  if (!hasJsonCreds && !hasSeparateCreds) {
     return NextResponse.json({
       status: "skipped",
-      message: "Google Indexing API credentials not configured yet. URLs remain in queue.",
+      message: "Google Indexing API credentials not configured. Set GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY.",
     })
   }
 
