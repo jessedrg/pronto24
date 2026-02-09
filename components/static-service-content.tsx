@@ -68,6 +68,14 @@ interface StaticServiceContentProps {
   coverageCities: string[]
 }
 
+const PROFESSION_IMAGES: Record<string, string> = {
+  electricista: "/images/electricista-trabajando.png",
+  fontanero: "/images/fontanero-trabajando.png",
+  cerrajero: "/images/cerrajero-trabajando.png",
+  desatascos: "/images/fontanero-trabajando.png",
+  calderas: "/images/fontanero-trabajando.png",
+}
+
 export function StaticServiceContent({
   serviceId,
   serviceName,
@@ -205,7 +213,7 @@ export function StaticServiceContent({
               <div className="relative max-w-sm sm:max-w-md mx-auto lg:max-w-none">
                 <div className="relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-2xl">
                   <Image
-                    src="/professional-service-technician-worker-with-tools-.jpg"
+                    src={PROFESSION_IMAGES[serviceId] || "/images/electricista-trabajando.png"}
                     alt={`${serviceName} profesional - Servicio urgente 24 horas`}
                     fill
                     className="object-cover"
