@@ -19,6 +19,8 @@ import {
   PROFESSIONS_POSTAL,
 } from "@/lib/postal-data"
 import { PROBLEMS } from "@/lib/seo-data"
+import { getLocalEnrichment } from "@/lib/local-enrichment"
+import { LocalContent } from "@/components/local-content"
 
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
@@ -55,13 +57,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const postalData = getPostalCodeData(postalcode)
   const zoneName = getZoneName(postalcode)
   const cityName = getCityFromPostalCode(postalcode)
+  const enrichment = getLocalEnrichment(postalcode)
 
   if (!professionData) {
     return { title: "No encontrado" }
   }
 
-  const title = `${professionData.name} Urgente en ${zoneName} (${postalcode}) | 30 Min | 936 946 639`
-  const description = `${professionData.name} urgente en ${zoneName}, ${cityName}. Codigo postal ${postalcode}. Llegamos en 30 minutos maximo. Servicio 24h. Presupuesto GRATIS. Llama: 936 946 639`
+  // Enrich title and description if we have local data
+  const localProblems = enrichment?.problemasLocales[profession]
+  const problemSnippet = localProblems && localProblems.length > 0
+    ? ` ${localProblems[0].split(" ").slice(0, 6).join(" ")}...`
+    : ""
+
+  const title = enrichment
+    ? `${professionData.name} en ${enrichment.municipio} (${postalcode}) | 30 Min | 936 946 639`
+    : `${professionData.name} Urgente en ${zoneName} (${postalcode}) | 30 Min | 936 946 639`
+
+  const description = enrichment
+    ? `${professionData.name} urgente en ${enrichment.municipio}, ${enrichment.provincia}. CP ${postalcode}. Conocemos la zona: ${enrichment.tipoZona === "urbana" ? "zona urbana" : enrichment.tipoZona === "rural" ? "zona rural" : "zona semiurbana"}.${problemSnippet} Llegamos en 30 min. Llama: 936 946 639`
+    : `${professionData.name} urgente en ${zoneName}, ${cityName}. Codigo postal ${postalcode}. Llegamos en 30 minutos maximo. Servicio 24h. Presupuesto GRATIS. Llama: 936 946 639`
 
   return {
     title,
@@ -104,7 +118,12 @@ export default async function PostalCodePage({ params }: PageProps) {
   const postalData = getPostalCodeData(postalcode)
   const zoneName = getZoneName(postalcode)
   const cityName = getCityFromPostalCode(postalcode)
-  const description = getZoneDescription(postalcode, profession)
+  const enrichment = getLocalEnrichment(postalcode)
+
+  // Use enriched description if available, otherwise generic
+  const description = enrichment
+    ? `${professionData.name} urgente en ${enrichment.municipio} (${postalcode}). ${enrichment.descripcionLocal.split('.')[0]}. Llegamos en 30 minutos.`
+    : getZoneDescription(postalcode, profession)
 
   // Generate nearby postal codes for interlinking (cross-prefix, up to 10)
   const postalNum = parseInt(postalcode)
@@ -165,6 +184,15 @@ export default async function PostalCodePage({ params }: PageProps) {
             zoneName={zoneName}
             postalcode={postalcode}
           />
+
+          {/* Enriched local content for high-opportunity postal codes */}
+          {enrichment && (
+            <LocalContent
+              enrichment={enrichment}
+              professionId={profession}
+              professionName={professionData.name}
+            />
+          )}
           
           <GuaranteeSection />
           
@@ -173,6 +201,7 @@ export default async function PostalCodePage({ params }: PageProps) {
             postalcode={postalcode}
             zoneName={zoneName}
             cityName={cityName}
+            enrichment={enrichment}
           />
 
           {/* Interlinking: Common problems for this profession in this city */}

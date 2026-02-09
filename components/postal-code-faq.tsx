@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
+import type { LocalEnrichment } from "@/lib/local-enrichment"
 
 interface PostalCodeFAQProps {
   profession: {
@@ -13,6 +14,7 @@ interface PostalCodeFAQProps {
   postalcode: string
   zoneName: string
   cityName: string
+  enrichment?: LocalEnrichment | null
 }
 
 export function PostalCodeFAQ({
@@ -20,35 +22,77 @@ export function PostalCodeFAQ({
   postalcode,
   zoneName,
   cityName,
+  enrichment,
 }: PostalCodeFAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
-  const faqs = [
+  const localProblems = enrichment?.problemasLocales[profession.id]
+  const municipioName = enrichment?.municipio || zoneName
+
+  // Base FAQs - always shown
+  const baseFaqs = [
     {
-      question: `¿Cuánto cuesta un ${profession.name.toLowerCase()} en ${zoneName} (${postalcode})?`,
-      answer: `El precio de un ${profession.name.toLowerCase()} en ${zoneName} depende del tipo de servicio. Los precios empiezan desde 39€ para servicios básicos. Ofrecemos presupuesto GRATIS y sin compromiso para el código postal ${postalcode}. Llámanos al 936 946 639 para un presupuesto personalizado.`,
+      question: `¿Cuánto cuesta un ${profession.name.toLowerCase()} en ${municipioName} (${postalcode})?`,
+      answer: `El precio de un ${profession.name.toLowerCase()} en ${municipioName} depende del tipo de servicio. Los precios empiezan desde 39€ para servicios básicos. Ofrecemos presupuesto GRATIS y sin compromiso para el código postal ${postalcode}. Llámanos al 936 946 639 para un presupuesto personalizado.`,
     },
     {
       question: `¿Cuánto tarda en llegar un ${profession.name.toLowerCase()} al ${postalcode}?`,
-      answer: `Nuestros ${profession.namePlural.toLowerCase()} llegan en un maximo de 30 minutos a cualquier punto del codigo postal ${postalcode} (${zoneName}). Tenemos profesionales distribuidos por toda la zona de ${cityName} para garantizar una respuesta rapida.`,
+      answer: enrichment
+        ? `Nuestros ${profession.namePlural.toLowerCase()} llegan en un maximo de 30 minutos a cualquier punto del codigo postal ${postalcode} en ${municipioName}. ${enrichment.tipoZona === "urbana" ? "Al ser zona urbana, la cobertura es optima y normalmente llegamos en menos de 20 minutos." : enrichment.tipoZona === "rural" ? "Aunque es una zona rural, tenemos tecnicos distribuidos estrategicamente para llegar rapido." : "Tenemos profesionales distribuidos por toda la zona para garantizar una respuesta rapida."}`
+        : `Nuestros ${profession.namePlural.toLowerCase()} llegan en un maximo de 30 minutos a cualquier punto del codigo postal ${postalcode} (${zoneName}). Tenemos profesionales distribuidos por toda la zona de ${cityName} para garantizar una respuesta rapida.`,
     },
     {
-      question: `¿Hay ${profession.namePlural.toLowerCase()} 24 horas en ${zoneName}?`,
-      answer: `Sí, tenemos ${profession.namePlural.toLowerCase()} disponibles las 24 horas del día, los 7 días de la semana en ${zoneName} y todo el código postal ${postalcode}. Trabajamos noches, fines de semana y festivos sin recargo adicional.`,
+      question: `¿Hay ${profession.namePlural.toLowerCase()} 24 horas en ${municipioName}?`,
+      answer: `Sí, tenemos ${profession.namePlural.toLowerCase()} disponibles las 24 horas del día, los 7 días de la semana en ${municipioName} y todo el código postal ${postalcode}. Trabajamos noches, fines de semana y festivos sin recargo adicional.`,
     },
     {
       question: `¿Los ${profession.namePlural.toLowerCase()} del ${postalcode} están certificados?`,
-      answer: `Sí, todos nuestros ${profession.namePlural.toLowerCase()} que trabajan en ${zoneName} (${postalcode}) están certificados y cuentan con años de experiencia. Además, ofrecemos garantía en todos nuestros trabajos realizados en ${cityName}.`,
-    },
-    {
-      question: `¿Cómo contactar con un ${profession.name.toLowerCase()} urgente en ${postalcode}?`,
-      answer: `Para contactar con un ${profession.name.toLowerCase()} urgente en el codigo postal ${postalcode}, llama al 936 946 639. Estamos disponibles 24/7 y un profesional estara en tu domicilio de ${zoneName} en un maximo de 30 minutos.`,
-    },
-    {
-      question: `¿Qué zonas cubren cerca del ${postalcode}?`,
-      answer: `Cubrimos todo ${zoneName} y codigos postales cercanos en ${cityName}. Nuestros ${profession.namePlural.toLowerCase()} estan estrategicamente ubicados para llegar rapidamente a cualquier punto de la zona. Servicio garantizado en un maximo de 30 minutos.`,
+      answer: `Sí, todos nuestros ${profession.namePlural.toLowerCase()} que trabajan en ${municipioName} (${postalcode}) están certificados y cuentan con años de experiencia. Además, ofrecemos garantía en todos nuestros trabajos realizados en ${cityName}.`,
     },
   ]
+
+  // Local-specific FAQs - only shown when we have enrichment data
+  const localFaqs: { question: string; answer: string }[] = []
+
+  if (enrichment) {
+    // FAQ about local problems
+    if (localProblems && localProblems.length > 0) {
+      localFaqs.push({
+        question: `¿Cuáles son los problemas mas comunes de ${profession.name.toLowerCase()} en ${municipioName}?`,
+        answer: `En ${municipioName} (${postalcode}), los problemas más frecuentes que atendemos son: ${localProblems.slice(0, 3).map(p => p.charAt(0).toLowerCase() + p.slice(1).replace(/\.$/, '')).join('; ')}. Nuestros técnicos conocen estas problemáticas específicas de la zona y llegan preparados con el material adecuado.`,
+      })
+    }
+
+    // FAQ about infrastructure
+    localFaqs.push({
+      question: `¿Qué tipo de edificios hay en la zona ${postalcode} de ${municipioName}?`,
+      answer: enrichment.infraestructura,
+    })
+
+    // FAQ about coverage/barrios
+    if (enrichment.barriosZonas && enrichment.barriosZonas.length > 0) {
+      localFaqs.push({
+        question: `¿Qué barrios cubren en el código postal ${postalcode}?`,
+        answer: `Cubrimos todas las zonas del código postal ${postalcode} en ${municipioName}: ${enrichment.barriosZonas.join(", ")}. Nuestros ${profession.namePlural.toLowerCase()} están estratégicamente ubicados para llegar en un máximo de 30 minutos a cualquier punto de estas zonas.`,
+      })
+    }
+
+    // FAQ about climate impact
+    if (enrichment.clima) {
+      localFaqs.push({
+        question: `¿El clima de ${municipioName} afecta a las instalaciones?`,
+        answer: `Si. ${municipioName} tiene un clima ${enrichment.clima.toLowerCase()}. Esto influye directamente en el tipo de averias que atendemos. ${enrichment.datosUnicos[0] || ""} Nuestros tecnicos conocen estas condiciones y llegan preparados con el material especifico para la zona.`,
+      })
+    }
+  }
+
+  // Always add generic contact FAQ at the end
+  const contactFaq = {
+    question: `¿Cómo contactar con un ${profession.name.toLowerCase()} urgente en ${postalcode}?`,
+    answer: `Para contactar con un ${profession.name.toLowerCase()} urgente en el codigo postal ${postalcode}, llama al 936 946 639. Estamos disponibles 24/7 y un profesional estara en tu domicilio de ${municipioName} en un maximo de 30 minutos.`,
+  }
+
+  const faqs = [...baseFaqs, ...localFaqs, contactFaq]
 
   return (
     <section className="py-16 bg-background">
