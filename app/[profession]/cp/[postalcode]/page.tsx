@@ -8,7 +8,7 @@ import { PostalCodeStats } from "@/components/postal-code-stats"
 import { PostalCodeFAQ } from "@/components/postal-code-faq"
 import { PostalCodeSchema } from "@/components/postal-code-schema"
 import { GuaranteeSection } from "@/components/guarantee-section"
-import { ServiceReviews } from "@/components/service-reviews"
+import { ServiceTrust } from "@/components/service-reviews"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import {
   getPostalCodeData,
@@ -81,53 +81,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-// Reviews dinámicas por zona
-function generateReviews(profession: string, zoneName: string, postalcode: string) {
-  const seed = parseInt(postalcode.slice(-3))
-  const names = [
-    "María García", "Carlos Pérez", "Ana Martínez", "José López", "Laura Sánchez",
-    "Miguel Fernández", "Carmen Ruiz", "David González", "Isabel Torres", "Pablo Díaz"
-  ]
-  const services: Record<string, string[]> = {
-    fontanero: ["Fuga de agua", "Atasco tubería", "Reparación cisterna", "Cambio grifería"],
-    electricista: ["Avería eléctrica", "Cuadro eléctrico", "Sin luz", "Cortocircuito"],
-    cerrajero: ["Apertura puerta", "Cambio cerradura", "Cerradura atascada", "Bombín roto"],
-    desatascos: ["Atasco WC", "Desatasco fregadero", "Arqueta atascada", "Limpieza tuberías"],
-    calderas: ["Caldera no enciende", "Sin agua caliente", "Revisión caldera", "Fuga caldera"],
-  }
 
-  const profServices = services[profession] || services.fontanero
-
-  return [
-    {
-      name: names[seed % names.length],
-      location: zoneName,
-      rating: 5 as const,
-      date: "Hace 1 día",
-      text: `Excelente servicio en ${zoneName}. Llegaron rapidamente y solucionaron el problema de forma profesional. Precio justo y sin sorpresas.`,
-      service: profServices[seed % profServices.length],
-      verified: false,
-    },
-    {
-      name: names[(seed + 3) % names.length],
-      location: zoneName,
-      rating: 5 as const,
-      date: "Hace 3 días",
-      text: `Llamé a las 11 de la noche y vinieron enseguida. El técnico era muy profesional y explicó todo claramente. 100% recomendado para ${zoneName}.`,
-      service: profServices[(seed + 1) % profServices.length],
-      verified: false,
-    },
-    {
-      name: names[(seed + 5) % names.length],
-      location: zoneName,
-      rating: 5 as const,
-      date: "Hace 1 semana",
-      text: `Servicio impecable. Presupuesto sin sorpresas y trabajo de calidad. Ya los he recomendado a mis vecinos del ${postalcode}.`,
-      service: profServices[(seed + 2) % profServices.length],
-      verified: false,
-    },
-  ]
-}
 
 export default async function PostalCodePage({ params }: PageProps) {
   const { profession, postalcode } = await params
@@ -151,7 +105,6 @@ export default async function PostalCodePage({ params }: PageProps) {
   const zoneName = getZoneName(postalcode)
   const cityName = getCityFromPostalCode(postalcode)
   const description = getZoneDescription(postalcode, profession)
-  const reviews = generateReviews(profession, zoneName, postalcode)
 
   // Generate nearby postal codes for interlinking (cross-prefix, up to 10)
   const postalNum = parseInt(postalcode)
@@ -207,9 +160,10 @@ export default async function PostalCodePage({ params }: PageProps) {
           
           <PostalCodeStats postalcode={postalcode} />
           
-          <ServiceReviews 
-            service={professionData.name} 
-            reviews={reviews} 
+          <ServiceTrust
+            service={professionData.name}
+            zoneName={zoneName}
+            postalcode={postalcode}
           />
           
           <GuaranteeSection />

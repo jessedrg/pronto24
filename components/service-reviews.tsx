@@ -1,86 +1,85 @@
-"use client"
+import { Phone, ShieldCheck, Clock, Zap, CheckCircle2 } from "lucide-react"
 
-import { Star, CheckCircle2, Clock } from "lucide-react"
-import { Card } from "@/components/ui/card"
-
-interface Review {
-  name: string
-  location: string
-  rating: 5
-  date: string
-  text: string
+interface ServiceTrustProps {
   service: string
-  verified: boolean
+  zoneName: string
+  postalcode: string
 }
 
-interface ServiceReviewsProps {
-  service: string
-  reviews: Review[]
-}
+const COMMITMENTS = [
+  {
+    icon: Clock,
+    title: "Llegada en 30 minutos",
+    description: "Nos comprometemos a estar en tu domicilio en un maximo de 30 minutos desde tu llamada.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Presupuesto sin compromiso",
+    description: "Te damos un presupuesto cerrado antes de empezar. Sin sorpresas ni costes ocultos.",
+  },
+  {
+    icon: Zap,
+    title: "Disponible 24 horas",
+    description: "Servicio operativo los 365 dias del ano, incluyendo festivos y fines de semana.",
+  },
+]
 
-export function ServiceReviews({ service, reviews }: ServiceReviewsProps) {
+export function ServiceTrust({ service, zoneName, postalcode }: ServiceTrustProps) {
   return (
-    <section className="py-16 bg-neutral-50">
-      <div className="container mx-auto px-4">
+    <section className="py-16 bg-muted/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-6 h-6 fill-black text-black" />
-              ))}
-            </div>
-            <span className="text-2xl font-bold">4.9/5</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">Experiencias de nuestros clientes</h2>
-          <p className="text-lg text-neutral-600">Lo que dicen quienes han confiado en nuestro servicio</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3 text-balance">
+            Nuestro compromiso en {zoneName}
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
+            Servicio de {service.toLowerCase()} profesional con garantias reales para el codigo postal {postalcode}.
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {reviews.map((review, index) => (
-            <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold">{review.name}</h3>
-                  </div>
-                  <p className="text-sm text-neutral-600">{review.location}</p>
-                </div>
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-black text-black" />
-                  ))}
-                </div>
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
+          {COMMITMENTS.map((item) => (
+            <div
+              key={item.title}
+              className="flex flex-col items-center text-center p-6 rounded-2xl border border-border bg-background"
+            >
+              <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center mb-4">
+                <item.icon className="w-6 h-6 text-foreground" />
               </div>
-
-              <p className="text-neutral-700 mb-4 leading-relaxed">{review.text}</p>
-
-              <div className="flex items-center justify-between text-sm text-neutral-500">
-                <span className="font-medium">{review.service}</span>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  <span>{review.date}</span>
-                </div>
-              </div>
-            </Card>
+              <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+            </div>
           ))}
         </div>
 
-        <div className="mt-12 text-center">
-          <div className="inline-flex items-center gap-8 bg-white px-8 py-4 rounded-lg shadow-sm">
-            <div>
-              <div className="text-3xl font-bold">24h</div>
-              <div className="text-sm text-neutral-600">Disponibilidad</div>
+        <div className="max-w-2xl mx-auto bg-background border border-border rounded-2xl p-6 sm:p-8">
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <div className="flex-1">
+              <h3 className="font-bold text-foreground text-lg mb-2">
+                Necesitas {service.toLowerCase()} en {zoneName}?
+              </h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-foreground shrink-0" />
+                  <span>Tecnicos cualificados y asegurados</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-foreground shrink-0" />
+                  <span>Garantia por escrito en todos los trabajos</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-foreground shrink-0" />
+                  <span>Pago despues del servicio, no antes</span>
+                </li>
+              </ul>
             </div>
-            <div className="w-px h-12 bg-neutral-200" />
-            <div>
-              <div className="text-3xl font-bold">365</div>
-              <div className="text-sm text-neutral-600">Dias al ano</div>
-            </div>
-            <div className="w-px h-12 bg-neutral-200" />
-            <div>
-              <div className="text-3xl font-bold">30min</div>
-              <div className="text-sm text-neutral-600">Llegada maxima</div>
-            </div>
+            <a
+              href="tel:936946639"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-foreground text-background font-bold text-lg hover:bg-foreground/90 transition-colors shrink-0"
+            >
+              <Phone className="w-5 h-5" />
+              936 946 639
+            </a>
           </div>
         </div>
       </div>
