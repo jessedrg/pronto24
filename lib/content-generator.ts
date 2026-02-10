@@ -393,6 +393,7 @@ export interface UniqueContent {
   extendedDescription: string
   whyChooseUs: string[]
   serviceProcess: string[]
+  testimonials: Array<{ name: string; city: string; text: string; time: string }>
 }
 
 /**
@@ -447,6 +448,9 @@ export function generateUniqueContent(
   // Proceso de servicio
   const serviceProcess = generateServiceProcess(professionName, hash)
   
+  // Testimoniales variados por ciudad
+  const testimonials = generateTestimonials(cityName, professionName, hash)
+  
   return {
     intro: introVariant(cityName, professionName.toLowerCase()),
     guarantee: guaranteeVariant,
@@ -464,6 +468,7 @@ export function generateUniqueContent(
     extendedDescription,
     whyChooseUs,
     serviceProcess,
+    testimonials,
   }
 }
 
@@ -563,4 +568,48 @@ function generateSeoText(
   return templates[hash % templates.length]()
 }
 
+// Genera testimoniales variados por ciudad y profesion
+function generateTestimonials(
+  cityName: string,
+  professionName: string,
+  hash: number
+): Array<{ name: string; city: string; text: string; time: string }> {
+  const firstNames = [
+    "Antonio", "Manuel", "Francisco", "David", "Juan", "Carlos", "Pedro", "Miguel",
+    "Maria", "Carmen", "Ana", "Laura", "Isabel", "Lucia", "Elena", "Marta",
+    "Jose", "Daniel", "Pablo", "Javier", "Sara", "Rosa", "Patricia", "Raquel",
+  ]
+  const lastInitials = ["L.", "R.", "G.", "M.", "S.", "F.", "P.", "D.", "V.", "T.", "C.", "B."]
+  const times = ["Hace 2 horas", "Hace 5 horas", "Ayer", "Hace 2 dias", "Hace 3 dias", "Esta semana"]
 
+  const textTemplates = [
+    `Averia en plena madrugada. El ${professionName.toLowerCase()} llego en 20 minutos y lo soluciono todo rapidamente. Muy profesional.`,
+    `Excelente servicio en ${cityName}. Presupuesto cerrado antes de empezar y trabajo impecable. Totalmente recomendable.`,
+    `Teniamos una urgencia y respondieron al momento. El tecnico fue muy amable, explico todo con claridad y el precio fue justo.`,
+    `Rapidos, profesionales y limpios. Resolvieron el problema en menos de una hora. Sin duda repetire si lo necesito.`,
+    `Muy satisfecha con el servicio. Vinieron el mismo dia que llame. El ${professionName.toLowerCase()} sabia perfectamente lo que hacia.`,
+    `Nos atendieron un domingo por la manana sin ningun recargo extra. Trabajo perfecto y garantia por escrito. Genial.`,
+    `Despues de llamar a varios sitios, estos fueron los unicos que vinieron en 30 minutos de verdad. Gran servicio en ${cityName}.`,
+    `Problema solucionado a la primera visita. El tecnico traia todo el material necesario. Presupuesto sin sorpresas.`,
+    `Increible atencion al cliente. Desde la llamada hasta el final todo fue transparente y profesional. Muy contento.`,
+  ]
+
+  const count = 3
+  const result: Array<{ name: string; city: string; text: string; time: string }> = []
+
+  for (let i = 0; i < count; i++) {
+    const nameIdx = (hash + i * 7) % firstNames.length
+    const lastIdx = (hash + i * 3) % lastInitials.length
+    const textIdx = (hash + i * 4) % textTemplates.length
+    const timeIdx = (hash + i * 2) % times.length
+
+    result.push({
+      name: `${firstNames[nameIdx]} ${lastInitials[lastIdx]}`,
+      city: cityName,
+      text: textTemplates[textIdx],
+      time: times[timeIdx],
+    })
+  }
+
+  return result
+}
