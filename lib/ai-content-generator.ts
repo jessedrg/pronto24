@@ -277,7 +277,7 @@ export function buildGenerationQueue(): Array<{
   citySlug: string
   pageType: "city" | "problem"
   problemId?: string
-}>> {
+}> {
   const queue: Array<{
     professionId: string
     citySlug: string

@@ -106,6 +106,23 @@ async function logRun(
   }
 }
 
+// Fire-and-forget: trigger a new invocation to continue processing remaining pages
+function selfChain() {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+  const headers: Record<string, string> = { "Content-Type": "application/json" }
+  if (CRON_SECRET) headers["Authorization"] = `Bearer ${CRON_SECRET}`
+
+  fetch(`${baseUrl}/api/cron/generate-content`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ chained: true }),
+  }).catch(() => {})
+
+  console.log("[CRON] Self-chained next invocation")
+}
+
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("authorization")
   if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
@@ -177,6 +194,12 @@ export async function POST(request: NextRequest) {
     const remaining = pending.length - cursor
     await logRun(totalSuccess + totalErrors, totalSuccess, totalErrors, durationMs)
 
+    // If pages remain, fire-and-forget a new invocation to keep going
+    if (remaining > 0) {
+      console.log(`[CRON] ${remaining} pages remaining, self-chaining...`)
+      selfChain()
+    }
+
     console.log(`[CRON] === Run complete: ${totalSuccess} generated, ${totalErrors} errors, ${remaining} remaining (${Math.round(durationMs / 1000)}s) ===`)
 
     return NextResponse.json({
@@ -185,6 +208,7 @@ export async function POST(request: NextRequest) {
       remaining,
       totalPages,
       durationMs,
+      selfChained: remaining > 0,
     })
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : "Unknown error"
