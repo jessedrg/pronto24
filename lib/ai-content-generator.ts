@@ -271,13 +271,13 @@ export async function getAIContent(
   }
 }
 
-// Build the full queue of pages to generate (pure computation, no async needed)
-export function buildGenerationQueue(): Array<{
+// Build the full queue of pages to generate
+export async function buildGenerationQueue(): Promise<Array<{
   professionId: string
   citySlug: string
   pageType: "city" | "problem"
   problemId?: string
-}> {
+}>> {
   const queue: Array<{
     professionId: string
     citySlug: string
