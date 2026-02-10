@@ -239,7 +239,8 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { profession: professionId, problem: problemId, city: citySlug } = await params
+  const { profession: professionId, problem: problemId, city: rawCitySlug } = await params
+  const citySlug = decodeURIComponent(rawCitySlug)
   if (!VALID_PROFESSIONS.includes(professionId)) return { title: "No encontrado" }
   const profession = PROFESSIONS.find((p) => p.id === professionId)
   if (!profession) return {}
@@ -275,7 +276,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProblemCityPage({ params }: PageProps) {
-  const { profession: professionId, problem: problemId, city: citySlug } = await params
+  const { profession: professionId, problem: problemId, city: rawCitySlug } = await params
+  const citySlug = decodeURIComponent(rawCitySlug)
   if (!VALID_PROFESSIONS.includes(professionId)) notFound()
   const profession = PROFESSIONS.find((p) => p.id === professionId)
   if (!profession) notFound()
