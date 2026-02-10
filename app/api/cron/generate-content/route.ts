@@ -76,7 +76,7 @@ async function ensurePendingRowsExist() {
   if (existing > 0) return existing
 
   // Seed all page combinations as pending rows - use batched inserts
-  const queue = buildGenerationQueue()
+  const queue = await buildGenerationQueue()
   let inserted = 0
   const SEED_BATCH = 100
 
