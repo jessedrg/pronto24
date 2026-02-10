@@ -369,7 +369,7 @@ export default async function ProblemCityPage({ params }: PageProps) {
   } : null
 
   // Generate testimonials
-  const problemContent = generateUniqueContent(citySlug, profession.name, cityName)
+  const problemContent = generateUniqueContent(citySlug, cityName, professionId, profession.name)
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

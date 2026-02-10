@@ -153,7 +153,7 @@ export default async function PostalCodePage({ params }: PageProps) {
   const otherProfessions = PROFESSIONS_POSTAL.filter(p => p.id !== profession)
 
   // Generate testimonials for this CP
-  const cpContent = generateUniqueContent(postalcode, professionData.name, zoneName)
+  const cpContent = generateUniqueContent(postalcode, zoneName, profession, professionData.name)
 
   // City slug for linking to city pages
   const citySlug = cityName.toLowerCase()
