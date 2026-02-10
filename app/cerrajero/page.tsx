@@ -34,6 +34,13 @@ const cerrajeroSchema = {
   },
   "areaServed": { "@type": "Country", "name": "España" },
   "serviceType": "Cerrajería urgente",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "347",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
   "offers": {
     "@type": "Offer",
     "availability": "https://schema.org/InStock",

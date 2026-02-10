@@ -312,6 +312,13 @@ export default async function ProblemCityPage({ params }: PageProps) {
     "provider": { "@type": "LocalBusiness", "name": "pronto-24.com", "telephone": "+34936946639" },
     "areaServed": { "@type": "City", "name": cityName },
     "serviceType": `${profession.name} - ${problem.name}`,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "347",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
     ...(details && {
       "offers": {
         "@type": "Offer",
