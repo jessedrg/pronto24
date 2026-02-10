@@ -30,11 +30,14 @@ CREATE TABLE IF NOT EXISTS page_content (
   ai_status VARCHAR(20) DEFAULT 'pending',
   
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  
-  -- Unique constraint: one row per profession+city+problem combination
-  UNIQUE(profession_id, city_slug, COALESCE(problem_id, ''))
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Unique indexes: one row per profession+city+problem combination
+CREATE UNIQUE INDEX IF NOT EXISTS idx_page_content_uniq_problem 
+  ON page_content(profession_id, city_slug, problem_id) WHERE problem_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_page_content_uniq_city 
+  ON page_content(profession_id, city_slug) WHERE problem_id IS NULL;
 
 -- Indexes for fast lookups
 CREATE INDEX IF NOT EXISTS idx_page_content_ai_status ON page_content(ai_status);
