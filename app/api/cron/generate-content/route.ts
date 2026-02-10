@@ -7,20 +7,24 @@ import {
   getGenerationStats,
 } from "@/lib/ai-content-generator"
 
-// Max duration for Vercel Pro plan (300s)
-export const maxDuration = 300
+// Max duration: 800s on Pro, 300s on Hobby
+// Set to 800 for Pro plan - change to 300 if on Hobby
+export const maxDuration = 800
 
 const CRON_SECRET = process.env.CRON_SECRET
 
 // --- TURBO CONFIG ---
-// Pages per invocation (total across all parallel workers)
+// Pages per invocation (total across all parallel batches)
 const BATCH_SIZE = 50
 // How many AI calls run at the same time
+// Keep at 5 to stay well within OpenAI rate limits (Tier 1: 500 RPM)
 const CONCURRENCY = 5
 // Delay between concurrent rounds (ms) - prevents rate limits
-const ROUND_DELAY = 500
+const ROUND_DELAY = 300
 // Max retries for a single page
 const MAX_RETRIES = 2
+// Safety margin before function timeout (seconds)
+const TIME_SAFETY_MARGIN = 40
 
 // Parallel execution with concurrency limit
 async function processInParallel<T, R>(
@@ -319,15 +323,15 @@ export async function POST(request: NextRequest) {
     // 8. Self-chain if more remain and we still have time budget
     const hasMore = statsAfter.pending > 0 || statsAfter.errored > 0
     const elapsedSec = (Date.now() - startTime) / 1000
-    const timeLeft = 300 - elapsedSec
+    const timeLeft = maxDuration - elapsedSec
 
-    if (hasMore && timeLeft > 30) {
+    if (hasMore && timeLeft > TIME_SAFETY_MARGIN) {
       // We have time left in this invocation - keep going within the same function
-      // This avoids the overhead of a new HTTP call
+      // With maxDuration=800 on Pro, we can process ~12 batches (600 pages) per invocation
       console.log(`[CRON] ${Math.round(timeLeft)}s left, continuing within invocation...`)
 
       let continueBatches = 0
-      const maxContinueBatches = Math.floor(timeLeft / 60) // ~1 batch per minute
+      const maxContinueBatches = Math.floor(timeLeft / 50) // ~1 batch per 50s
 
       while (continueBatches < maxContinueBatches) {
         const nextBatch = await getNextBatch(BATCH_SIZE)
@@ -354,8 +358,8 @@ export async function POST(request: NextRequest) {
 
         continueBatches++
 
-        // Check if we're running low on time
-        if ((Date.now() - startTime) / 1000 > 260) break
+        // Check if we're running low on time (respect maxDuration - safety margin)
+        if ((Date.now() - startTime) / 1000 > (maxDuration - TIME_SAFETY_MARGIN)) break
       }
 
       // Log the extended run
