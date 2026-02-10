@@ -179,6 +179,8 @@ export default async function PostalCodePage({ params }: PageProps) {
 
   // City slug for linking to city pages
   const citySlug = cityName.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
 
   // Fetch AI-generated content from DB (falls back to city-level content)
   let aiContent: Awaited<ReturnType<typeof getAIContent>> = null
@@ -187,8 +189,6 @@ export default async function PostalCodePage({ params }: PageProps) {
   } catch {
     // AI content is optional
   }
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
 
   return (
     <>
