@@ -11,59 +11,17 @@ export const maxDuration = 300
 
 const CRON_SECRET = process.env.CRON_SECRET
 
-// --- TURBO CONFIG ---
-const CONCURRENCY = 5
-const ROUND_DELAY = 300
+// --- CONFIG ---
+const BATCH_SIZE = 3 // pages processed concurrently per round
 const MAX_RETRIES = 2
-const TIME_SAFETY_MARGIN = 30
+const TIME_SAFETY_MARGIN = 45 // seconds before deadline to stop accepting new work
 
-// Parallel execution with concurrency limit
-async function processInParallel<T, R>(
-  items: T[],
-  fn: (item: T) => Promise<R>,
-  concurrency: number,
-  delayBetweenRounds: number
-): Promise<Array<{ item: T; result?: R; error?: string }>> {
-  const results: Array<{ item: T; result?: R; error?: string }> = []
-
-  for (let i = 0; i < items.length; i += concurrency) {
-    const chunk = items.slice(i, i + concurrency)
-
-    const chunkResults = await Promise.allSettled(
-      chunk.map(async (item) => {
-        const result = await fn(item)
-        return { item, result }
-      })
-    )
-
-    for (let j = 0; j < chunkResults.length; j++) {
-      const cr = chunkResults[j]
-      if (cr.status === "fulfilled") {
-        results.push(cr.value)
-      } else {
-        results.push({
-          item: chunk[j],
-          error: cr.reason instanceof Error ? cr.reason.message : String(cr.reason),
-        })
-      }
-    }
-
-    if (i + concurrency < items.length) {
-      await new Promise((r) => setTimeout(r, delayBetweenRounds))
-    }
-  }
-
-  return results
-}
-
-// Get pages that haven't been generated yet (no seeding needed)
-async function getPendingPages(limit: number) {
+// Build pending queue once: compute full queue, subtract already-generated keys
+async function buildPendingQueue() {
   const sql = getSQL()
 
-  // 1. Build full queue in memory
-  const fullQueue = await buildGenerationQueue()
+  const fullQueue = buildGenerationQueue()
 
-  // 2. Get all already-generated page keys from DB
   const existing = await queryWithRetry(async () => {
     return await sql`
       SELECT profession_id, city_slug, COALESCE(problem_id, '') as problem_id
@@ -72,25 +30,23 @@ async function getPendingPages(limit: number) {
     `
   })
 
-  // 3. Build a Set of existing keys for fast lookup
   const existingKeys = new Set(
     existing.map(
       (r: Record<string, string>) => `${r.profession_id}|${r.city_slug}|${r.problem_id || ""}`
     )
   )
 
-  // 4. Filter out already-generated pages
   const pending = fullQueue.filter((item) => {
     const key = `${item.professionId}|${item.citySlug}|${item.problemId || ""}`
     return !existingKeys.has(key)
   })
 
-  console.log(`[CRON] Total: ${fullQueue.length} | Generated: ${existingKeys.size} | Pending: ${pending.length}`)
+  console.log(`[CRON] Queue built — Total: ${fullQueue.length} | Generated: ${existingKeys.size} | Pending: ${pending.length}`)
 
-  return { pending: pending.slice(0, limit), totalPending: pending.length, totalPages: fullQueue.length }
+  return { pending, totalPages: fullQueue.length }
 }
 
-// Process a single page: generate AI content and save directly to DB
+// Process a single page with retries
 async function processPage(item: {
   professionId: string
   citySlug: string
@@ -150,29 +106,6 @@ async function logRun(
   }
 }
 
-function getBaseUrl() {
-  if (process.env.NEXT_PUBLIC_BASE_URL) return process.env.NEXT_PUBLIC_BASE_URL
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
-  return "http://localhost:3000"
-}
-
-async function selfChain() {
-  try {
-    const url = `${getBaseUrl()}/api/cron/generate-content`
-    const headers: Record<string, string> = { "Content-Type": "application/json" }
-    if (CRON_SECRET) headers["Authorization"] = `Bearer ${CRON_SECRET}`
-
-    fetch(url, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ chained: true }),
-    }).catch(() => {})
-    console.log("[CRON] Self-chained next batch")
-  } catch {
-    console.log("[CRON] Self-chain failed, cron will retry in 5 min")
-  }
-}
-
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("authorization")
   if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
@@ -180,80 +113,88 @@ export async function POST(request: NextRequest) {
   }
 
   const startTime = Date.now()
+  const deadline = startTime + (maxDuration - TIME_SAFETY_MARGIN) * 1000
   let totalSuccess = 0
   let totalErrors = 0
 
-  console.log("[CRON] === AI Content Generation Started ===")
+  console.log(`[CRON] === AI Content Generation Started ===`)
+  console.log(`[CRON] Config: batch=${BATCH_SIZE}, retries=${MAX_RETRIES}, safetyMargin=${TIME_SAFETY_MARGIN}s`)
 
   try {
-    // Loop: keep processing batches until we run out of time
-    while (true) {
-      const elapsed = (Date.now() - startTime) / 1000
-      if (elapsed > maxDuration - TIME_SAFETY_MARGIN) {
-        console.log(`[CRON] Time limit approaching (${Math.round(elapsed)}s), stopping.`)
+    // Build the pending queue ONCE at the start
+    const { pending, totalPages } = await buildPendingQueue()
+
+    if (pending.length === 0) {
+      console.log("[CRON] ALL PAGES GENERATED! Nothing left to do.")
+      await logRun(0, 0, 0, Date.now() - startTime)
+      return NextResponse.json({
+        status: "complete",
+        message: `All ${totalPages} pages have been generated`,
+        processed: { success: 0, errors: 0 },
+      })
+    }
+
+    let cursor = 0
+
+    // Process pages in batches until time runs out
+    while (cursor < pending.length) {
+      // Check time BEFORE starting a new batch
+      if (Date.now() >= deadline) {
+        console.log(`[CRON] Time limit approaching (${Math.round((Date.now() - startTime) / 1000)}s), stopping gracefully.`)
         break
       }
 
-      // Get next batch of pending pages (no seeding, direct from queue)
-      const { pending, totalPending, totalPages } = await getPendingPages(CONCURRENCY)
+      const batch = pending.slice(cursor, cursor + BATCH_SIZE)
+      cursor += batch.length
 
-      if (pending.length === 0) {
-        console.log("[CRON] ALL PAGES GENERATED! Nothing left to do.")
-        await logRun(totalSuccess + totalErrors, totalSuccess, totalErrors, Date.now() - startTime)
-        return NextResponse.json({
-          status: "complete",
-          message: `All ${totalPages} pages have been generated`,
-          processed: { success: totalSuccess, errors: totalErrors },
-        })
-      }
+      console.log(`[CRON] Batch ${Math.ceil(cursor / BATCH_SIZE)}: processing ${batch.length} pages (${cursor}/${pending.length})`)
 
-      console.log(`[CRON] Processing ${pending.length} pages... (${totalPending} remaining of ${totalPages})`)
-
-      // Process batch in parallel
-      const results = await processInParallel(
-        pending,
-        async (item) => {
+      const results = await Promise.allSettled(
+        batch.map(async (item) => {
           const label = `${item.professionId}/${item.citySlug}${item.problemId ? `/${item.problemId}` : ""}`
           console.log(`[CRON] Generating: ${label}`)
-          return await processPage(item)
-        },
-        CONCURRENCY,
-        ROUND_DELAY
+          return processPage(item)
+        })
       )
 
-      for (const r of results) {
-        if (r.error) {
-          console.error(`[CRON] Error: ${r.item.professionId}/${r.item.citySlug}: ${r.error}`)
-          totalErrors++
-        } else {
+      for (let i = 0; i < results.length; i++) {
+        const r = results[i]
+        if (r.status === "fulfilled") {
           totalSuccess++
+        } else {
+          const item = batch[i]
+          console.error(`[CRON] Error: ${item.professionId}/${item.citySlug}: ${r.reason}`)
+          totalErrors++
         }
       }
 
-      const pps = (totalSuccess / ((Date.now() - startTime) / 1000)).toFixed(1)
-      console.log(`[CRON] Running total: ${totalSuccess} ok, ${totalErrors} errors (${pps} pages/s)`)
+      const elapsed = (Date.now() - startTime) / 1000
+      const pps = elapsed > 0 ? (totalSuccess / elapsed).toFixed(1) : "0"
+      console.log(`[CRON] Progress: ${totalSuccess} ok, ${totalErrors} errors (${pps} pages/s, ${Math.round(elapsed)}s elapsed)`)
     }
 
-    // Time ran out but pages remain - log and self-chain
     const durationMs = Date.now() - startTime
+    const remaining = pending.length - cursor
     await logRun(totalSuccess + totalErrors, totalSuccess, totalErrors, durationMs)
 
-    const { totalPending } = await getPendingPages(1)
-    if (totalPending > 0) {
-      console.log(`[CRON] ${totalPending} pages remaining, self-chaining...`)
-      await selfChain()
-    }
+    console.log(`[CRON] === Run complete: ${totalSuccess} generated, ${totalErrors} errors, ${remaining} remaining (${Math.round(durationMs / 1000)}s) ===`)
 
     return NextResponse.json({
-      status: totalPending > 0 ? "in_progress" : "complete",
+      status: remaining > 0 ? "in_progress" : "complete",
       processed: { success: totalSuccess, errors: totalErrors },
-      remaining: totalPending,
+      remaining,
+      totalPages,
       durationMs,
-      selfChained: totalPending > 0,
     })
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : "Unknown error"
     console.error("[CRON] Fatal error:", errorMsg)
+
+    // Still try to log the partial run
+    try {
+      await logRun(totalSuccess + totalErrors, totalSuccess, totalErrors, Date.now() - startTime)
+    } catch { /* ignore */ }
+
     return NextResponse.json(
       { error: "Generation failed", details: errorMsg },
       { status: 500 }
