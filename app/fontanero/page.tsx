@@ -118,20 +118,20 @@ const fontaneroData = {
     {
       name: "Luis M.",
       city: "Madrid",
-      text: "Fuga de agua en plena madrugada. Llegaron en 15 minutos y pararon la fuga inmediatamente. Salvaron mi casa de una inundación.",
-      time: "Hace 2 horas",
+      text: "Se nos revento una tuberia del baño a las 3 de la mañana. Llame sin mucha esperanza y en 25 minutos ya estaba el fontanero en casa. Corto el agua, cambio el tramo roto y nos dejo todo perfecto. El precio fue el que me dijeron por telefono, ni un euro mas.",
+      time: "Hace 2 dias",
     },
     {
       name: "Elena C.",
       city: "Barcelona",
-      text: "Muy profesionales. Arreglaron el grifo de la cocina que llevaba semanas goteando. Trabajo rápido y limpio.",
-      time: "Hace 5 horas",
+      text: "Llevaba meses con el grifo de la cocina goteando y al final la factura del agua se noto bastante. Vino el chico, lo cambio en media hora y me dejo uno nuevo mucho mejor. Muy majo y limpio, recogio todo antes de irse.",
+      time: "Hace 5 dias",
     },
     {
       name: "Roberto V.",
       city: "Valencia",
-      text: "La caldera dejó de funcionar en invierno. Vinieron el mismo día y la repararon. Excelente servicio.",
-      time: "Ayer",
+      text: "El calentador dejo de funcionar justo el fin de semana que tenia invitados en casa. Me atendieron un sabado por la tarde sin recargo y el tecnico encontro el problema enseguida. Era una pieza que traia en la furgoneta. Muy agradecida la verdad.",
+      time: "Hace 1 semana",
     },
   ],
   faqs: [

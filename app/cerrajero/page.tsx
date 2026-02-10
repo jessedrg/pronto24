@@ -70,11 +70,6 @@ const cerrajeroData = {
     { problem: "Cerradura seguridad", emoji: "🛡️", urgent: false },
     { problem: "Copia de llaves", emoji: "🗝️", urgent: false },
   ],
-  reviews: [
-    { name: "Pedro L.", city: "Madrid", text: "Me quedé fuera de casa a las 2 AM. Llegaron en 12 minutos y abrieron la puerta sin romper nada. Increíble.", time: "Hace 2 horas" },
-    { name: "María J.", city: "Barcelona", text: "Muy profesionales. Cambiaron el bombín de mi puerta en 20 minutos. Precio justo y trabajo impecable.", time: "Hace 5 horas" },
-    { name: "José R.", city: "Valencia", text: "Rápidos y eficientes. Abrieron mi puerta sin daños y me dieron consejos de seguridad.", time: "Ayer" },
-  ],
   faqs: [
     { question: "¿Cuánto cuesta un cerrajero urgente?", answer: "El precio depende del tipo de servicio. Las aperturas simples empiezan desde 39€. Cambios de bombín desde 60€. Ofrecemos presupuesto GRATIS y sin compromiso antes de empezar cualquier trabajo." },
     { question: "¿Pueden abrir mi puerta sin romperla?", answer: "Sí, en la gran mayoría de casos abrimos sin roturas usando técnicas profesionales: ganzúas, bumping controlado, impresioning. Solo en casos excepcionales (cerraduras de muy alta seguridad dañadas) puede ser necesario forzar." },
@@ -98,6 +93,26 @@ const cerrajeroData = {
     "Si aceptas, abrimos sin roturas en minutos",
     "Verificamos que todo funciona correctamente",
     "Te entregamos factura y garantía por escrito",
+  ],
+  reviews: [
+    {
+      name: "Marta R.",
+      city: "Sevilla",
+      text: "Me deje las llaves dentro de casa al salir a tirar la basura y estaba bastante nerviosa. El cerrajero llego en menos de 20 minutos y abrio sin dañar nada, que era lo que mas me preocupaba. Un alivio enorme, la verdad.",
+      time: "Hace 3 dias",
+    },
+    {
+      name: "Javier S.",
+      city: "Zaragoza",
+      text: "Intentaron forzar la puerta de mi piso mientras estaba de viaje. Un vecino me aviso y al llegar necesitaba cambiar la cerradura urgente. Vinieron esa misma noche y me pusieron una antibumping. Ahora duermo mucho mas tranquilo.",
+      time: "Hace 1 semana",
+    },
+    {
+      name: "Carmen F.",
+      city: "Madrid",
+      text: "Se me partio la llave dentro del bombin un domingo por la noche. Pense que no encontraria a nadie y al final vinieron en media hora. Sacaron el trozo, cambiaron el bombin y me hicieron 3 copias. Todo por el precio que me dijeron antes de venir.",
+      time: "Hace 5 dias",
+    },
   ],
   preventionTips: [
     "Nunca dejes las llaves bajo el felpudo o en macetas: es lo primero que miran los ladrones.",

@@ -70,11 +70,6 @@ const calderasData = {
     { problem: "Ruidos extraños", emoji: "🔊", urgent: false },
     { problem: "Error en display", emoji: "⚠️", urgent: false },
   ],
-  reviews: [
-    { name: "Carlos M.", city: "Madrid", text: "Mi caldera dejó de funcionar en pleno invierno. Vinieron en 25 minutos y la repararon en el acto. Excelente.", time: "Hace 2 horas" },
-    { name: "Laura G.", city: "Barcelona", text: "Muy profesionales. Hicieron el mantenimiento anual de mi caldera y me explicaron todo perfectamente.", time: "Hace 5 horas" },
-    { name: "Miguel A.", city: "Valencia", text: "Rápidos y eficientes. La caldera volvió a funcionar perfectamente. Precio justo y sin sorpresas.", time: "Ayer" },
-  ],
   faqs: [
     { question: "¿Cuánto cuesta reparar una caldera?", answer: "El precio depende de la avería. Las reparaciones simples (purgado, ajustes) empiezan desde 49€. Cambio de piezas desde 80€ según el componente. Ofrecemos presupuesto GRATIS y sin compromiso antes de empezar." },
     { question: "¿Qué marcas de calderas reparan?", answer: "Reparamos todas las marcas del mercado: Vaillant, Junkers, Saunier Duval, Baxi, Roca, Ferroli, Ariston, Beretta, Cointra, Fagor, y muchas más. Nuestros técnicos reciben formación continua de los fabricantes." },
@@ -98,6 +93,26 @@ const calderasData = {
     "Te damos presupuesto cerrado antes de reparar",
     "Reparamos con repuestos originales",
     "Verificamos que todo funciona correctamente",
+  ],
+  reviews: [
+    {
+      name: "Teresa N.",
+      city: "Madrid",
+      text: "La caldera empezo a hacer un ruido raro y a perder presion cada dos dias. Llame y el tecnico vino esa misma tarde. Era el intercambiador que tenia cal acumulada. Lo limpio y ahora funciona como el primer dia. Me recomendo un descalcificador para mi zona.",
+      time: "Hace 4 dias",
+    },
+    {
+      name: "Carlos P.",
+      city: "Zaragoza",
+      text: "Se nos rompio la caldera en pleno enero con temperaturas bajo cero. Vinieron al dia siguiente a primera hora. La pieza la tenian que pedir pero nos dejaron una calefaccion de apoyo mientras tanto. En 3 dias estaba todo arreglado. Un detalle que se agradece mucho.",
+      time: "Hace 1 semana",
+    },
+    {
+      name: "Laura F.",
+      city: "Valladolid",
+      text: "Teniamos dudas entre reparar la caldera vieja o poner una nueva. El tecnico fue muy honesto y nos dijo que la reparacion no merecia la pena por la edad que tenia. Nos instalo una de condensacion nueva con financiacion y la verdad que el ahorro en gas se nota ya.",
+      time: "Hace 2 semanas",
+    },
   ],
   preventionTips: [
     "Haz una revisión anual de la caldera antes del invierno para evitar averías en pleno frío.",

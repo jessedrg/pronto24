@@ -70,11 +70,6 @@ const electricistaData = {
     { problem: "Luces parpadean", emoji: "✨", urgent: false },
     { problem: "Cuadro eléctrico", emoji: "⚙️", urgent: false },
   ],
-  reviews: [
-    { name: "Pedro F.", city: "Madrid", text: "Se fue la luz a las 11 de la noche. Llegaron en 20 minutos y solucionaron el problema del diferencial rápidamente. Muy profesional.", time: "Hace 2 horas" },
-    { name: "Carmen D.", city: "Barcelona", text: "Excelente servicio. Necesitaba instalar varios enchufes y lo hicieron perfecto. Trabajo limpio y precio razonable.", time: "Hace 5 horas" },
-    { name: "Antonio R.", city: "Valencia", text: "Tuve un cortocircuito y vinieron super rápido. El electricista explicó todo claramente. Muy recomendable.", time: "Ayer" },
-  ],
   faqs: [
     { question: "¿Cuánto cuesta un electricista urgente?", answer: "El precio depende del tipo de avería. Los servicios básicos (reparación diferencial, enchufes) empiezan desde 39€. Trabajos más complejos (cuadro eléctrico, instalaciones) desde 80€. Ofrecemos presupuesto GRATIS y sin compromiso." },
     { question: "¿Qué hago si se va la luz en mi casa?", answer: "Primero verifica si es un problema general del edificio o solo de tu vivienda. Si solo afecta a tu casa, no toques el cuadro eléctrico y llámanos inmediatamente. Llegamos en un maximo de 30 minutos para diagnosticar y solucionar el problema de forma segura." },
@@ -98,6 +93,26 @@ const electricistaData = {
     "Te damos presupuesto cerrado antes de reparar",
     "Reparamos con materiales de calidad",
     "Verificamos que todo funciona correctamente",
+  ],
+  reviews: [
+    {
+      name: "Daniel V.",
+      city: "Valencia",
+      text: "Se fue la luz de media casa un viernes por la noche y no habia manera de arreglarlo con los automaticos. Llame y el electricista vino en media hora. Era un cable suelto en el cuadro. Lo arreglo y nos reviso todo por si acaso. Muy tranquilos.",
+      time: "Hace 2 dias",
+    },
+    {
+      name: "Isabel M.",
+      city: "Malaga",
+      text: "Los enchufes de la cocina echaban chispas al conectar el horno y me asuste mucho. Vinieron de urgencia, cambiaron todo el cableado de esa linea que estaba viejo y nos instalaron un diferencial nuevo. Ahora esta todo seguro por fin.",
+      time: "Hace 1 semana",
+    },
+    {
+      name: "Pablo G.",
+      city: "Bilbao",
+      text: "El cuadro electrico saltaba cada vez que encendiamos el aire acondicionado. El tecnico vino, reviso la potencia y redimensiono la linea. Lleva ya dos meses sin saltar ni una sola vez. Problema resuelto de verdad.",
+      time: "Hace 4 dias",
+    },
   ],
   preventionTips: [
     "No sobrecargues los enchufes con muchos aparatos: usa regletas con protección.",
