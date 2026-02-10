@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Footer } from "@/components/footer"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { StaticServiceContent } from "@/components/static-service-content"
+import { generateAggregateRating } from "@/lib/content-generator"
 
 export const metadata: Metadata = {
   title: "Electricista Urgente 24h | pronto-24.com | Llegamos en 30 Minutos",
@@ -34,13 +35,7 @@ const electricistaSchema = {
   },
   "areaServed": { "@type": "Country", "name": "España" },
   "serviceType": "Electricista urgente",
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "reviewCount": "347",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
+  "aggregateRating": generateAggregateRating("electricista-espana"),
   "offers": {
     "@type": "Offer",
     "availability": "https://schema.org/InStock",

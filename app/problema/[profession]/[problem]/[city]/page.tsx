@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { CallButton, LiveBadge } from "@/components/hero-client-parts"
 import { GuaranteeSection } from "@/components/guarantee-section"
 import { PROFESSIONS, PROBLEMS, getCityDisplayName, getNearbyCities } from "@/lib/seo-data"
+import { generateAggregateRating } from "@/lib/content-generator"
 
 
 export const dynamicParams = true
@@ -312,13 +313,7 @@ export default async function ProblemCityPage({ params }: PageProps) {
     "provider": { "@type": "LocalBusiness", "name": "pronto-24.com", "telephone": "+34936946639" },
     "areaServed": { "@type": "City", "name": cityName },
     "serviceType": `${profession.name} - ${problem.name}`,
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "reviewCount": "347",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
+    "aggregateRating": generateAggregateRating(`${citySlug}-${professionId}-${problemId}`),
     ...(details && {
       "offers": {
         "@type": "Offer",

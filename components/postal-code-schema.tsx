@@ -1,3 +1,5 @@
+import { generateAggregateRating } from "@/lib/content-generator"
+
 interface PostalCodeSchemaProps {
   profession: {
     id: string
@@ -57,13 +59,7 @@ export function PostalCodeSchema({
       postalCode: postalcode,
       addressLocality: zoneName,
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      reviewCount: "347",
-      bestRating: "5",
-      worstRating: "1",
-    },
+    aggregateRating: generateAggregateRating(`${postalcode}-${profession.id}`),
   }
 
   // Service Schema

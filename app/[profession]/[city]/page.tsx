@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { PROFESSIONS, getCityDisplayName, getCityProvince, getKeywordModifier } from "@/lib/seo-data"
-import { generateUniqueContent } from "@/lib/content-generator"
+import { generateUniqueContent, generateAggregateRating } from "@/lib/content-generator"
 
 export const dynamicParams = true
 export const revalidate = 604800
@@ -192,13 +192,7 @@ export default async function ProfessionCityPage({ params }: PageProps) {
         "name": uniqueContent.localInfo.province
       }
     },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "reviewCount": "347",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
+    "aggregateRating": generateAggregateRating(`${citySlug}-${professionId}`),
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": `Servicios de ${profession.name} en ${cityName}`,
