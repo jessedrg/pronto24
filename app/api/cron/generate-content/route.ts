@@ -20,7 +20,7 @@ const TIME_SAFETY_MARGIN = 45 // seconds before deadline to stop accepting new w
 async function buildPendingQueue() {
   const sql = getSQL()
 
-  const fullQueue = buildGenerationQueue()
+  const fullQueue = await buildGenerationQueue()
 
   const existing = await queryWithRetry(async () => {
     return await sql`
