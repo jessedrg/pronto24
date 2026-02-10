@@ -142,7 +142,7 @@ export async function generatePageContent(
     maxOutputTokens: 4000,
   })
 
-  const content = result.object
+  const content = result.output
   if (!content) throw new Error("AI returned no content")
 
   // Calculate word count
