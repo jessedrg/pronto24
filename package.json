@@ -65,7 +65,13 @@
     "vaul": "^0.9.9",
     "zod": "3.25.76"
   },
+  "overrides": {
+    "@react-email/render": {
+      "prettier": "$prettier"
+    }
+  },
   "devDependencies": {
+    "prettier": "^3.5.0",
     "babel-plugin-react-compiler": "latest",
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
