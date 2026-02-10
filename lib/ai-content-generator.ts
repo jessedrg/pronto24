@@ -134,14 +134,24 @@ export async function generatePageContent(
     { postalCode: extra?.postalCode, zoneName, problemName, problemDescription }
   )
 
-  const result = await generateText({
-    model: "openai/gpt-4o-mini",
-    prompt,
-    output: Output.object({ schema: PageContentSchema }),
-    temperature: 0.8,
-    maxOutputTokens: 4000,
-  })
+  let result;
+  try {
+    result = await generateText({
+      model: "openai/gpt-4o-mini",
+      prompt,
+      output: Output.object({ schema: PageContentSchema }),
+      temperature: 0.8,
+      maxOutputTokens: 4000,
+    })
+  } catch (aiError) {
+    console.error("[v0] AI generateText error:", aiError)
+    throw new Error(`AI generation failed: ${aiError instanceof Error ? aiError.message : String(aiError)}`)
+  }
 
+  console.log("[v0] AI result keys:", Object.keys(result))
+  console.log("[v0] AI result.output:", result.output ? "has content" : "null/undefined")
+  console.log("[v0] AI result.text:", result.text ? result.text.substring(0, 200) : "empty")
+  
   const content = result.output
   if (!content) throw new Error("AI returned no content")
 
