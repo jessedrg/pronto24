@@ -22,20 +22,27 @@ export async function POST(request: NextRequest) {
       headers["Authorization"] = `Bearer ${cronSecret}`
     }
 
-    // Fire the cron
+    console.log("[TRIGGER] Firing cron at:", `${baseUrl}/api/cron/generate-content`)
+    console.log("[TRIGGER] CRON_SECRET set:", !!cronSecret)
+
+    // Fire the cron - do NOT await, let it run in background
     fetch(`${baseUrl}/api/cron/generate-content`, {
       method: "POST",
       headers,
       body: JSON.stringify({ chained: true }),
     }).catch((err) => {
-      console.error("[ADMIN] Failed to trigger cron:", err)
+      console.error("[TRIGGER] Failed to trigger cron:", err)
     })
 
-    return NextResponse.json({ status: "started", message: "Generation triggered" })
+    return NextResponse.json({
+      status: "started",
+      message: "Generation triggered. The cron is now running in the background. Refresh in a few seconds to see progress.",
+      baseUrl,
+      cronSecretConfigured: !!cronSecret,
+    })
   }
 
   if (action === "retry-errors") {
-    // Reset all error pages to pending
     const result = await queryWithRetry(async () => {
       return await sql`
         UPDATE page_content 
@@ -45,15 +52,22 @@ export async function POST(request: NextRequest) {
       `
     })
 
+    // Also trigger the cron to start processing
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+    const headers: Record<string, string> = { "Content-Type": "application/json" }
+    if (process.env.CRON_SECRET) headers["Authorization"] = `Bearer ${process.env.CRON_SECRET}`
+    fetch(`${baseUrl}/api/cron/generate-content`, { method: "POST", headers, body: JSON.stringify({ chained: true }) }).catch(() => {})
+
     return NextResponse.json({
       status: "reset",
-      message: `Reset ${result.length} errored pages to pending`,
+      message: `Reset ${result.length} errored pages to pending and triggered generation`,
       count: result.length,
     })
   }
 
   if (action === "reset-all") {
-    // Reset ALL pages to pending (full regeneration)
     const result = await queryWithRetry(async () => {
       return await sql`
         UPDATE page_content 
