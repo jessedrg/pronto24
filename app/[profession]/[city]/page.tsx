@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer"
 import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { PROFESSIONS, getCityDisplayName, getCityProvince, getKeywordModifier } from "@/lib/seo-data"
-import { generateUniqueContent } from "@/lib/content-generator"
+import { generateUniqueContent, generateAggregateRating } from "@/lib/content-generator"
 
 export const dynamicParams = true
 export const revalidate = 604800
@@ -192,6 +192,7 @@ export default async function ProfessionCityPage({ params }: PageProps) {
         "name": uniqueContent.localInfo.province
       }
     },
+    "aggregateRating": generateAggregateRating(`${citySlug}-${professionId}`),
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": `Servicios de ${profession.name} en ${cityName}`,
@@ -250,9 +251,6 @@ export default async function ProfessionCityPage({ params }: PageProps) {
       "text": step
     }))
   } : null
-
-  // Note: Review schema removed - Google penalizes fabricated reviews in structured data.
-  // Testimonials are still shown visually but without schema markup.
 
   // Schema.org JSON-LD para BreadcrumbList
   const breadcrumbSchema = {

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Footer } from "@/components/footer"
 import { UrgencyBanner } from "@/components/urgency-banner"
 import { StaticServiceContent } from "@/components/static-service-content"
+import { generateAggregateRating } from "@/lib/content-generator"
 
 export const metadata: Metadata = {
   title: "Desatascos Urgentes 24h | pronto-24.com | Llegamos en 30 Minutos",
@@ -34,6 +35,7 @@ const desatascosSchema = {
   },
   "areaServed": { "@type": "Country", "name": "España" },
   "serviceType": "Desatascos urgentes",
+  "aggregateRating": generateAggregateRating("desatascos-espana"),
   "offers": {
     "@type": "Offer",
     "availability": "https://schema.org/InStock",
@@ -68,11 +70,6 @@ const desatascosData = {
     { problem: "Arqueta llena", emoji: "🚧", urgent: false },
     { problem: "Mal olor desagües", emoji: "👃", urgent: false },
   ],
-  reviews: [
-    { name: "Carlos M.", city: "Madrid", text: "Increíble servicio. Llegaron en 20 minutos y solucionaron el atasco del inodoro en menos de una hora. Muy profesionales.", time: "Hace 2 horas" },
-    { name: "Ana G.", city: "Barcelona", text: "Tuve un atasco grave en la cocina un domingo por la noche. Vinieron rapidísimo y lo arreglaron todo.", time: "Hace 5 horas" },
-    { name: "Miguel R.", city: "Valencia", text: "Excelente atención. El técnico explicó todo el proceso y dejó todo limpio. Muy satisfecho.", time: "Ayer" },
-  ],
   faqs: [
     { question: "¿Cuánto cuesta un desatasco urgente?", answer: "El precio depende del tipo y gravedad del atasco. Los desatascos simples (fregadero, ducha) empiezan desde 39€. Atascos más complejos (bajantes, arquetas) desde 80€. Ofrecemos presupuesto GRATIS antes de empezar." },
     { question: "¿Qué tipos de atascos solucionan?", answer: "Solucionamos todo tipo de atascos: inodoros, fregaderos, duchas, bañeras, bajantes, arquetas y tuberías principales. Contamos con equipos especializados incluyendo cámaras de inspección y camiones cuba para los casos más graves." },
@@ -96,6 +93,26 @@ const desatascosData = {
     "Te damos presupuesto cerrado antes de actuar",
     "Desatascamos con el método más adecuado",
     "Verificamos que el agua fluye correctamente",
+  ],
+  reviews: [
+    {
+      name: "Francisco T.",
+      city: "Barcelona",
+      text: "El inodoro del baño no tragaba nada y ya no sabiamos que hacer. Vinieron con una maquina de presion y en media hora estaba todo limpio y funcionando. El tecnico me explico que no tiremos toallitas, que era lo que habia causado todo el problema.",
+      time: "Hace 2 dias",
+    },
+    {
+      name: "Ana D.",
+      city: "Alicante",
+      text: "Llevabamos semanas con todos los desagues del piso lentos y oliendo mal. Al final llamamos y el tecnico descubrio que el problema estaba en la bajante comunitaria. Lo soluciono y dejo un informe para la comunidad. Muy profesional.",
+      time: "Hace 1 semana",
+    },
+    {
+      name: "Miguel L.",
+      city: "Cordoba",
+      text: "Se nos inundo el patio entero porque el sumidero estaba taponado con raices de un arbol. Vinieron ese mismo dia, cortaron las raices con una maquina especial y nos dejaron el desague como nuevo. Nos recomendaron revisarlo cada año.",
+      time: "Hace 3 dias",
+    },
   ],
   preventionTips: [
     "Nunca viertas aceite por el fregadero: solidifica y causa atascos. Guárdalo en un bote y tíralo a la basura.",

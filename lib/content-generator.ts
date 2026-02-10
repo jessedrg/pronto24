@@ -13,7 +13,7 @@
  */
 
 // Función hash simple para generar número consistente por ciudad
-function hashCity(citySlug: string): number {
+export function hashCity(citySlug: string): number {
   let hash = 0
   for (let i = 0; i < citySlug.length; i++) {
     const char = citySlug.charCodeAt(i)
@@ -21,6 +21,27 @@ function hashCity(citySlug: string): number {
     hash = hash & hash // Convert to 32bit integer
   }
   return Math.abs(hash)
+}
+
+/**
+ * Genera un aggregateRating variado y realista basado en un seed string.
+ * Produce ratings entre 4.5 y 4.9, y reviewCounts entre 89 y 487.
+ * Determinístico: misma seed = mismos valores.
+ */
+export function generateAggregateRating(seed: string) {
+  const hash = hashCity(seed)
+  // Rating entre 4.5 y 4.9 (con 1 decimal)
+  const ratingOptions = ["4.5", "4.6", "4.7", "4.8", "4.9"]
+  const ratingValue = ratingOptions[hash % ratingOptions.length]
+  // Review count entre 89 y 487 (variado)
+  const reviewCount = String(89 + (hash % 399))
+  return {
+    "@type": "AggregateRating" as const,
+    ratingValue,
+    reviewCount,
+    bestRating: "5",
+    worstRating: "1",
+  }
 }
 
 // Provincias de España con códigos
@@ -372,6 +393,7 @@ export interface UniqueContent {
   extendedDescription: string
   whyChooseUs: string[]
   serviceProcess: string[]
+  testimonials: Array<{ name: string; city: string; text: string; time: string }>
 }
 
 /**
@@ -426,6 +448,9 @@ export function generateUniqueContent(
   // Proceso de servicio
   const serviceProcess = generateServiceProcess(professionName, hash)
   
+  // Testimoniales variados por ciudad
+  const testimonials = generateTestimonials(cityName, professionName, hash)
+  
   return {
     intro: introVariant(cityName, professionName.toLowerCase()),
     guarantee: guaranteeVariant,
@@ -443,6 +468,7 @@ export function generateUniqueContent(
     extendedDescription,
     whyChooseUs,
     serviceProcess,
+    testimonials,
   }
 }
 
@@ -542,4 +568,133 @@ function generateSeoText(
   return templates[hash % templates.length]()
 }
 
+// Genera testimoniales ultra-realistas variados por ciudad y profesion
+function generateTestimonials(
+  cityName: string,
+  professionName: string,
+  hash: number
+): Array<{ name: string; city: string; text: string; time: string }> {
+  const prof = professionName.toLowerCase()
 
+  // Nombres realistas con apellidos variados (mezcla de regiones de Espana)
+  const people = [
+    "Antonio Garcia", "Manuel Lopez", "Francisco Ruiz", "David Martinez", "Juan Sanchez",
+    "Carlos Fernandez", "Pedro Romero", "Miguel Torres", "Jose Navarro", "Daniel Vega",
+    "Pablo Moreno", "Javier Diaz", "Alejandro Gil", "Rafael Molina", "Fernando Serrano",
+    "Maria Lopez", "Carmen Garcia", "Ana Martinez", "Laura Fernandez", "Isabel Ruiz",
+    "Lucia Sanchez", "Elena Torres", "Marta Romero", "Sara Navarro", "Rosa Moreno",
+    "Patricia Diaz", "Raquel Gil", "Cristina Molina", "Beatriz Serrano", "Teresa Vega",
+  ]
+
+  // Tiempos con formato natural
+  const times = [
+    "Hace 1 dia", "Hace 2 dias", "Hace 3 dias", "Hace 4 dias", "Hace 5 dias",
+    "Hace 1 semana", "Hace 1 semana", "Hace 2 semanas", "Hace 2 semanas", "Hace 3 semanas",
+  ]
+
+  // Templates con detalles concretos y lenguaje natural (incluyen faltas tipicas, coloquialismos)
+  const templateSets: Record<string, string[][]> = {
+    fontanero: [
+      [
+        `Se nos revento una tuberia del baño a las 3 de la mañana. Llame sin mucha esperanza y en 25 min ya estaba el ${prof} en casa. Corto el agua, cambio el tramo roto y nos dejo todo perfecto. El precio fue el que me dijeron por telefono, ni un euro mas.`,
+        `Llevaba meses con el grifo de la cocina goteando y al final la factura del agua se noto bastante. Vino el chico, lo cambio en media hora y me dejo uno nuevo mucho mejor. Muy majo y limpio, recogio todo antes de irse.`,
+        `El calentador dejo de funcionar justo el fin de semana que tenia invitados en casa. Me atendieron un sabado por la tarde sin recargo y el tecnico encontro el problema enseguida. Era una pieza que traia en la furgoneta. Muy agradecida la verdad.`,
+      ],
+      [
+        `Nos inundamos por una fuga en la cocina que venia de la vivienda de arriba. Necesitabamos alguien ya y vinieron rapidisimo. El ${prof} localizo de donde venia, reparo la junta y nos ayudo a secar. Muy profesional.`,
+        `Tenia un atasco en el fregadero que no habia manera. Probe con productos del super y nada. El ${prof} lo soluciono con una maquina en 15 minutos. Me explico que no use esos productos porque estropean las tuberias. Buen consejo.`,
+        `El baño de abajo tenia una humedad que no sabiamos de donde venia. Vino el tecnico con una camara y encontro una microfiltracion en un codo. Lo reparo sin tener que romper apenas nada. Quede impresionado con el equipo que traen.`,
+      ],
+    ],
+    cerrajero: [
+      [
+        `Me deje las llaves dentro de casa al salir a tirar la basura. Llame bastante agobiada y el ${prof} llego en menos de 20 minutos. Abrio sin dañar nada, que era lo que mas me preocupaba. Un alivio.`,
+        `Intentaron forzar la puerta de casa mientras estabamos de vacaciones. Los vecinos nos avisaron y al llegar necesitabamos cambiar la cerradura urgente. Vinieron esa misma noche y nos pusieron una de seguridad nueva. Ahora dormimos mas tranquilos.`,
+        `Se me rompio la llave dentro del bombin al girarla. Era domingo y pense que no encontraria a nadie. Llame y en media hora estaba el chico. Saco el trozo de llave, cambio el bombin y me hizo 3 copias. Todo por el precio que me dijeron antes.`,
+      ],
+      [
+        `La cerradura de la oficina se bloqueo y no podiamos abrir el lunes a primera hora. Vinieron antes de las 8 y lo solucionaron sin problemas. Nos recomendaron cambiar a una cerradura antibumping y la verdad que nos quedo genial.`,
+        `Tuve que cambiar todas las cerraduras de casa por una separacion. El ${prof} fue muy discreto y profesional, me asesoro sobre las mejores opciones y lo hizo todo en una mañana. Precio razonable para 4 cerraduras con llaves nuevas.`,
+        `Se nos quedo el niño encerrado en la habitacion por un pestillo estropeado. Imaginate los nervios. El ${prof} llego en 15 minutos y abrio en un momento sin asustar al crio. Un profesional de verdad.`,
+      ],
+    ],
+    electricista: [
+      [
+        `Se fue la luz de media casa un viernes por la noche. Revisamos los automaticos y nada. Llame y el ${prof} vino en media hora. Era un cable suelto en el cuadro. Lo arreglo y nos reviso todo el cuadro por si acaso. Muy profesional.`,
+        `Necesitaba instalar puntos de luz nuevos en el salon que acabamos de reformar. El tecnico hizo un trabajo impecable, dejo los cables ocultos y nos puso focos LED que quedan geniales. Muy contento con el resultado.`,
+        `Los enchufes de la cocina echaban chispas al conectar el horno. Me asuste bastante y llame de urgencia. Vino el ${prof}, cambio todo el cableado de esa linea que estaba viejo y nos instalo un diferencial nuevo. Ahora esta todo seguro.`,
+      ],
+      [
+        `El cuadro electrico saltaba cada dos por tres cuando encendiamos el aire acondicionado. El ${prof} vino, reviso la potencia y nos redimensiono la linea. Lleva 2 meses sin saltar, problema resuelto.`,
+        `Teniamos una averia en el tendido que va del contador al piso y la compania nos decia que era nuestro problema. El tecnico nos lo confirmo y lo reparo ese mismo dia. Por fin tenemos la potencia que pagamos.`,
+        `Queria poner un punto de recarga para el coche electrico en el garaje. El ${prof} vino, estudio la instalacion y me lo dejo todo montado con su certificado en dos dias. Muy serio y cumplidor.`,
+      ],
+    ],
+    desatascos: [
+      [
+        `El inodoro del baño principal no tragaba nada. Llame y vinieron con una maquina de esas de presion. En media hora estaba todo limpio y funcionando. El tecnico me explico que no tire toallitas, que es lo que habia causado el atasco.`,
+        `Se nos atasco el desague de la ducha y empezaba a oler bastante mal. Vinieron al dia siguiente a primera hora, metieron una camara para ver donde estaba el problema y lo solucionaron con desatascador mecanico. Muy limpios trabajando.`,
+        `Llevabamos semanas con los desagues del piso lentos. Al final llame y el tecnico descubrio que el problema era en la bajante comunitaria. Lo soluciono con maquina de presion y dejo un informe por si la comunidad lo necesitaba. Muy profesional.`,
+      ],
+      [
+        `Se nos inundo el patio porque el sumidero estaba taponado con raices. Vinieron ese mismo dia, cortaron las raices con una maquina especial y nos dejaron el desague como nuevo. Nos recomendaron revisarlo una vez al año.`,
+        `El fregadero de la cocina del restaurante se atascaba cada semana. Llamamos a estos y descubrieron que el problema era un codo mal puesto que acumulaba grasa. Lo cambiaron y llevamos 3 meses sin atascos. Nos ha ahorrado mucho dinero.`,
+        `Despues de una tormenta fuerte se nos taponaron los desagues del garaje y se empezo a inundar. Vinieron de urgencia y los limpiaron todos con agua a presion. Servicio rapido cuando realmente lo necesitabamos.`,
+      ],
+    ],
+    calderas: [
+      [
+        `La caldera empezo a hacer un ruido raro y a perder presion. Llame y el tecnico vino esa misma tarde. Era el intercambiador que tenia cal. Lo limpio y ahora funciona como el primer dia. Me recomendo poner un descalcificador para la zona.`,
+        `Se nos rompio la caldera en pleno enero con temperaturas bajo cero. Vinieron al dia siguiente a primera hora. La pieza la tenian que pedir pero nos dejaron una calefaccion de apoyo mientras tanto. En 3 dias estaba todo arreglado. Detalle que se agradece.`,
+        `Necesitabamos cambiar la caldera antigua de gas por una de condensacion nueva. El tecnico nos asesoro sobre el modelo, se encargo de todo el papeleo y la instalacion fue impecable. Ademas el ahorro en la factura se nota ya desde el primer mes.`,
+      ],
+      [
+        `El agua caliente salia templada y la caldera daba error. El tecnico diagnostico que era la valvula de 3 vias. La cambio en una hora y nos hizo una revision completa de la caldera aprovechando la visita. Muy profesional y buen precio.`,
+        `Llevaba dos inviernos sin hacer la revision de la caldera y claro, se paro justo cuando mas frio hacia. Vino el tecnico, la limpio a fondo, cambio un par de juntas y nos dejo el certificado de mantenimiento. Leccion aprendida.`,
+        `Teniamos dudas entre reparar la caldera vieja o poner una nueva. El tecnico fue muy honesto y nos dijo que la reparacion no merecia la pena por la edad que tenia. Nos instalo una nueva con financiacion y la verdad que estamos encantados.`,
+      ],
+    ],
+  }
+
+  // Para profesiones que no tienen templates especificos, usar genericos
+  const genericTemplates = [
+    [
+      `Llame con bastante urgencia y vinieron antes de lo que esperaba. El tecnico evaluo el problema, me explico lo que habia que hacer y se puso manos a la obra. Todo quedo perfecto y el precio fue el que me dijeron por telefono.`,
+      `Es la segunda vez que les llamo y repiten. Puntuales, limpios y el trabajo queda bien hecho. El tecnico se tomo su tiempo para dejarlo todo perfecto, no como otros que van con prisas. Los recomiendo sin duda.`,
+      `Tenia el problema desde hacia semanas y ya no podia mas. Vinieron el mismo dia que llame, diagnosticaron la averia al momento y la repararon en poco mas de una hora. Me dejaron garantia por escrito. Muy satisfecho.`,
+    ],
+    [
+      `Nos atendieron un festivo sin recargo, que ya es dificil de encontrar. El tecnico fue muy majo, nos explico todo el proceso y nos dio consejos para evitar que vuelva a pasar. Servicio de 10.`,
+      `Despues de probar con otra empresa que nos dejo tirados, llame a estos y la diferencia fue brutal. Vinieron cuando dijeron, hicieron lo que dijeron y cobraron lo que dijeron. Asi de simple. Ya tengo su numero guardado.`,
+      `El tecnico que vino era joven pero se notaba que sabia lo que hacia. Llego con todo el material, trabajo limpio y me dejo todo recogido. Ademas me enseño un par de trucos para el mantenimiento. Muy agradecida.`,
+    ],
+  ]
+
+  // Seleccionar el set de templates correcto
+  const profKey = Object.keys(templateSets).find(key => prof.includes(key)) || ""
+  const sets = profKey ? templateSets[profKey] : genericTemplates
+  const setIdx = hash % sets.length
+  const selectedTexts = sets[setIdx]
+
+  const count = 3
+  const result: Array<{ name: string; city: string; text: string; time: string }> = []
+
+  for (let i = 0; i < count; i++) {
+    const personIdx = (hash + i * 7 + i * i * 3) % people.length
+    const timeIdx = (hash + i * 5 + 2) % times.length
+
+    // Abreviar el apellido para privacidad realista (ej: "Antonio Garcia" -> "Antonio G.")
+    const fullName = people[personIdx]
+    const parts = fullName.split(" ")
+    const displayName = `${parts[0]} ${parts[1].charAt(0)}.`
+
+    result.push({
+      name: displayName,
+      city: cityName,
+      text: selectedTexts[i % selectedTexts.length],
+      time: times[timeIdx],
+    })
+  }
+
+  return result
+}

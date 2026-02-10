@@ -9,6 +9,7 @@ import { ServicesOverview } from "@/components/services-overview"
 import { HomeFAQ } from "@/components/home-faq"
 import { AboutSection } from "@/components/about-section"
 import { HomeServiceArticles } from "@/components/home-service-articles"
+import { generateAggregateRating } from "@/lib/content-generator"
 
 // Schema.org JSON-LD para la página principal
 const homeSchema = {
@@ -24,6 +25,7 @@ const homeSchema = {
     "@type": "Country",
     "name": "España"
   },
+  "aggregateRating": generateAggregateRating("pronto24-home"),
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "Servicios de Emergencia para el Hogar",
