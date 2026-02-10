@@ -1120,9 +1120,18 @@ export function getAllCities(): string[] {
   return Object.values(CITIES_SPAIN).flat()
 }
 
+// Helper to decode URI-encoded slugs (e.g. "do%C3%B1a" -> "doña")
+function decodeSlug(slug: string): string {
+  try {
+    return decodeURIComponent(slug)
+  } catch {
+    return slug
+  }
+}
+
 // Helper to get city display name
 export function getCityDisplayName(slug: string): string {
-  return slug
+  return decodeSlug(slug)
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
@@ -1140,8 +1149,9 @@ export function getCityDisplayName(slug: string): string {
 
 // Helper to get region from city
 export function getCityRegion(citySlug: string): string {
+  const decodedSlug = decodeSlug(citySlug)
   for (const [region, cities] of Object.entries(CITIES_SPAIN)) {
-    if (cities.includes(citySlug)) {
+    if (cities.includes(decodedSlug)) {
       const regionNames: Record<string, string> = {
         barcelona: "Barcelona",
         girona: "Girona",
@@ -1476,11 +1486,12 @@ export function getProfessionBySlug(slug: string) {
 }
 
 export function getCityBySlug(slug: string) {
+  const decodedSlug = decodeSlug(slug)
   const allCities = getAllCities()
-  if (!allCities.includes(slug)) return null
+  if (!allCities.includes(decodedSlug)) return null
   return {
-    slug,
-    name: getCityDisplayName(slug),
-    province: getCityRegion(slug),
+    slug: decodedSlug,
+    name: getCityDisplayName(decodedSlug),
+    province: getCityRegion(decodedSlug),
   }
 }

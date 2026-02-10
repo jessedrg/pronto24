@@ -69,7 +69,8 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { profession: rawProfession, city: citySlug } = await params
+  const { profession: rawProfession, city: rawCitySlug } = await params
+  const citySlug = decodeURIComponent(rawCitySlug)
   const { professionId, modifier } = parseProfessionAndModifier(rawProfession)
 
   if (!VALID_PROFESSIONS.includes(professionId)) {
@@ -135,7 +136,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProfessionCityPage({ params }: PageProps) {
-  const { profession: rawProfession, city: citySlug } = await params
+  const { profession: rawProfession, city: rawCitySlug } = await params
+  const citySlug = decodeURIComponent(rawCitySlug)
 
   if (RESERVED_PATHS.includes(rawProfession)) {
     notFound()
