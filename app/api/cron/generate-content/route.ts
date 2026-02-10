@@ -7,9 +7,8 @@ import {
   getGenerationStats,
 } from "@/lib/ai-content-generator"
 
-// Max duration: 800s on Pro, 300s on Hobby
-// Set to 800 for Pro plan - change to 300 if on Hobby
-export const maxDuration = 800
+// Max duration: 300s on Pro plan (Vercel max for Pro)
+export const maxDuration = 300
 
 const CRON_SECRET = process.env.CRON_SECRET
 
@@ -17,14 +16,13 @@ const CRON_SECRET = process.env.CRON_SECRET
 // Pages per invocation (total across all parallel batches)
 const BATCH_SIZE = 50
 // How many AI calls run at the same time
-// Keep at 5 to stay well within OpenAI rate limits (Tier 1: 500 RPM)
 const CONCURRENCY = 5
 // Delay between concurrent rounds (ms) - prevents rate limits
 const ROUND_DELAY = 300
 // Max retries for a single page
 const MAX_RETRIES = 2
 // Safety margin before function timeout (seconds)
-const TIME_SAFETY_MARGIN = 40
+const TIME_SAFETY_MARGIN = 30
 
 // Parallel execution with concurrency limit
 async function processInParallel<T, R>(
