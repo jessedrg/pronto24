@@ -9,6 +9,8 @@ import { CallButton, LiveBadge } from "@/components/hero-client-parts"
 import { GuaranteeSection } from "@/components/guarantee-section"
 import { PROFESSIONS, PROBLEMS, getCityDisplayName, getNearbyCities } from "@/lib/seo-data"
 import { generateTestimonials } from "@/lib/content-generator"
+import { getAIContent } from "@/lib/ai-content-generator"
+import { AIContentSections } from "@/components/ai-content-sections"
 
 export const dynamicParams = true
 export const revalidate = 604800
@@ -290,6 +292,14 @@ export default async function ProblemCityPage({ params }: PageProps) {
   const details = PROBLEM_DETAILS[professionId]?.[problemId]
   const reviews = generateTestimonials(citySlug, cityName, profession.name)
 
+  // Fetch AI-generated content from DB
+  let aiContent: Awaited<ReturnType<typeof getAIContent>> = null
+  try {
+    aiContent = await getAIContent(professionId, citySlug, problemId)
+  } catch {
+    // AI content is optional - graceful degradation
+  }
+  
   const phoneNumber = "936946639"
   const phoneFormatted = "936 946 639"
 
@@ -762,6 +772,23 @@ export default async function ProblemCityPage({ params }: PageProps) {
             </div>
           </div>
         </section>
+
+        {/* AI-Generated Unique Content */}
+        {aiContent && (
+          <AIContentSections
+            aiIntro={aiContent.ai_intro}
+            aiLocalContext={aiContent.ai_local_context}
+            aiServiceDetails={aiContent.ai_service_details}
+            aiPricingInfo={aiContent.ai_pricing_info}
+            aiPreventionTips={aiContent.ai_prevention_tips}
+            aiFaqs={aiContent.ai_faqs}
+            aiNeighborhoodInfo={aiContent.ai_neighborhood_info}
+            aiSeasonalTips={aiContent.ai_seasonal_tips}
+            aiEmergencyGuide={aiContent.ai_emergency_guide}
+            cityName={cityName}
+            professionName={profession.name}
+          />
+        )}
 
         {/* Interlinking: Postal codes in this city */}
         {(() => {

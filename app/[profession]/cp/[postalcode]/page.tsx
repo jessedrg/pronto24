@@ -19,6 +19,8 @@ import {
   PROFESSIONS_POSTAL,
 } from "@/lib/postal-data"
 import { PROBLEMS } from "@/lib/seo-data"
+import { getAIContent } from "@/lib/ai-content-generator"
+import { AIContentSections } from "@/components/ai-content-sections"
 
 const VALID_PROFESSIONS = ["electricista", "fontanero", "cerrajero", "desatascos", "calderas"]
 
@@ -177,6 +179,14 @@ export default async function PostalCodePage({ params }: PageProps) {
 
   // City slug for linking to city pages
   const citySlug = cityName.toLowerCase()
+
+  // Fetch AI-generated content from DB (falls back to city-level content)
+  let aiContent: Awaited<ReturnType<typeof getAIContent>> = null
+  try {
+    aiContent = await getAIContent(profession, citySlug)
+  } catch {
+    // AI content is optional
+  }
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
 
@@ -293,6 +303,23 @@ export default async function PostalCodePage({ params }: PageProps) {
               </div>
             </div>
           </section>
+
+          {/* AI-Generated Unique Content */}
+          {aiContent && (
+            <AIContentSections
+              aiIntro={aiContent.ai_intro}
+              aiLocalContext={aiContent.ai_local_context}
+              aiServiceDetails={aiContent.ai_service_details}
+              aiPricingInfo={aiContent.ai_pricing_info}
+              aiPreventionTips={aiContent.ai_prevention_tips}
+              aiFaqs={aiContent.ai_faqs}
+              aiNeighborhoodInfo={aiContent.ai_neighborhood_info}
+              aiSeasonalTips={aiContent.ai_seasonal_tips}
+              aiEmergencyGuide={aiContent.ai_emergency_guide}
+              cityName={zoneName}
+              professionName={professionData.name}
+            />
+          )}
 
           {/* Interlinking: Nearby postal codes */}
           {nearbyPostalCodes.length > 0 && (
