@@ -75,30 +75,51 @@ async function ensurePendingRowsExist() {
 
   if (existing > 0) return existing
 
-  // Seed all page combinations as pending rows - use batched inserts
+  console.log("[CRON] Seeding page_content table with all page combinations...")
+
+  // Build full queue of all pages
   const queue = await buildGenerationQueue()
+  console.log(`[CRON] Queue has ${queue.length} pages to seed`)
+
   let inserted = 0
-  const SEED_BATCH = 100
+  const SEED_BATCH = 500
 
   for (let i = 0; i < queue.length; i += SEED_BATCH) {
     const chunk = queue.slice(i, i + SEED_BATCH)
-    const values = chunk.map((item) => {
+
+    // Build batch values for a single multi-row INSERT
+    const valueTuples = chunk.map((item) => {
       const pageUrl =
         item.pageType === "problem" && item.problemId
           ? `/problema/${item.professionId}/${item.problemId}/${item.citySlug}`
           : `/${item.professionId}/${item.citySlug}`
-      return { ...item, pageUrl }
+      return {
+        professionId: item.professionId,
+        citySlug: item.citySlug,
+        problemId: item.problemId || null,
+        pageUrl,
+      }
     })
 
     try {
-      for (const v of values) {
-        await sql`
+      // Insert one by one but without awaiting each separately - use Promise.allSettled for speed
+      const insertPromises = valueTuples.map((v) =>
+        sql`
           INSERT INTO page_content (profession_id, city_slug, problem_id, page_url, ai_status)
-          VALUES (${v.professionId}, ${v.citySlug}, ${v.problemId || null}, ${v.pageUrl}, 'pending')
+          VALUES (${v.professionId}, ${v.citySlug}, ${v.problemId}, ${v.pageUrl}, 'pending')
           ON CONFLICT (profession_id, city_slug, COALESCE(problem_id, ''), COALESCE(modifier, ''))
           DO NOTHING
-        `
-        inserted++
+        `.catch(() => null)
+      )
+
+      // Process 50 concurrent inserts at a time
+      for (let j = 0; j < insertPromises.length; j += 50) {
+        await Promise.allSettled(insertPromises.slice(j, j + 50))
+      }
+      inserted += chunk.length
+      
+      if (i % 2000 === 0) {
+        console.log(`[CRON] Seeded ${inserted}/${queue.length} rows...`)
       }
     } catch (err) {
       console.error(`[CRON] Seed batch error at offset ${i}:`, err)

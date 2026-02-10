@@ -86,13 +86,19 @@ export default function ContentGenerationDashboard() {
 
   const fetchStats = useCallback(async () => {
     try {
+      console.log("[v0] Fetching stats from /api/admin/generation-status...")
       const res = await fetch("/api/admin/generation-status")
+      console.log("[v0] Status response:", res.status, res.statusText)
       if (res.ok) {
         const data = await res.json()
+        console.log("[v0] Stats data:", JSON.stringify(data.overall))
         setStats(data)
+      } else {
+        const text = await res.text()
+        console.error("[v0] Status API error:", text)
       }
     } catch (err) {
-      console.error("Failed to fetch stats:", err)
+      console.error("[v0] Failed to fetch stats:", err)
     } finally {
       setLoading(false)
     }
@@ -111,17 +117,23 @@ export default function ContentGenerationDashboard() {
   const triggerAction = async (action: string) => {
     setActionLoading(action)
     try {
+      console.log("[v0] Triggering action:", action)
       const res = await fetch("/api/admin/trigger-generation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),
       })
+      const data = await res.json()
+      console.log("[v0] Trigger response:", res.status, data)
       if (res.ok) {
         setAutoRefresh(true)
-        setTimeout(fetchStats, 2000)
+        // Give the cron time to seed rows on first run
+        setTimeout(fetchStats, 5000)
+        setTimeout(fetchStats, 15000)
+        setTimeout(fetchStats, 30000)
       }
     } catch (err) {
-      console.error("Action failed:", err)
+      console.error("[v0] Action failed:", err)
     } finally {
       setActionLoading(null)
     }
