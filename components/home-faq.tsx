@@ -24,8 +24,8 @@ const faqCategories = [
     icon: CreditCard,
     faqs: [
       {
-        question: "¿Cuánto cuesta el servicio de urgencias?",
-        answer: "El precio varía según el tipo de servicio, la hora del día, y la complejidad del trabajo. Siempre proporcionamos un presupuesto cerrado y por escrito antes de comenzar cualquier trabajo, sin sorpresas ni costes ocultos. Como referencia general: Cerrajería de urgencia: desde 60€. Fontanería urgente: desde 70€. Electricidad de emergencia: desde 65€. Desatascos: desde 80€. Calderas: desde 75€. La visita de diagnóstico tiene un coste mínimo (generalmente entre 25-40€) que se descuenta completamente si decides realizar la reparación con nosotros. Si el cliente decide no hacer la reparación, solo paga esta visita de diagnóstico."
+        question: "¿Cuánto cuesta el servicio de desatascos?",
+        answer: "El precio varia segun el tipo de atasco, la hora del dia, y la complejidad del trabajo. Siempre proporcionamos un presupuesto cerrado y por escrito antes de comenzar cualquier trabajo, sin sorpresas ni costes ocultos. Como referencia general: Desatasco de WC o fregadero: desde 80€. Desatasco de bajante comunitario: desde 120€. Inspeccion con camara CCTV: desde 120€. Limpieza de arquetas: desde 150€. Camion cuba (vaciado + limpieza): desde 200€. Vaciado de fosa septica: desde 250€. Reparacion de tuberia sin zanja: desde 300€. La visita de diagnostico tiene un coste minimo (generalmente entre 25-40€) que se descuenta completamente si decides realizar el desatasco con nosotros."
       },
       {
         question: "¿Hay diferencia de precio entre día, noche y festivos?",
@@ -46,8 +46,8 @@ const faqCategories = [
     icon: Shield,
     faqs: [
       {
-        question: "¿Los profesionales están certificados y tienen experiencia?",
-        answer: "Absolutamente. Todos nuestros técnicos son profesionales certificados con un mínimo de 5 años de experiencia en su especialidad. Nuestro proceso de selección es riguroso: Electricistas: Carnet oficial de instalador autorizado (categoría básica o especialista), expedido por la comunidad autónoma correspondiente. Fontaneros: Certificación profesional en instalaciones de fontanería y calefacción. Cerrajeros: Formación acreditada en sistemas de seguridad y aperturas no destructivas. Técnicos de gas y calderas: Carnet de instalador de gas categoría A, B o C según especialidad, inscrito en el registro oficial. Desatascos: Formación en saneamiento y equipos especializados (cuba, robots, cámaras). Además, todos los técnicos reciben formación continua (mínimo 40 horas anuales) para estar al día de las últimas tecnologías, normativas y mejores prácticas del sector."
+        question: "¿Los tecnicos de desatascos estan certificados?",
+        answer: "Absolutamente. Todos nuestros tecnicos son profesionales especializados en desatascos y saneamiento con un minimo de 5 anos de experiencia. Nuestro proceso de seleccion es riguroso: Formacion especifica en sistemas de saneamiento, redes de alcantarillado y normativa vigente. Certificacion en manejo de equipos de alta presion (hasta 200 bares) y camion cuba. Formacion en inspeccion con camaras CCTV robotizadas y elaboracion de informes tecnicos. Carnet de conducir C+E para camiones cuba (tecnicos de fosas y arquetas). Formacion en prevencion de riesgos laborales especifica para trabajos en espacios confinados. Ademas, todos los tecnicos reciben formacion continua (minimo 40 horas anuales) para estar al dia de las ultimas tecnologias y equipos del sector."
       },
       {
         question: "¿Qué garantía tienen los trabajos realizados?",
@@ -68,8 +68,8 @@ const faqCategories = [
         answer: "Damos servicio en toda España peninsular, Baleares y Canarias. Nuestra cobertura incluye: Comunidades Autónomas: Todas las 17 comunidades autónomas más Ceuta y Melilla. Grandes ciudades: Madrid, Barcelona, Valencia, Sevilla, Zaragoza, Málaga, Murcia, Palma de Mallorca, Las Palmas, Bilbao, Alicante, Córdoba, Valladolid, Vigo, Gijón, y muchas más. Áreas metropolitanas: Cobertura completa en todas las áreas metropolitanas de las principales ciudades. Zonas rurales: Servicio disponible aunque con tiempos de llegada más amplios (hasta 60-90 minutos en zonas muy alejadas). Consulta disponibilidad para tu zona específica llamando al 936 946 639. Nuestro sistema localiza automáticamente al técnico más cercano a tu ubicación."
       },
       {
-        question: "¿Qué tipos de servicios ofrecen exactamente?",
-        answer: "Ofrecemos una gama completa de servicios de emergencia para el hogar y comercios: CERRAJERÍA: Aperturas de puertas sin daños, cambio de cerraduras, amaestramiento, cerraduras de seguridad, cajas fuertes, persianas, cierres de comercio. FONTANERÍA: Fugas de agua, roturas de tuberías, atascos, reparación de cisternas, grifería, calentadores de agua, termos eléctricos, detección de fugas ocultas. ELECTRICIDAD: Apagones, cortocircuitos, cuadros eléctricos, enchufes, interruptores, iluminación, instalaciones nuevas, boletines eléctricos, certificados de instalación. DESATASCOS: WC, fregaderos, bañeras, duchas, bajantes, arquetas, fosas sépticas, limpieza con camión cuba, inspección con cámara. CALDERAS Y CALEFACCIÓN: Reparación de calderas (gas, gasoil, eléctricas), mantenimiento, revisiones obligatorias, calderas de condensación, radiadores, suelo radiante, aire acondicionado."
+        question: "¿Qué tipos de desatascos realizan exactamente?",
+        answer: "Realizamos todo tipo de desatascos y servicios de saneamiento: DESATASCO DOMESTICO: WC, fregaderos, baneras, duchas, lavabos y bidets. Utilizamos sondas mecanicas y equipos de presion. BAJANTES Y COLECTORES: Desatasco de bajantes comunitarios que afectan a varios vecinos. Equipos de alta presion hasta 200 bares. ARQUETAS Y REGISTROS: Limpieza y desatasco de arquetas de patio, garaje, jardin y zonas comunes. FOSAS SEPTICAS: Vaciado completo con camion cuba, limpieza y desinfeccion. Gestion legal de residuos con certificado. INSPECCION CON CAMARA: Diagnostico con camara CCTV robotizada para localizar atascos recurrentes, raices, roturas o deformaciones. REPARACION DE TUBERIAS: Sustitucion parcial o total, reparacion sin zanja (relining), eliminacion de raices con fresadora."
       },
       {
         question: "¿Atienden también a empresas y comunidades de propietarios?",
@@ -82,8 +82,8 @@ const faqCategories = [
     icon: Wrench,
     faqs: [
       {
-        question: "¿Qué hago en caso de emergencia mientras espero al técnico?",
-        answer: "Nuestro equipo de atención telefónica te dará instrucciones específicas según tu emergencia. Aquí tienes las pautas generales de seguridad: FUGA DE AGUA: Cierra la llave de paso general (suele estar junto al contador o debajo del fregadero). Si no la encuentras, cierra las llaves angulares del aparato afectado. Recoge el agua con cubos y toallas para evitar daños mayores. PROBLEMAS ELÉCTRICOS: Baja el diferencial y los automáticos del cuadro eléctrico. No toques cables ni aparatos si hay humedad. No intentes reparar nada tú mismo. OLOR A GAS: No enciendas luces, mecheros ni aparatos eléctricos. Abre ventanas para ventilar. Sal de la vivienda y llama desde fuera. Contacta también al 112 si el olor es muy fuerte. PUERTA BLOQUEADA: No intentes forzarla, puedes dañar la cerradura y encarecer la reparación. Si tienes niños o personas vulnerables dentro, llama al 112 además de a nosotros."
+        question: "¿Que hago mientras espero al tecnico de desatascos?",
+        answer: "Nuestro equipo de atencion telefonica te dara instrucciones especificas segun tu situacion. Aqui tienes las pautas generales: WC ATASCADO: No sigas tirando de la cadena, empeoraras la situacion. Si el agua sube, cierra la llave de paso del inodoro (esta detras, cerca del suelo). Coloca toallas alrededor por si desborda. FREGADERO OBSTRUIDO: No viertas mas agua. Si hay agua estancada, sacala con un cubo. No uses productos quimicos desatascadores, pueden complicar el trabajo del tecnico. BAJANTE ATASCADO: Si el agua sale por otros desagues, cierra las llaves de paso de esos aparatos. Avisa a los vecinos si es un bajante comunitario. ARQUETA DESBORDADA: No intentes abrirla si esta bajo presion. Aleja mascotas y ninos de la zona. Si el agua sucia se extiende, pon barreras con toallas viejas. MALOS OLORES SEVEROS: Ventila bien la zona. Si el olor es muy fuerte, puede indicar acumulacion de gases — ventila y sal de la zona afectada."
       },
       {
         question: "¿Necesito estar presente durante la reparación?",
@@ -153,12 +153,12 @@ export function HomeFAQ() {
             <span>Centro de ayuda</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
-            Guía completa: Todo lo que necesitas saber sobre servicios de urgencia 24h
+            Guia completa: Todo lo que necesitas saber sobre desatascos urgentes
           </h2>
           <p className="text-muted-foreground max-w-3xl mx-auto text-pretty">
             Hemos recopilado las respuestas a las preguntas más frecuentes de nuestros clientes. 
-            Esta guía te ayudará a entender cómo funcionamos, qué esperar de nuestro servicio, 
-            y cómo actuar en caso de emergencia. Si tienes alguna pregunta adicional, 
+            Esta guia te ayudara a entender como funcionamos, que esperar de nuestro servicio de desatascos, 
+            y como actuar en caso de emergencia. Si tienes alguna pregunta adicional, 
             llámanos al <a href="tel:936946639" className="text-primary font-semibold hover:underline">936 946 639</a>.
           </p>
         </div>

@@ -1,4 +1,5 @@
-import { Shield, Users, Clock, Award, MapPin, Phone, CheckCircle, Star, Briefcase, Heart, Target, Zap } from "lucide-react"
+import { Shield, Users, Clock, Award, MapPin, Phone, CheckCircle, Star, Heart, Target, Truck, Camera, Wrench, Waves } from "lucide-react"
+import Link from "next/link"
 
 export function AboutSection() {
   return (
@@ -8,14 +9,14 @@ export function AboutSection() {
         <div className="text-center mb-16">
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
             <Heart className="w-4 h-4" />
-            Nuestra historia
+            Especialistas en desatascos
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
-            Más de 10 años siendo la referencia en servicios de urgencia 24h en España
+            Mas de 10 anos solucionando atascos en toda Espana
           </h2>
           <p className="text-muted-foreground max-w-3xl mx-auto text-pretty">
-            Conoce quienes somos, como trabajamos, y por que familias y negocios en toda Espana 
-            confian en nosotros para resolver sus emergencias del hogar.
+            Somos especialistas en desatascos y saneamiento. Conoce como trabajamos
+            y por que comunidades, empresas y familias confian en nosotros.
           </p>
         </div>
 
@@ -26,42 +27,40 @@ export function AboutSection() {
               <div>
                 <h3 className="text-xl font-bold text-foreground mb-3">El origen de pronto-24.com</h3>
                 <p>
-                  <strong className="text-foreground">pronto-24.com</strong> nació en 2014 de una experiencia personal 
-                  frustrante: nuestro fundador sufrió una fuga de agua a las 2 de la madrugada un sábado. 
-                  Llamó a más de 10 empresas de urgencias antes de encontrar a alguien dispuesto a venir. 
-                  Cuando llegó el fontanero (3 horas después), el trabajo costó el triple de lo razonable 
-                  y la factura llegó llena de conceptos confusos.
+                  <strong className="text-foreground">pronto-24.com</strong> nacio de la frustracion de lidiar con atascos urgentes
+                  y no encontrar a nadie disponible. Un sabado por la noche, con la arqueta del edificio desbordada y
+                  agua sucia inundando el garaje, nuestro fundador llamo a mas de 10 empresas. Nadie podia venir hasta
+                  el lunes. Cuando finalmente llego un tecnico, el presupuesto se triplico sobre lo hablado por telefono.
                 </p>
               </div>
               
               <div>
-                <h3 className="text-xl font-bold text-foreground mb-3">Nuestra misión</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">Nuestra especializacion</h3>
                 <p>
-                  Esa experiencia nos impulsó a crear algo diferente: un servicio de urgencias que realmente 
-                  estuviera disponible las 24 horas, que llegara rápido, con profesionales cualificados, 
-                  y con precios transparentes. Sin sorpresas, sin letras pequeñas, sin estrés añadido en 
-                  momentos que ya de por sí son complicados.
+                  Nos especializamos exclusivamente en <strong className="text-foreground">desatascos y saneamiento</strong>.
+                  No somos una empresa generalista — cada tecnico, cada equipo, cada vehiculo esta dedicado a resolver
+                  atascos de la forma mas rapida y efectiva posible. Desde un WC atascado hasta la limpieza completa
+                  de colectores con camion cuba, tenemos el equipo y la experiencia para cada situacion.
                 </p>
               </div>
               
               <div>
-                <h3 className="text-xl font-bold text-foreground mb-3">Cómo trabajamos</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">Nuestro equipo</h3>
                 <p>
-                  Hoy contamos con una red de <strong className="text-foreground">más de 500 profesionales</strong> distribuidos 
-                  por toda España. Cada técnico pasa un riguroso proceso de selección que incluye verificación 
-                  de titulaciones, comprobación de antecedentes, periodo de prueba supervisado, y evaluación 
-                  continua basada en las opiniones de los clientes. Solo el 15% de los candidatos supera 
-                  todas las fases.
+                  Contamos con una red de <strong className="text-foreground">mas de 80 tecnicos especializados</strong> en 
+                  desatascos, distribuidos por toda Espana. Cada tecnico tiene formacion especifica en sistemas de 
+                  saneamiento, manejo de equipos de alta presion, camaras CCTV de inspeccion y camiones cuba.
+                  Solo el 20% de los candidatos supera nuestro proceso de seleccion.
                 </p>
               </div>
               
               <div>
-                <h3 className="text-xl font-bold text-foreground mb-3">Nuestro compromiso contigo</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">Nuestro compromiso</h3>
                 <p>
-                  Sabemos que cuando nos llamas, estás pasando un mal momento. Por eso nos esforzamos en 
-                  hacer todo el proceso lo más fácil posible: una llamada, un presupuesto claro, un profesional 
-                  en tu puerta en minutos, y un problema resuelto. Sin complicaciones, sin esperas interminables, 
-                  sin sustos en la factura. Ese es nuestro compromiso, cada día, cada servicio.
+                  Un atasco grave puede inutilizar tu vivienda en minutos. Por eso garantizamos
+                  <strong className="text-foreground"> 30 minutos de tiempo maximo de llegada</strong>, presupuesto cerrado
+                  antes de empezar, y garantia de 12 meses por escrito. Si el atasco vuelve dentro del periodo
+                  de garantia, volvemos gratis.
                 </p>
               </div>
             </div>
@@ -71,7 +70,7 @@ export function AboutSection() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl transition-all"
             >
               <Phone className="w-5 h-5" />
-              Llámanos: 936 946 639
+              Llamanos: 936 946 639
             </a>
           </div>
           
@@ -81,13 +80,13 @@ export function AboutSection() {
               <div className="p-6 rounded-2xl bg-muted/30 border border-border text-center">
                 <Clock className="w-8 h-8 mx-auto mb-3 text-primary" />
                 <div className="text-3xl font-bold text-foreground">24/7</div>
-                <div className="text-sm text-muted-foreground">365 días al año</div>
+                <div className="text-sm text-muted-foreground">365 dias al ano</div>
               </div>
               
               <div className="p-6 rounded-2xl bg-muted/30 border border-border text-center">
-                <Users className="w-8 h-8 mx-auto mb-3 text-primary" />
-                <div className="text-3xl font-bold text-foreground">24/7</div>
-                <div className="text-sm text-muted-foreground">Servicio disponible</div>
+                <Truck className="w-8 h-8 mx-auto mb-3 text-primary" />
+                <div className="text-3xl font-bold text-foreground">15+</div>
+                <div className="text-sm text-muted-foreground">Camiones cuba propios</div>
               </div>
               
               <div className="p-6 rounded-2xl bg-muted/30 border border-border text-center">
@@ -98,8 +97,8 @@ export function AboutSection() {
               
               <div className="p-6 rounded-2xl bg-muted/30 border border-border text-center">
                 <MapPin className="w-8 h-8 mx-auto mb-3 text-primary" />
-                <div className="text-3xl font-bold text-foreground">500+</div>
-                <div className="text-sm text-muted-foreground">Ciudades en España</div>
+                <div className="text-3xl font-bold text-foreground">100+</div>
+                <div className="text-sm text-muted-foreground">Ciudades con servicio</div>
               </div>
             </div>
             
@@ -107,19 +106,19 @@ export function AboutSection() {
               <div className="flex items-start gap-4">
                 <Shield className="w-10 h-10 shrink-0" />
                 <div>
-                  <h3 className="text-xl font-bold mb-2">Nuestra garantía triple</h3>
+                  <h3 className="text-xl font-bold mb-2">Nuestra garantia triple</h3>
                   <ul className="space-y-2 text-primary-foreground/90">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 shrink-0 mt-0.5" />
-                      <span><strong>Garantía de precio:</strong> El presupuesto que aceptas es el precio final. Sin sorpresas.</span>
+                      <span><strong>Garantia de precio:</strong> El presupuesto que aceptas es el precio final. Sin sorpresas.</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 shrink-0 mt-0.5" />
-                      <span><strong>Garantía de trabajo:</strong> 12 meses de garantía en mano de obra.</span>
+                      <span><strong>Garantia de trabajo:</strong> 12 meses. Si el atasco vuelve, volvemos gratis.</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 shrink-0 mt-0.5" />
-                      <span><strong>Garantía de satisfacción:</strong> Si no quedas contento, te devolvemos el dinero.</span>
+                      <span><strong>Garantia de satisfaccion:</strong> Si no quedas contento, te devolvemos el dinero.</span>
                     </li>
                   </ul>
                 </div>
@@ -129,77 +128,71 @@ export function AboutSection() {
             <div className="p-6 rounded-2xl border border-border bg-muted/20">
               <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
                 <Target className="w-5 h-5 text-primary" />
-                Los 5 pilares de nuestro servicio
+                Los 5 pilares de nuestro servicio de desatascos
               </h3>
               <ul className="space-y-3 text-muted-foreground">
                 <li className="flex items-start gap-3">
                   <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold shrink-0">1</span>
-                  <span><strong className="text-foreground">Rapidez real:</strong> Tiempo medio de llegada de 20 minutos. No prometemos lo que no podemos cumplir.</span>
+                  <span><strong className="text-foreground">Rapidez real:</strong> 30 minutos maximo de llegada. Tenemos tecnicos repartidos por toda Espana.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold shrink-0">2</span>
-                  <span><strong className="text-foreground">Transparencia total:</strong> Presupuesto cerrado y por escrito antes de empezar cualquier trabajo.</span>
+                  <span><strong className="text-foreground">Equipo profesional:</strong> Sondas, alta presion, camion cuba y camaras CCTV. El equipo adecuado para cada atasco.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold shrink-0">3</span>
-                  <span><strong className="text-foreground">Profesionales de élite:</strong> Solo el 15% de los candidatos supera nuestra selección.</span>
+                  <span><strong className="text-foreground">Transparencia:</strong> Presupuesto cerrado por escrito antes de tocar nada.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold shrink-0">4</span>
-                  <span><strong className="text-foreground">Garantía blindada:</strong> Respaldamos cada trabajo con garantía por escrito de 12 meses.</span>
+                  <span><strong className="text-foreground">Solucion definitiva:</strong> No aliviamos el atasco, lo eliminamos. Diagnosticamos la causa raiz.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold shrink-0">5</span>
-                  <span><strong className="text-foreground">Atención humana:</strong> Personas reales te atienden 24/7. Nada de robots ni contestadores.</span>
+                  <span><strong className="text-foreground">Limpieza total:</strong> Dejamos la zona de trabajo impecable. Incluido en el servicio.</span>
                 </li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Sección de equipo y profesionales */}
+        {/* Equipo especializado */}
         <div className="border-t border-border pt-16">
           <div className="text-center mb-12">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Conoce a los profesionales que te atenderán
+              Nuestro equipamiento profesional
             </h3>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Nuestro equipo está formado por profesionales especializados en cada área, 
-              todos con formación certificada y años de experiencia.
+              Invertimos en la mejor tecnologia del sector para resolver cualquier atasco
+              de la forma mas rapida y menos invasiva posible.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {[
               {
-                title: "Electricistas",
-                description: "Carnet oficial de instalador autorizado. Expertos en instalaciones domésticas, comerciales e industriales. Media de 8 años de experiencia.",
-                icon: Zap,
-                stat: "120+"
+                title: "Camiones cuba",
+                description: "Flota propia de camiones con bomba de succion industrial y deposito de 10.000 litros. Para fosas septicas, arquetas y atascos severos.",
+                icon: Truck,
+                stat: "15+"
               },
               {
-                title: "Fontaneros",
-                description: "Certificación profesional en instalaciones de fontanería y calefacción. Especialistas en detección y reparación de fugas.",
-                icon: Briefcase,
-                stat: "95+"
+                title: "Equipos de alta presion",
+                description: "Maquinas de agua a presion hasta 200 bares con boquillas rotativas. Limpian las paredes de la tuberia eliminando grasa e incrustaciones.",
+                icon: Waves,
+                stat: "200 bar"
               },
               {
-                title: "Cerrajeros",
-                description: "Formación acreditada en sistemas de seguridad. Especialistas en aperturas no destructivas y cerraduras de alta seguridad.",
-                icon: Shield,
-                stat: "110+"
+                title: "Camaras CCTV",
+                description: "Camaras robotizadas que recorren el interior de las tuberias grabando en video HD. Localizan el problema exacto sin romper nada.",
+                icon: Camera,
+                stat: "HD"
               },
               {
-                title: "Desatascadores",
-                description: "Equipados con tecnología punta: cámaras de inspección, equipos de presión y camión cuba para los casos más difíciles.",
-                icon: Target,
-                stat: "75+"
-              },
-              {
-                title: "Técnicos de calderas",
-                description: "Carnet de instalador de gas categoría A, B y C. Formación continua con las principales marcas del mercado.",
-                icon: Award,
-                stat: "85+"
+                title: "Sondas y fresadoras",
+                description: "Sondas mecanicas flexibles y fresadoras para eliminar raices, objetos solidos y acumulaciones en tuberias de todos los diametros.",
+                icon: Wrench,
+                stat: "50mm+"
               }
             ].map((item, i) => (
               <div key={i} className="p-6 rounded-2xl border border-border bg-muted/10 hover:bg-muted/20 transition-colors">
@@ -214,40 +207,39 @@ export function AboutSection() {
           </div>
         </div>
 
-        {/* Testimonios destacados */}
+        {/* Testimonios desatascos */}
         <div className="border-t border-border pt-16">
           <div className="text-center mb-12">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Lo que dicen nuestros clientes
+              Lo que dicen nuestros clientes de desatascos
             </h3>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Estas son opiniones reales de clientes que han utilizado nuestros servicios. 
-              Puedes ver más en Google Reviews buscando "pronto-24.com".
+              Opiniones reales de clientes que han utilizado nuestro servicio de desatascos.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                name: "María García",
+                name: "Laura Fernandez",
                 location: "Madrid",
                 rating: 5,
-                text: "A las 3 de la mañana se rompió una tubería y en 20 minutos tenía al fontanero en casa. Resolvió el problema en menos de una hora. Precio justo y factura detallada. No puedo estar más agradecida.",
-                service: "Fontanería urgente"
+                text: "El bajante del edificio se atasco un domingo y el agua empezaba a salir por el bano del primero. Llamamos y en 25 minutos tenian el equipo de alta presion trabajando. En una hora estaba todo solucionado. Precio justo y limpiaron todo.",
+                service: "Desatasco de bajante comunitario"
               },
               {
-                name: "Carlos Martínez",
+                name: "Pedro Navarro",
                 location: "Barcelona",
                 rating: 5,
-                text: "Me quedé fuera de casa con mi hija de 2 años dentro. Llamé desesperado y el cerrajero llegó en 15 minutos. Abrió la puerta sin dañar nada. Un servicio impecable en un momento muy angustioso.",
-                service: "Cerrajería 24h"
+                text: "Llevaba meses con el fregadero que desaguaba lento. Vinieron con la camara y vieron que habia una acumulacion de grasa enorme. Con el equipo de alta presion lo dejaron como nuevo. Me ensenaron el video del antes y despues.",
+                service: "Desatasco con inspeccion CCTV"
               },
               {
-                name: "Ana López",
+                name: "Comunidad Residencial Sol",
                 location: "Valencia",
                 rating: 5,
-                text: "La caldera dejó de funcionar en plena ola de frío. Vinieron el mismo día, diagnosticaron el problema y lo solucionaron en el momento. Llevaban la pieza de repuesto en la furgoneta. Excelentes.",
-                service: "Reparación de calderas"
+                text: "La fosa septica del edificio necesitaba vaciado urgente. El camion cuba llego en 30 minutos, vaciaron y limpiaron la fosa, y nos dieron el certificado de gestion de residuos. Todo profesional y a buen precio.",
+                service: "Vaciado de fosa septica"
               }
             ].map((testimonial, i) => (
               <div key={i} className="p-6 rounded-2xl border border-border bg-background">
@@ -256,7 +248,7 @@ export function AboutSection() {
                     <Star key={j} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-muted-foreground mb-4 italic">"{testimonial.text}"</p>
+                <p className="text-muted-foreground mb-4 italic">&ldquo;{testimonial.text}&rdquo;</p>
                 <div className="border-t border-border pt-4">
                   <div className="font-semibold text-foreground">{testimonial.name}</div>
                   <div className="text-sm text-muted-foreground">{testimonial.location} - {testimonial.service}</div>
@@ -266,33 +258,40 @@ export function AboutSection() {
           </div>
         </div>
 
-        {/* Cobertura geográfica */}
+        {/* Cobertura desatascos */}
         <div className="border-t border-border pt-16 mt-16">
           <div className="text-center mb-12">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Cobertura en toda España
+              Desatascos en toda Espana
             </h3>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Desde grandes ciudades hasta poblaciones más pequeñas, nuestra red de profesionales 
-              cubre todo el territorio nacional.
+              Servicio de desatascos urgente con camion cuba en mas de 100 ciudades.
             </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {[
-              "Madrid", "Barcelona", "Valencia", "Sevilla", "Zaragoza", "Málaga",
-              "Murcia", "Palma", "Las Palmas", "Bilbao", "Alicante", "Córdoba",
-              "Valladolid", "Vigo", "Gijón", "Hospitalet", "Vitoria", "A Coruña",
-              "Granada", "Elche", "Oviedo", "Badalona", "Cartagena", "Terrassa"
+              { slug: "madrid", name: "Madrid" }, { slug: "barcelona", name: "Barcelona" },
+              { slug: "valencia", name: "Valencia" }, { slug: "sevilla", name: "Sevilla" },
+              { slug: "zaragoza", name: "Zaragoza" }, { slug: "malaga", name: "Malaga" },
+              { slug: "murcia", name: "Murcia" }, { slug: "bilbao", name: "Bilbao" },
+              { slug: "alicante", name: "Alicante" }, { slug: "cordoba", name: "Cordoba" },
+              { slug: "granada", name: "Granada" }, { slug: "vigo", name: "Vigo" },
+              { slug: "gijon", name: "Gijon" }, { slug: "oviedo", name: "Oviedo" },
+              { slug: "santander", name: "Santander" }, { slug: "pamplona", name: "Pamplona" },
+              { slug: "san-sebastian", name: "San Sebastian" }, { slug: "almeria", name: "Almeria" },
+              { slug: "burgos", name: "Burgos" }, { slug: "valladolid", name: "Valladolid" },
+              { slug: "hospitalet-llobregat", name: "Hospitalet" }, { slug: "badalona", name: "Badalona" },
+              { slug: "terrassa", name: "Terrassa" }, { slug: "sabadell", name: "Sabadell" },
             ].map((city, i) => (
-              <div key={i} className="px-4 py-3 rounded-xl bg-muted/30 border border-border text-center">
-                <span className="text-sm font-medium text-foreground">{city}</span>
-              </div>
+              <Link key={i} href={`/desatascos/${city.slug}`} className="px-4 py-3 rounded-xl bg-muted/30 border border-border text-center hover:border-foreground/30 transition-colors">
+                <span className="text-sm font-medium text-foreground">Desatascos {city.name}</span>
+              </Link>
             ))}
           </div>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
-            Y muchas más ciudades y poblaciones. Llama al <a href="tel:936946639" className="text-primary font-semibold hover:underline">936 946 639</a> para confirmar disponibilidad en tu zona.
+            Y muchas mas ciudades. Llama al <a href="tel:936946639" className="text-primary font-semibold hover:underline">936 946 639</a> para confirmar disponibilidad en tu zona.
           </p>
         </div>
       </div>

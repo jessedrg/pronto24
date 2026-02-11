@@ -1,91 +1,86 @@
-import { Zap, Droplets, Key, Waves, Flame, ArrowRight, Clock, Shield, Phone } from "lucide-react"
+import { Waves, Droplets, ArrowRight, Clock, Shield, Phone, Camera, Truck, Wrench, ThermometerSun } from "lucide-react"
 import Link from "next/link"
 
 const services = [
   {
-    id: "electricista",
-    name: "Electricista",
-    icon: Zap,
-    color: "text-yellow-500",
-    bgColor: "bg-yellow-500/10",
-    description: "Servicio de electricista urgente 24 horas. Solucionamos apagones, cortocircuitos, problemas con el diferencial, instalaciones electricas y certificados. Profesionales certificados con experiencia.",
-    problems: [
-      "Apagones y cortes de luz",
-      "Cortocircuitos y chispazos",
-      "Diferencial que salta",
-      "Enchufes que no funcionan",
-      "Instalaciones eléctricas",
-      "Boletín eléctrico",
+    id: "desatascos",
+    name: "Desatasco de WC e Inodoros",
+    icon: Waves,
+    color: "text-teal-500",
+    bgColor: "bg-teal-500/10",
+    description: "El WC atascado es la emergencia de desatascos mas comun. Utilizamos equipos de presion profesional y sondas mecanicas para eliminar la obstruccion sin danar la ceramica ni las tuberias. En la mayoria de casos se resuelve en 30-60 minutos sin necesidad de obra.",
+    features: [
+      "Desatasco sin romper ni desmontar el inodoro",
+      "Equipos de presion hasta 200 bares",
+      "Sonda mecanica para objetos solidos atrapados",
+      "Inspeccion con camara si el atasco es recurrente",
     ],
+    priceRange: "Desde 80€ (IVA incluido)",
     cities: ["madrid", "barcelona", "valencia", "sevilla", "malaga"],
   },
   {
-    id: "fontanero",
-    name: "Fontanero",
+    id: "desatascos",
+    name: "Desatasco de Fregaderos y Bajantes",
     icon: Droplets,
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
-    description: "Fontaneros profesionales disponibles las 24 horas. Reparamos fugas de agua, tuberias rotas, problemas con calentadores, grifos y cisternas. Llegamos en minutos a tu domicilio.",
-    problems: [
-      "Fugas de agua urgentes",
-      "Tuberias rotas o atascadas",
-      "Calentadores y termos",
-      "Grifos que gotean",
-      "Cisternas que no funcionan",
-      "Humedades",
+    description: "Los fregaderos se atascan por acumulacion de grasa, restos de comida y jabon. Los bajantes de edificios pueden bloquearse afectando a multiples viviendas. Nuestros equipos de alta presion eliminan la obstruccion y limpian las paredes internas de la tuberia para prevenir futuros atascos.",
+    features: [
+      "Limpieza de grasa acumulada en tuberias",
+      "Desatasco de bajantes comunitarios",
+      "Eliminacion de incrustaciones de cal",
+      "Tratamiento preventivo anti-atascos",
     ],
-    cities: ["madrid", "barcelona", "valencia", "bilbao", "zaragoza"],
-  },
-  {
-    id: "cerrajero",
-    name: "Cerrajero",
-    icon: Key,
-    color: "text-purple-500",
-    bgColor: "bg-purple-500/10",
-    description: "Cerrajeros de urgencia 24/7. Abrimos puertas sin danos, cambiamos cerraduras y bombines, instalamos cerraduras de seguridad. Servicio rapido y profesional.",
-    problems: [
-      "Puertas bloqueadas",
-      "Llaves rotas en cerradura",
-      "Cambio de bombin",
-      "Cerraduras de seguridad",
-      "Puertas acorazadas",
-      "Aperturas de emergencia",
-    ],
-    cities: ["madrid", "barcelona", "sevilla", "murcia", "alicante"],
+    priceRange: "Desde 70€ (IVA incluido)",
+    cities: ["zaragoza", "bilbao", "murcia", "alicante", "granada"],
   },
   {
     id: "desatascos",
-    name: "Desatascos",
-    icon: Waves,
+    name: "Limpieza de Arquetas y Fosas Septicas",
+    icon: Truck,
     color: "text-green-500",
     bgColor: "bg-green-500/10",
-    description: "Servicio de desatascos urgente con camion cuba. Desatascamos WC, fregaderos, bajantes y arquetas. Limpieza de tuberias con agua a presion. Sin olores, sin complicaciones.",
-    problems: [
-      "WC atascado",
-      "Fregadero obstruido",
-      "Bajantes atascados",
-      "Malos olores",
-      "Arquetas bloqueadas",
-      "Limpieza de tuberias",
+    description: "Las arquetas bloqueadas y las fosas septicas llenas requieren equipos especializados. Disponemos de camion cuba con bomba de succion de gran capacidad para vaciar, limpiar y dejar operativa cualquier arqueta, fosa septica o pozo de saneamiento. Gestionamos el transporte y vertido legal de residuos.",
+    features: [
+      "Camion cuba con bomba de succion industrial",
+      "Vaciado completo de fosas septicas",
+      "Limpieza de arquetas y colectores",
+      "Gestion legal de residuos (certificado incluido)",
     ],
-    cities: ["madrid", "barcelona", "valencia", "malaga", "granada"],
+    priceRange: "Desde 200€ (IVA incluido)",
+    cities: ["madrid", "barcelona", "valencia", "sevilla", "malaga"],
   },
   {
-    id: "calderas",
-    name: "Calderas",
-    icon: Flame,
-    color: "text-red-500",
-    bgColor: "bg-red-500/10",
-    description: "Tecnicos de calderas certificados. Reparamos calderas de todas las marcas, revisiones obligatorias, problemas de calefaccion y agua caliente. Servicio urgente 24 horas.",
-    problems: [
-      "Caldera no enciende",
-      "Sin agua caliente",
-      "Caldera pierde presion",
-      "Ruidos extranos",
-      "Revision obligatoria",
-      "Radiadores frios",
+    id: "desatascos",
+    name: "Inspeccion con Camara CCTV de Tuberias",
+    icon: Camera,
+    color: "text-purple-500",
+    bgColor: "bg-purple-500/10",
+    description: "Cuando un atasco es recurrente o no se localiza facilmente, utilizamos camaras de inspeccion CCTV que recorren el interior de la tuberia grabando en video. Esto nos permite ver exactamente donde esta el problema: raices, roturas, deformaciones o acumulaciones. Diagnostico preciso sin romper nada.",
+    features: [
+      "Camara robotizada para tuberias desde 50mm",
+      "Video en tiempo real y grabacion para el cliente",
+      "Localizacion GPS del punto exacto del problema",
+      "Informe tecnico con imagenes y recomendaciones",
     ],
-    cities: ["madrid", "barcelona", "bilbao", "zaragoza", "valladolid"],
+    priceRange: "Desde 120€ (IVA incluido)",
+    cities: ["madrid", "barcelona", "bilbao", "zaragoza", "alicante"],
+  },
+  {
+    id: "desatascos",
+    name: "Reparacion y Sustitucion de Tuberias",
+    icon: Wrench,
+    color: "text-orange-500",
+    bgColor: "bg-orange-500/10",
+    description: "Si la inspeccion revela tuberias rotas, colapsadas o con raices, realizamos la reparacion o sustitucion. Ofrecemos tecnicas sin zanja (relining) cuando es posible, que permiten reparar la tuberia desde dentro sin necesidad de abrir suelos ni paredes. Menos obra, menos tiempo, menos coste.",
+    features: [
+      "Reparacion sin zanja (relining/camisado)",
+      "Sustitucion parcial o total de tuberias",
+      "Eliminacion de raices con fresadora mecanica",
+      "Garantia de 5 anos en sustituciones completas",
+    ],
+    priceRange: "Desde 300€ segun alcance",
+    cities: ["madrid", "barcelona", "valencia", "sevilla", "murcia"],
   },
 ]
 
@@ -95,18 +90,18 @@ export function ServicesOverview() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Servicios de urgencias para el hogar
+            Servicios de desatascos profesionales
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Profesionales certificados disponibles 24 horas al día, 7 días a la semana. 
-            Llegamos en un maximo de 30 minutos a cualquier punto de tu ciudad.
+            Solucionamos cualquier problema de atascos y saneamiento con equipos profesionales. 
+            Desde un WC atascado hasta la limpieza completa de la red de saneamiento con camion cuba.
           </p>
         </div>
 
         <div className="space-y-12">
-          {services.map((service) => (
+          {services.map((service, idx) => (
             <div
-              key={service.id}
+              key={idx}
               className="p-8 rounded-3xl border border-border bg-muted/20 hover:bg-muted/30 transition-colors"
             >
               <div className="grid md:grid-cols-2 gap-8">
@@ -117,8 +112,8 @@ export function ServicesOverview() {
                       <service.icon className={`w-7 h-7 ${service.color}`} />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-foreground">{service.name} Urgente 24h</h3>
-                      <p className="text-muted-foreground">Servicio disponible ahora</p>
+                      <h3 className="text-2xl font-bold text-foreground">{service.name}</h3>
+                      <p className="text-muted-foreground">Servicio urgente 24 horas</p>
                     </div>
                   </div>
                   
@@ -129,11 +124,11 @@ export function ServicesOverview() {
                   <div className="flex flex-wrap gap-3">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-foreground/10 text-foreground text-sm">
                       <Clock className="w-4 h-4" />
-                      Llegada en 10-30 min
+                      Llegada en 30 min
                     </span>
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-foreground/10 text-foreground text-sm">
                       <Shield className="w-4 h-4" />
-                      Garantía incluida
+                      {service.priceRange}
                     </span>
                   </div>
                   
@@ -146,37 +141,37 @@ export function ServicesOverview() {
                   </a>
                 </div>
                 
-                {/* Right: Problems and cities */}
+                {/* Right: Features and cities */}
                 <div className="space-y-6">
                   <div>
-                    <h4 className="font-semibold text-foreground mb-3">Problemas que solucionamos:</h4>
-                    <ul className="grid grid-cols-2 gap-2">
-                      {service.problems.map((problem, i) => (
-                        <li key={i} className="flex items-center gap-2 text-muted-foreground text-sm">
-                          <span className="w-1.5 h-1.5 rounded-full bg-foreground shrink-0" />
-                          {problem}
+                    <h4 className="font-semibold text-foreground mb-3">Que incluye este servicio:</h4>
+                    <ul className="space-y-2">
+                      {service.features.map((feature, i) => (
+                        <li key={i} className="flex items-start gap-2 text-muted-foreground text-sm">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
+                          {feature}
                         </li>
                       ))}
                     </ul>
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold text-foreground mb-3">Ciudades con servicio:</h4>
+                    <h4 className="font-semibold text-foreground mb-3">Disponible en:</h4>
                     <div className="flex flex-wrap gap-2">
                       {service.cities.map((city) => (
                         <Link
                           key={city}
-                          href={`/${service.id}/${city}`}
+                          href={`/desatascos/${city}`}
                           className="px-3 py-1.5 rounded-full bg-background border border-border text-sm text-foreground hover:border-foreground/50 transition-colors"
                         >
                           {city.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
                         </Link>
                       ))}
                       <Link
-                        href={`/${service.id}`}
+                        href="/desatascos"
                         className="px-3 py-1.5 rounded-full bg-foreground/10 text-foreground text-sm font-medium hover:bg-foreground/20 transition-colors inline-flex items-center gap-1"
                       >
-                        Ver más
+                        +100 ciudades
                         <ArrowRight className="w-3 h-3" />
                       </Link>
                     </div>
