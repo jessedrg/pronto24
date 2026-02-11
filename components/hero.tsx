@@ -2,11 +2,9 @@ import { CheckCircle2, Shield, Phone, Clock, Star, Zap, Droplets, Key, Waves, Fl
 import Link from "next/link"
 
 const SERVICES_QUICK = [
-  { id: "electricista", name: "Electricista", icon: Zap, color: "text-yellow-500", bgColor: "bg-yellow-500/10" },
-  { id: "fontanero", name: "Fontanero", icon: Droplets, color: "text-blue-500", bgColor: "bg-blue-500/10" },
-  { id: "cerrajero", name: "Cerrajero", icon: Key, color: "text-purple-500", bgColor: "bg-purple-500/10" },
   { id: "desatascos", name: "Desatascos", icon: Waves, color: "text-teal-500", bgColor: "bg-teal-500/10" },
-  { id: "calderas", name: "Calderas", icon: Flame, color: "text-red-500", bgColor: "bg-red-500/10" },
+  { id: "desatascos-24-horas", name: "24 Horas", icon: Clock, color: "text-blue-500", bgColor: "bg-blue-500/10" },
+  { id: "desatascos-urgentes", name: "Urgentes", icon: Zap, color: "text-yellow-500", bgColor: "bg-yellow-500/10" },
 ]
 
 export function Hero() {
@@ -25,12 +23,12 @@ export function Hero() {
             </div>
 
             <h1 id="hero-heading" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] text-balance">
-              <span className="text-foreground">Electricistas, Fontaneros y Cerrajeros</span>{" "}
-              <span className="text-muted-foreground">Urgentes 24h</span>
+              <span className="text-foreground">Desatascos Urgentes</span>{" "}
+              <span className="text-muted-foreground">24 Horas en Toda España</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-xl">
-              Profesionales certificados en tu casa en menos de 30 minutos. Presupuesto gratis, sin compromiso. Servicio 24 horas, 365 dias.
+              Servicio de desatascos con camión cuba en menos de 30 minutos. WC, fregaderos, bajantes, arquetas y tuberías. Presupuesto gratis, sin compromiso.
             </p>
 
             {/* Primary CTA - Phone Call (hidden on mobile, floating button handles it) */}

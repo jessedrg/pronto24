@@ -14,8 +14,8 @@ import { HomeServiceArticles } from "@/components/home-service-articles"
 const homeSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "name": "pronto-24.com - Servicios Urgentes 24h",
-  "description": "Servicios de emergencia 24/7 en toda España. Electricistas, fontaneros, cerrajeros, desatascos y calderas. Llegamos en 30 minutos. Presupuesto gratis.",
+  "name": "pronto-24.com - Desatascos Urgentes 24h",
+  "description": "Servicio de desatascos urgente 24/7 en toda España. Camión cuba, tuberías, WC, fregaderos, bajantes y arquetas. Llegamos en 30 minutos. Presupuesto gratis.",
   "url": "https://www.pronto-24.com",
   "telephone": "+34936946639",
   "priceRange": "€€",
@@ -26,46 +26,30 @@ const homeSchema = {
   },
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
-    "name": "Servicios de Emergencia para el Hogar",
+    "name": "Servicios de Desatascos",
     "itemListElement": [
       {
         "@type": "Offer",
         "itemOffered": {
           "@type": "Service",
-          "name": "Electricista Urgente 24h",
-          "description": "Servicio de electricista urgente disponible 24/7. Apagones, cortocircuitos, instalaciones."
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Fontanero Urgente 24h",
-          "description": "Fontaneros profesionales para emergencias. Fugas, tuberías, calentadores."
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Cerrajero Urgente 24h",
-          "description": "Cerrajeros de urgencia. Aperturas sin daños, cambio de cerraduras."
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
           "name": "Desatascos Urgentes 24h",
-          "description": "Servicio de desatascos con camión cuba. WC, fregaderos, bajantes."
+          "description": "Servicio de desatascos urgente con camión cuba. WC, fregaderos, bajantes, arquetas."
         }
       },
       {
         "@type": "Offer",
         "itemOffered": {
           "@type": "Service",
-          "name": "Reparación de Calderas 24h",
-          "description": "Técnicos de calderas certificados. Todas las marcas, revisiones."
+          "name": "Desatasco de Tuberías",
+          "description": "Desatasco profesional de tuberías con inspección por cámara y alta presión."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Limpieza de Arquetas y Fosas",
+          "description": "Vaciado y limpieza de arquetas, fosas sépticas y pozos con camión cuba."
         }
       }
     ]

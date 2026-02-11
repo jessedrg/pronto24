@@ -7,11 +7,9 @@ const phoneNumber = "936946639"
 const phoneFormatted = "936 946 639"
 
 const NAV_LINKS = [
-  { href: "/fontanero/", label: "Fontanero" },
-  { href: "/electricista/", label: "Electricista" },
   { href: "/desatascos/", label: "Desatascos" },
-  { href: "/cerrajero/", label: "Cerrajero" },
-  { href: "/calderas/", label: "Calderas" },
+  { href: "/desatascos-24-horas/", label: "24 Horas" },
+  { href: "/desatascos-urgentes/", label: "Urgentes" },
 ]
 
 export function Header() {

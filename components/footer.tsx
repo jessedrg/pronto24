@@ -3,11 +3,9 @@ import Link from "next/link"
 import { Logo } from "./logo"
 
 const SERVICES = [
-  { id: "electricista", name: "Electricista" },
-  { id: "fontanero", name: "Fontanero" },
-  { id: "cerrajero", name: "Cerrajero" },
   { id: "desatascos", name: "Desatascos" },
-  { id: "calderas", name: "Calderas" },
+  { id: "desatascos-24-horas", name: "Desatascos 24h" },
+  { id: "desatascos-urgentes", name: "Desatascos Urgentes" },
 ]
 
 const TOP_CITIES = [
@@ -36,7 +34,7 @@ export function Footer() {
           <div className="space-y-3">
             <Logo variant="light" size="lg" />
             <p className="text-background/70 text-sm leading-relaxed">
-              Servicios de emergencia 24/7 en toda Espana. Profesionales verificados con garantia.
+              Servicio de desatascos urgente 24/7 en toda España. Camión cuba y profesionales con garantía.
             </p>
             <div className="flex items-center gap-2 text-sm text-background/70">
               <Shield className="w-3.5 h-3.5 shrink-0" />
@@ -78,15 +76,15 @@ export function Footer() {
               {TOP_CITIES.slice(0, 10).map((slug) => (
                 <li key={slug}>
                   <Link
-                    href={`/electricista/${slug}/`}
+                    href={`/desatascos/${slug}/`}
                     className="text-sm text-background/70 hover:text-background transition-colors flex items-center gap-1"
                   >
                     <MapPin className="w-3 h-3 shrink-0" />
-                    {CITY_NAMES[slug]}
+                    Desatascos {CITY_NAMES[slug]}
                   </Link>
                 </li>
               ))}
-              <li className="text-xs text-background/40 pt-1">+8.000 municipios en toda Espana</li>
+              <li className="text-xs text-background/40 pt-1">+100 ciudades en toda España</li>
             </ul>
           </div>
 
@@ -118,17 +116,15 @@ export function Footer() {
         <div className="mt-10 pt-6 border-t border-background/10">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-background/30 mb-4">Servicios por ciudad</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-1">
-            {SERVICES.map((service) =>
-              TOP_CITIES.slice(0, 8).map((slug) => (
-                <Link
-                  key={`${service.id}-${slug}`}
-                  href={`/${service.id}/${slug}/`}
-                  className="text-[11px] text-background/40 hover:text-background/70 transition-colors truncate"
-                >
-                  {service.name} {CITY_NAMES[slug]}
-                </Link>
-              ))
-            )}
+            {TOP_CITIES.map((slug) => (
+              <Link
+                key={`desatascos-${slug}`}
+                href={`/desatascos/${slug}/`}
+                className="text-[11px] text-background/40 hover:text-background/70 transition-colors truncate"
+              >
+                Desatascos {CITY_NAMES[slug]}
+              </Link>
+            ))}
           </div>
         </div>
 

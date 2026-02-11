@@ -28,24 +28,16 @@ const CITIES = [
   { slug: "sabadell", name: "Sabadell" },
 ]
 
-const SERVICES = [
-  { id: "electricista", name: "Electricista" },
-  { id: "fontanero", name: "Fontanero" },
-  { id: "cerrajero", name: "Cerrajero" },
-  { id: "desatascos", name: "Desatascos" },
-  { id: "calderas", name: "Calderas" },
-]
-
 export function Coverage() {
   return (
     <section className="py-20 bg-muted/30" aria-labelledby="coverage-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <h2 id="coverage-heading" className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
-            Cobertura en toda Espana
+            Desatascos en toda Espana
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Servicio de urgencias 24 horas en mas de 8.000 municipios. Encuentra profesionales disponibles ahora en tu ciudad.
+            Servicio de desatascos urgente 24 horas en mas de 100 ciudades. Camion cuba y profesionales disponibles ahora en tu ciudad.
           </p>
         </div>
 
@@ -53,30 +45,28 @@ export function Coverage() {
           {CITIES.map((city) => (
             <Link
               key={city.slug}
-              href={`/electricista/${city.slug}/`}
+              href={`/desatascos/${city.slug}/`}
               className="group flex items-center gap-2 p-3 rounded-xl bg-background border border-border hover:border-foreground/30 hover:bg-muted/50 transition-all"
             >
               <MapPin className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
-              <span className="text-sm font-medium text-foreground truncate">{city.name}</span>
+              <span className="text-sm font-medium text-foreground truncate">Desatascos {city.name}</span>
             </Link>
           ))}
         </div>
 
-        {/* Service x City cross-links for SEO */}
+        {/* Popular searches for SEO */}
         <div className="pt-8 border-t border-border">
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Busquedas populares</h3>
           <div className="flex flex-wrap gap-2">
-            {SERVICES.map((service) =>
-              CITIES.slice(0, 6).map((city) => (
-                <Link
-                  key={`${service.id}-${city.slug}`}
-                  href={`/${service.id}/${city.slug}/`}
-                  className="text-xs px-3 py-1.5 rounded-lg bg-background border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
-                >
-                  {service.name} en {city.name}
-                </Link>
-              ))
-            )}
+            {CITIES.slice(0, 12).map((city) => (
+              <Link
+                key={`desatascos-${city.slug}`}
+                href={`/desatascos/${city.slug}/`}
+                className="text-xs px-3 py-1.5 rounded-lg bg-background border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+              >
+                Desatascos en {city.name}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

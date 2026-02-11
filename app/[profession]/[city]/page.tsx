@@ -5,8 +5,6 @@ import { ServiceLandingTemplate } from "@/components/service-landing-template"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { PROFESSIONS, getCityDisplayName, getCityProvince, getKeywordModifier } from "@/lib/seo-data"
 import { generateUniqueContent, generateTestimonials } from "@/lib/content-generator"
-import { getAIContent } from "@/lib/ai-content-generator"
-import { AIContentSections } from "@/components/ai-content-sections"
 
 export const dynamicParams = true
 export const revalidate = 604800
@@ -155,13 +153,6 @@ export default async function ProfessionCityPage({ params }: PageProps) {
 
   const cityName = getCityDisplayName(citySlug)
 
-  // Fetch AI-generated content from DB
-  let aiContent: Awaited<ReturnType<typeof getAIContent>> = null
-  try {
-    aiContent = await getAIContent(professionId, citySlug)
-  } catch {
-    // AI content is optional - graceful degradation
-  }
   
   // Generar contenido único para Schema.org
   const uniqueContent = generateUniqueContent(citySlug, cityName, profession.id, profession.name)
@@ -332,21 +323,6 @@ export default async function ProfessionCityPage({ params }: PageProps) {
           modifierText={modifierMeta?.modifierText}
           isUrgent={modifierMeta?.isUrgent}
         />
-        {aiContent && (
-          <AIContentSections
-            aiIntro={aiContent.ai_intro}
-            aiLocalContext={aiContent.ai_local_context}
-            aiServiceDetails={aiContent.ai_service_details}
-            aiPricingInfo={aiContent.ai_pricing_info}
-            aiPreventionTips={aiContent.ai_prevention_tips}
-            aiFaqs={aiContent.ai_faqs}
-            aiNeighborhoodInfo={aiContent.ai_neighborhood_info}
-            aiSeasonalTips={aiContent.ai_seasonal_tips}
-            aiEmergencyGuide={aiContent.ai_emergency_guide}
-            cityName={cityName}
-            professionName={profession.name}
-          />
-        )}
       </main>
       <Footer />
     </div>

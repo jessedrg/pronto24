@@ -9,17 +9,19 @@ import "./globals.css"
 const geistSans = Geist({ subsets: ["latin"], display: "swap" })
 
 export const metadata: Metadata = {
-  title: "Electricista, Fontanero y Cerrajero Urgente 24h | pronto-24.com",
+  title: "Desatascos Urgentes 24h en Toda España | pronto-24.com",
   description:
-    "Servicios de emergencia 24/7 en toda Espana. Electricistas, fontaneros, cerrajeros y desatascos urgentes. Llegamos en 30 minutos. Presupuesto gratis. Llama: 936 946 639",
+    "Servicio de desatascos urgente 24/7 en toda España. Camión cuba, desatasco de tuberías, WC, fregaderos, bajantes y arquetas. Llegamos en 30 minutos. Presupuesto gratis. Llama: 936 946 639",
+  keywords:
+    "desatascos urgentes, desatascos 24 horas, desatascos cerca de mi, desatascos baratos, camion cuba, desatasco tuberias, desatascos Madrid, desatascos Barcelona, desatascos Valencia, desatascos Sevilla",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     shortcut: "/favicon.svg",
     apple: "/favicon.svg",
   },
   openGraph: {
-    title: "pronto-24.com - Servicios Urgentes 24/7 en Toda Espana",
-    description: "Profesionales verificados en un maximo de 30 minutos. Presupuesto gratis sin compromiso. Llama: 936 946 639",
+    title: "pronto-24.com - Desatascos Urgentes 24/7 en Toda España",
+    description: "Desatascos profesionales en 30 minutos. Camión cuba, tuberías, arquetas. Presupuesto gratis. Llama: 936 946 639",
     type: "website",
     locale: "es_ES",
     siteName: "pronto-24.com",
@@ -104,7 +106,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "pronto-24.com",
-              legalName: "Pronto 24 Servicios Urgentes",
+              legalName: "Pronto 24 Desatascos Urgentes",
               url: "https://www.pronto-24.com",
               logo: "https://www.pronto-24.com/favicon.svg",
               contactPoint: {
