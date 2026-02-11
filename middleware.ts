@@ -92,6 +92,7 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/_next") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/0x") ||
+    pathname.startsWith("/blog") ||
     pathname.startsWith("/sitemap") ||
     pathname.startsWith("/sitemaps") ||
     pathname.startsWith("/robots") ||

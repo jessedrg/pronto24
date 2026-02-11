@@ -13,6 +13,8 @@ export default function robots(): MetadataRoute.Robots {
           "/desatascos-urgentes/",
           "/precio-desatascos/",
           "/partners",
+          "/blog",
+          "/blog/",
         ],
         disallow: [
           "/api/",

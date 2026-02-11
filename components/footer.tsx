@@ -8,6 +8,15 @@ const SERVICES = [
   { id: "desatascos-urgentes", name: "Desatascos Urgentes" },
 ]
 
+const BLOG_LINKS = [
+  { href: "/blog/desatascar-fregadero-metodos-caseros-profesionales", label: "Desatascar fregadero" },
+  { href: "/blog/precio-desatascos-espana-2026", label: "Precios desatascos 2026" },
+  { href: "/blog/tuberias-atascadas-causas-soluciones", label: "Tuberías atascadas" },
+  { href: "/blog/prevenir-atascos-tuberias-consejos", label: "Prevenir atascos" },
+  { href: "/blog/como-elegir-empresa-desatascos", label: "Elegir empresa" },
+  { href: "/blog/desatasco-wc-inodoro-soluciones", label: "WC atascado" },
+]
+
 const TOP_CITIES = [
   "madrid", "barcelona", "valencia", "sevilla", "malaga",
   "zaragoza", "murcia", "bilbao", "alicante", "cordoba",
@@ -112,9 +121,31 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Service + City Combo Links - massive internal linking boost */}
+        {/* Blog links */}
         <div className="mt-10 pt-6 border-t border-background/10">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-background/30 mb-4">Servicios por ciudad</h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-background/30 mb-4">Blog de Desatascos</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-1">
+            {BLOG_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-[11px] text-background/40 hover:text-background/70 transition-colors truncate"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link
+              href="/blog"
+              className="text-[11px] text-background/50 hover:text-background/70 transition-colors font-medium"
+            >
+              Ver todo el blog →
+            </Link>
+          </div>
+        </div>
+
+        {/* City links */}
+        <div className="mt-6 pt-4 border-t border-background/10">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-background/30 mb-4">Desatascos por ciudad</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-1">
             {TOP_CITIES.map((slug) => (
               <Link

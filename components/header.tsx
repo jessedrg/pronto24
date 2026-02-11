@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: "/desatascos/", label: "Desatascos" },
   { href: "/desatascos-24-horas/", label: "24 Horas" },
   { href: "/desatascos-urgentes/", label: "Urgentes" },
+  { href: "/blog", label: "Blog" },
 ]
 
 export function Header() {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { KEPT_CITIES } from "@/lib/kept-cities"
+import { BLOG_ARTICLES } from "@/lib/blog-data"
 
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
@@ -19,6 +20,12 @@ export async function GET() {
 
   // Partners
   urls.push({ loc: `${BASE_URL}/partners`, priority: "0.7", changefreq: "monthly" })
+
+  // Blog
+  urls.push({ loc: `${BASE_URL}/blog`, priority: "0.8", changefreq: "weekly" })
+  for (const article of BLOG_ARTICLES) {
+    urls.push({ loc: `${BASE_URL}/blog/${article.slug}`, priority: "0.8", changefreq: "monthly" })
+  }
 
   // 3 desatascos patterns × kept cities
   for (const city of KEPT_CITIES) {
